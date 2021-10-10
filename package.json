@@ -1,0 +1,29 @@
+{
+  "name": "discord-html-transcripts",
+  "version": "1.0.0",
+  "description": "A nicely formatted html transcript generator for discord.js.",
+  "main": "src/index.js",
+  "homepage": "https://github.com/ItzDerock/discord-html-transcripts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ItzDerock/discord-html-transcripts.git"
+  },
+  "keywords": [
+    "discord.js",
+    "discord.js-transcripts",
+    "discord.js-html-transcripts",
+    "html-transcripts",
+    "discord-html-transcripts"
+  ],
+  "author": "Derock <derock@derock.dev>",
+  "license": "GNU GPLv3",
+  "dependencies": {
+    "discord.js": "^13.2.0",
+    "dompurify": "^2.3.3",
+    "escape-html": "^1.0.3",
+    "jsdom": "^18.0.0"
+  }
+}
