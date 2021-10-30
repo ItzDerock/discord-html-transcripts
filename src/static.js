@@ -10,6 +10,13 @@ module.exports.DummyUser = {
     avatarURL: () => 'https://cdn.discordapp.com/embed/avatars/0.png'
 }
 
+module.exports.LanguageAliases = {
+    'ts': 'typescript',
+    'js': 'javascript',
+    'py': 'python',
+    'rb': 'ruby',
+}
+
 // for use with xss module
 // module.exports.xssSettings = {
 //     a: [],

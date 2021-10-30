@@ -4,7 +4,9 @@ const fs      = require('fs');
 const path    = require('path');
 const purify  = require('dompurify');
 const static  = require('./static');
-const escape  = require('escape-html');
+// const escape  = require('escape-html'); // replaced by he
+const hljs    = require('highlight.js');
+const he      = require('he');
 
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 
@@ -132,7 +134,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
 
             const messageContentContentMarkdownSpan = document.createElement('span');
             messageContentContentMarkdownSpan.classList.add('preserve-whitespace');
-            messageContentContentMarkdownSpan.innerHTML = formatContent(message.content, escape);
+            messageContentContentMarkdownSpan.innerHTML = formatContent(message.content, message.webhookId !== undefined);
 
             messageContentContentMarkdown.appendChild(messageContentContentMarkdownSpan);
             messageContentContent.appendChild(messageContentContentMarkdown);
@@ -307,7 +309,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
 
                     const embedDescriptionMarkdown = document.createElement('div');
                     embedDescriptionMarkdown.classList.add('markdown', 'preserve-whitespace');
-                    embedDescriptionMarkdown.innerHTML = formatContent(embed.description);
+                    embedDescriptionMarkdown.innerHTML = formatContent(embed.description, true);
 
                     embedDescription.appendChild(embedDescriptionMarkdown);
                     embedText.appendChild(embedDescription);
@@ -342,7 +344,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
 
                         const embedFieldValueMarkdown = document.createElement('div');
                         embedFieldValueMarkdown.classList.add('markdown', 'preserve-whitespace');
-                        embedFieldValueMarkdown.innerHTML = formatContent(field.value);
+                        embedFieldValueMarkdown.innerHTML = formatContent(field.value, true);
 
                         embedFieldValue.appendChild(embedFieldValueMarkdown);
                         embedField.appendChild(embedFieldValue);
@@ -435,19 +437,44 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
     return opts.returnBuffer ? Buffer.from(dom.serialize()) : new discord.MessageAttachment(Buffer.from(dom.serialize()), opts.fileName ?? 'transcript.html');
 }
 
+const languages = hljs.default.listLanguages();
+
 /**
  * 
  * @param {String} content 
+ * @param {Boolean} allowExtra Stuff that only webhooks can send or things that can only appear in a embed description (such as [embeded links](https://like.this))
  * @returns {String}
  */
-function formatContent(content, purify=escape) {
-    return purify(content)
+function formatContent(content, allowExtra=false, purify=he.escape) {
+    content = purify(content)
+        .replace(/\&\#x60;/g, '`') // we dont want ` to be escaped
+        .replace(/```(.+?)```/gs, code => {
+            const split = code.slice(3, -3).split('\n')
+            var language = split.shift().trim().toLowerCase();
+
+            if(static.LanguageAliases[language]) language = static.LanguageAliases[language];
+
+            if(languages.includes(language)) {
+                const joined = he.unescape(split.join('\n'));
+                return `<div class="pre pre--multiline language-${language}">${hljs.default.highlight(language, joined).value}</div>`
+            } else {
+                return `<div class="pre pre--multiline nohighlight">${code.slice(3, -3).trim()}</div>`
+            }
+        })
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
         .replace(/~~(.+?)~~/g, '<s>$1</s>')
         .replace(/__(.+?)__/g, '<u>$1</u>')
-        .replace(/```(.+?)```/gs, code => `<div class="pre pre--multiline nohighlight">${code.slice(3, -3).trim()}</div>`)
+        .replace(/\_(.+?)\_/g, '<em>$1</em>')
         .replace(/`(.+?)`/g, `<span class="pre pre--inline">$1</span>`)
+        .replace(/\|\|(.+?)\|\|/g, '<span class="spoiler-text spoiler-text--hidden" onclick="showSpoiler(event, this)">$1</span>')
+        
+    if(allowExtra) {
+        content = content
+            .replace(/\[(.+?)\]\((.+?)\)/g, `<a href="$2">$1</a>`)
+    }
+
+    return content.replace(/(?:\r\n|\r|\n)/g, '<br />'); // do this last
 }
 
 function formatBytes(bytes, decimals = 2) {

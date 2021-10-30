@@ -608,13 +608,13 @@
         }
     </style>
 
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-dark.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.pre--multiline').forEach(block => hljs.highlightBlock(block));
-        });
+        // highlightjs done in exporthtml.js because doing it here caused newline issues.
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     document.querySelectorAll('.pre--multiline').forEach(block => hljs.highlightBlock(block));
+        // });
     </script>
 
     <script>
