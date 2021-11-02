@@ -63,14 +63,12 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
 
             reference.innerHTML = 
             `<img class="chatlog__reference-avatar" src="${author.avatarURL() ?? static.defaultPFP}" alt="Avatar" loading="lazy">
-            <span class="chatlog__reference-name" title="${author.username.replace(/"/g, '')}" style="color: ${author.hexAccentColor}">${xss(author.username)}</span>
+            <span class="chatlog__reference-name" title="${author.username.replace(/"/g, '')}" style="color: ${author.hexAccentColor ?? '#FFFFFF'}">${author.bot ? `<span class="chatlog__bot-tag">BOT</span> ${xss(author.username)}` : xss(author.username)}</span>
             <div class="chatlog__reference-content">
                 <span class="chatlog__reference-link" onclick="scrollToMessage(event, '${message.reference.messageId}')">
-                        <em>${xss(
-                            message.content ? `${message.content.substr(0, 42)}...` : 'Click to see attachment'
-                        )}</em>
+                        ${referencedMessage.content ? `${formatContent(referencedMessage.content, false, true)}...` : '<em>Click to see attachment</em>'}
                 </span>
-            </div>`
+            </div>`;
 
             messageGroup.appendChild(referenceSymbol);
             messageGroup.appendChild(reference);
@@ -445,20 +443,36 @@ const languages = hljs.default.listLanguages();
  * @param {Boolean} allowExtra Stuff that only webhooks can send or things that can only appear in a embed description (such as [embeded links](https://like.this))
  * @returns {String}
  */
-function formatContent(content, allowExtra=false, purify=he.escape) {
+function formatContent(content, allowExtra=false, replyStyle = false, purify=he.escape) {
     content = purify(content)
         .replace(/\&\#x60;/g, '`') // we dont want ` to be escaped
         .replace(/```(.+?)```/gs, code => {
-            const split = code.slice(3, -3).split('\n')
-            var language = split.shift().trim().toLowerCase();
+            if (!replyStyle) {
+              const split = code.slice(3, -3).split('\n');
+              let language = split.shift().trim().toLowerCase();
 
-            if(static.LanguageAliases[language]) language = static.LanguageAliases[language];
+              if (static.LanguageAliases[language])
+                language = static.LanguageAliases[language];
 
-            if(languages.includes(language)) {
-                const joined = he.unescape(split.join('\n'));
-                return `<div class="pre pre--multiline language-${language}">${hljs.default.highlight(language, joined).value}</div>`
+              if (languages.includes(language)) {
+                const joined = he.unescape(split.join("\n"));
+                return `<div class="pre pre--multiline language-${language}">${
+                  hljs.default.highlight(joined, {
+                    language,
+                  }).value
+                }</div>`;
+              } else {
+                return `<div class="pre pre--multiline nohighlight">${code
+                  .slice(3, -3)
+                  .trim()}</div>`;
+              }
             } else {
-                return `<div class="pre pre--multiline nohighlight">${code.slice(3, -3).trim()}</div>`
+                const split = code.slice(3, -3).split('\n');
+                split.shift();
+
+                const joined = he.unescape(split.join('\n'));
+
+                return `<span class="pre pre--inline">${joined.substring(0, 42)}</span>`;
             }
         })
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -467,14 +481,14 @@ function formatContent(content, allowExtra=false, purify=he.escape) {
         .replace(/__(.+?)__/g, '<u>$1</u>')
         .replace(/\_(.+?)\_/g, '<em>$1</em>')
         .replace(/`(.+?)`/g, `<span class="pre pre--inline">$1</span>`)
-        .replace(/\|\|(.+?)\|\|/g, '<span class="spoiler-text spoiler-text--hidden" onclick="showSpoiler(event, this)">$1</span>')
+        .replace(/\|\|(.+?)\|\|/g, `<span class="spoiler-text spoiler-text--hidden" ${replyStyle ? '' : 'onclick="showSpoiler(event, this)"'}>$1</span>`);
         
     if(allowExtra) {
         content = content
             .replace(/\[(.+?)\]\((.+?)\)/g, `<a href="$2">$1</a>`)
     }
 
-    return content.replace(/(?:\r\n|\r|\n)/g, '<br />'); // do this last
+    return replyStyle ? content.replace(/(?:\r\n|\r|\n)/g, ' ')  : content.replace(/(?:\r\n|\r|\n)/g, '<br />'); // do this last
 }
 
 function formatBytes(bytes, decimals = 2) {
