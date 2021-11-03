@@ -132,7 +132,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
 
             const messageContentContentMarkdownSpan = document.createElement('span');
             messageContentContentMarkdownSpan.classList.add('preserve-whitespace');
-            messageContentContentMarkdownSpan.innerHTML = formatContent(message.content, message.webhookId !== undefined);
+            messageContentContentMarkdownSpan.innerHTML = formatContent(message.content, message.webhookId !== null);
 
             messageContentContentMarkdown.appendChild(messageContentContentMarkdownSpan);
             messageContentContent.appendChild(messageContentContentMarkdown);
