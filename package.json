@@ -22,7 +22,7 @@
   "author": "Derock <derock@derock.dev>",
   "license": "GNU GPLv3",
   "dependencies": {
-    "discord.js": "^13.2.0",
+    "discord.js": "^13.3.1",
     "dompurify": "^2.3.3",
     "he": "^1.2.0",
     "highlight.js": "^11.3.1",
