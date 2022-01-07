@@ -59,14 +59,14 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
             reference.classList.add('chatlog__reference');
 
             const referencedMessage = messages instanceof discord.Collection ? messages.get(message.reference.messageId) : messages.find(m => m.id === message.reference.messageId);
-            const author = referencedMessage.author ?? static.DummyUser;
+            const author = referencedMessage?.author ?? static.DummyUser;
 
             reference.innerHTML = 
             `<img class="chatlog__reference-avatar" src="${author.avatarURL() ?? static.defaultPFP}" alt="Avatar" loading="lazy">
             <span class="chatlog__reference-name" title="${author.username.replace(/"/g, '')}" style="color: ${author.hexAccentColor ?? '#FFFFFF'}">${author.bot ? `<span class="chatlog__bot-tag">BOT</span> ${xss(author.username)}` : xss(author.username)}</span>
             <div class="chatlog__reference-content">
                 <span class="chatlog__reference-link" onclick="scrollToMessage(event, '${message.reference.messageId}')">
-                        ${referencedMessage.content ? `${formatContent(referencedMessage.content, false, true)}...` : '<em>Click to see attachment</em>'}
+                        ${referencedMessage ? (referencedMessage?.content ? `${formatContent(referencedMessage?.content, false, true)}...` : '<em>Click to see attachment</em>') : '<em>Original message was deleted.</em>'}
                 </span>
             </div>`;
 

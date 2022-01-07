@@ -6,7 +6,7 @@ module.exports.DummyUser = {
     tag: "Unknown User#0000",
     name: "Unknown User",
     username: "Unknown User",
-    hexAccentColor: "#000000",
+    hexAccentColor: "#FFFFFF",
     avatarURL: () => 'https://cdn.discordapp.com/embed/avatars/0.png'
 }
 
