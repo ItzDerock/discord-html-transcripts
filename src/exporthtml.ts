@@ -6,7 +6,7 @@ import purify from 'dompurify';
 import * as staticType from './static';
 import hljs from 'highlight.js';
 import he from 'he';
-import { Options } from 'types';
+import { Options } from './types';
 
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 

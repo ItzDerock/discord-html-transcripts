@@ -1,6 +1,6 @@
 import exportHtml from './exporthtml';
 import { Message, Collection, MessageAttachment, TextChannel } from 'discord.js';
-import { Options } from 'types';
+import { Options } from './types';
 
 /**
  * 

@@ -1,5 +1,8 @@
 import discord, { TextChannel } from 'discord.js';
 import { createTranscript } from '../src';
+import { config } from "dotenv";
+config();
+
 const client = new discord.Client({
     intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES]
 });
