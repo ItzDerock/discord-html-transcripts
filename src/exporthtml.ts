@@ -1,24 +1,19 @@
-const discord = require('discord.js');
-const jsdom   = require('jsdom');
-const fs      = require('fs');
-const path    = require('path');
-const purify  = require('dompurify');
-const static  = require('./static');
-// const escape  = require('escape-html'); // replaced by he
-const hljs    = require('highlight.js');
-const he      = require('he');
+import { Message, Collection, TextChannel, MessageAttachment } from 'discord.js';
+import jsdom from 'jsdom';
+import fs from 'fs';
+import path from 'path';
+import purify from 'dompurify';
+import * as staticType from './static';
+import hljs from 'highlight.js';
+import he from 'he';
+import { Options } from 'types';
 
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 
 // copilot helped so much here
 // copilot smart 🧠
 
-/**
- * 
- * @param {discord.Collection<string, discord.Message> | discord.Message[]} messages
- * @param {discord.TextChannel} channel
- */
-function generateTranscript(messages, channel, opts={ returnBuffer: false, fileName: 'transcript.html' }) {
+function generateTranscript(messages: Collection<string, Message> | Message[], channel: TextChannel, opts: Options = { returnBuffer: false, fileName: 'transcript.html' }) {
     const dom = new jsdom.JSDOM(template.replace('{{TITLE}}', channel.name));
     const document = dom.window.document;
 
@@ -34,7 +29,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
         ALLOWED_TAGS: []
     });
     const xss = DOMPurify.sanitize;
-    
+
     // Basic Info (header)
     document.getElementsByClassName('preamble__guild-icon')[0].src = channel.guild.iconURL();
     document.getElementById('guildname').textContent = channel.guild.name;
@@ -43,13 +38,13 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
     const transcript = document.getElementById('chatlog');
 
     // Messages
-    for(const message of (Array.from(messages.values())).sort((a, b) => a.createdTimestamp - b.createdTimestamp)) {
+    for (const message of (Array.from(messages.values())).sort((a, b) => a.createdTimestamp - b.createdTimestamp)) {
         // create message group
         const messageGroup = document.createElement('div');
         messageGroup.classList.add('chatlog__message-group');
 
         // message reference
-        if(message.reference?.messageId) {
+        if (message.reference?.messageId) {
             // create symbol
             const referenceSymbol = document.createElement('div');
             referenceSymbol.classList.add('chatlog__reference-symbol');
@@ -58,11 +53,11 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
             const reference = document.createElement('div');
             reference.classList.add('chatlog__reference');
 
-            const referencedMessage = messages instanceof discord.Collection ? messages.get(message.reference.messageId) : messages.find(m => m.id === message.reference.messageId);
-            const author = referencedMessage?.author ?? static.DummyUser;
+            const referencedMessage = messages instanceof Collection ? messages.get(message.reference.messageId) : messages.find(m => m.id === message.reference.messageId);
+            const author = referencedMessage?.author ?? staticType.DummyUser;
 
-            reference.innerHTML = 
-            `<img class="chatlog__reference-avatar" src="${author.avatarURL() ?? static.defaultPFP}" alt="Avatar" loading="lazy">
+            reference.innerHTML =
+                `<img class="chatlog__reference-avatar" src="${author.avatarURL() ?? staticType.defaultPFP}" alt="Avatar" loading="lazy">
             <span class="chatlog__reference-name" title="${author.username.replace(/"/g, '')}" style="color: ${author.hexAccentColor ?? '#FFFFFF'}">${author.bot ? `<span class="chatlog__bot-tag">BOT</span> ${xss(author.username)}` : xss(author.username)}</span>
             <div class="chatlog__reference-content">
                 <span class="chatlog__reference-link" onclick="scrollToMessage(event, '${message.reference.messageId}')">
@@ -75,14 +70,14 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
         }
 
         // message author pfp
-        const author = message.author ?? static.DummyUser;
-        
+        const author = message.author ?? staticType.DummyUser;
+
         const authorElement = document.createElement('div');
         authorElement.classList.add('chatlog__author-avatar-container');
 
         const authorAvatar = document.createElement('img');
         authorAvatar.classList.add('chatlog__author-avatar');
-        authorAvatar.src = author.avatarURL() ?? static.defaultPFP;
+        authorAvatar.src = author.avatarURL() ?? staticType.defaultPFP;
         authorAvatar.alt = 'Avatar';
         authorAvatar.loading = 'lazy';
 
@@ -102,7 +97,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
 
         content.appendChild(authorName);
 
-        if(author.bot) {
+        if (author.bot) {
             const botTag = document.createElement('span');
             botTag.classList.add('chatlog__bot-tag');
             botTag.textContent = 'BOT';
@@ -123,7 +118,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
         messageContent.title = `Message sent: ${message.createdAt.toLocaleString()}`;
 
         // message content
-        if(message.content) {
+        if (message.content) {
             const messageContentContent = document.createElement('div');
             messageContentContent.classList.add('chatlog__content');
 
@@ -140,14 +135,14 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
         }
 
         // message attachments
-        if(message.attachments && message.attachments.size > 0) {
-            for(const attachment of message.attachments.values()) {
+        if (message.attachments && message.attachments.size > 0) {
+            for (const attachment of message.attachments.values()) {
                 const attachmentsDiv = document.createElement('div');
                 attachmentsDiv.classList.add('chatlog__attachment');
 
                 const attachmentType = attachment.name.split('.').pop();
 
-                if(['png', 'jpg', 'jpeg', 'gif'].includes(attachmentType)) {
+                if (['png', 'jpg', 'jpeg', 'gif'].includes(attachmentType)) {
                     const attachmentLink = document.createElement('a');
 
                     const attachmentImage = document.createElement('img');
@@ -159,7 +154,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
 
                     attachmentLink.appendChild(attachmentImage);
                     attachmentsDiv.appendChild(attachmentLink);
-                } else if(['mp4', 'webm'].includes(attachmentType)) {
+                } else if (['mp4', 'webm'].includes(attachmentType)) {
                     const attachmentVideo = document.createElement('video');
                     attachmentVideo.classList.add('chatlog__attachment-media');
                     attachmentVideo.src = attachment.proxyURL ?? attachment.url;
@@ -168,7 +163,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
                     attachmentVideo.title = `Video: ${attachment.name} (${formatBytes(attachment.size)})`;
 
                     attachmentsDiv.appendChild(attachmentVideo);
-                } else if(['mp3', 'ogg'].includes(attachmentType)) {
+                } else if (['mp3', 'ogg'].includes(attachmentType)) {
                     const attachmentAudio = document.createElement('audio');
                     attachmentAudio.classList.add('chatlog__attachment-media');
                     attachmentAudio.src = attachment.proxyURL ?? attachment.url;
@@ -189,7 +184,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
 
                     attachmentGenericIcon.appendChild(attachmentGenericIconUse);
                     attachmentGeneric.appendChild(attachmentGenericIcon);
-                    
+
                     const attachmentGenericName = document.createElement('div');
                     attachmentGenericName.classList.add('chatlog__attachment-generic-name');
 
@@ -216,13 +211,13 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
         content.appendChild(messageContent);
 
         // embeds
-        if(message.embeds && message.embeds.length > 0) {
-            for(const embed of message.embeds) {
+        if (message.embeds && message.embeds.length > 0) {
+            for (const embed of message.embeds) {
                 const embedDiv = document.createElement('div');
                 embedDiv.classList.add('chatlog__embed');
 
                 // embed color
-                if(embed.hexColor) {
+                if (embed.hexColor) {
                     const embedColorPill = document.createElement('div');
                     embedColorPill.classList.add('chatlog__embed-color-pill');
                     embedColorPill.style.backgroundColor = embed.hexColor;
@@ -240,11 +235,11 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
                 embedText.classList.add('chatlog__embed-text');
 
                 // embed author
-                if(embed.author?.name) {
+                if (embed.author?.name) {
                     const embedAuthor = document.createElement('div');
                     embedAuthor.classList.add('chatlog__embed-author');
 
-                    if(embed.author.iconURL) {
+                    if (embed.author.iconURL) {
                         const embedAuthorIcon = document.createElement('img');
                         embedAuthorIcon.classList.add('chatlog__embed-author-icon');
                         embedAuthorIcon.src = embed.author.iconURL;
@@ -258,7 +253,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
                     const embedAuthorName = document.createElement('span');
                     embedAuthorName.classList.add('chatlog__embed-author-name');
 
-                    if(embed.author.url) {
+                    if (embed.author.url) {
                         const embedAuthorNameLink = document.createElement('a');
                         embedAuthorNameLink.classList.add('chatlog__embed-author-name-link');
                         embedAuthorNameLink.href = embed.author.url;
@@ -274,11 +269,11 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
                 }
 
                 // embed title
-                if(embed.title) {
+                if (embed.title) {
                     const embedTitle = document.createElement('div');
                     embedTitle.classList.add('chatlog__embed-title');
 
-                    if(embed.url) {
+                    if (embed.url) {
                         const embedTitleLink = document.createElement('a');
                         embedTitleLink.classList.add('chatlog__embed-title-link');
                         embedTitleLink.href = embed.url;
@@ -301,7 +296,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
                 }
 
                 // embed description
-                if(embed.description) {
+                if (embed.description) {
                     const embedDescription = document.createElement('div');
                     embedDescription.classList.add('chatlog__embed-description');
 
@@ -314,11 +309,11 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
                 }
 
                 // embed fields
-                if(embed.fields && embed.fields.length > 0) {
+                if (embed.fields && embed.fields.length > 0) {
                     const embedFields = document.createElement('div');
                     embedFields.classList.add('chatlog__embed-fields');
 
-                    for(const field of embed.fields) {
+                    for (const field of embed.fields) {
                         const embedField = document.createElement('div');
                         embedField.classList.add(
                             ...(!field.inline ? ['chatlog__embed-field'] : ['chatlog__embed-field', 'chatlog__embed-field--inline'])
@@ -356,7 +351,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
                 embedContent.appendChild(embedText);
 
                 // embed thumbnail
-                if(embed.thumbnail?.proxyURL ?? embed.thumbnail?.url) {
+                if (embed.thumbnail?.proxyURL ?? embed.thumbnail?.url) {
                     const embedThumbnail = document.createElement('div');
                     embedThumbnail.classList.add('chatlog__embed-thumbnail-container');
 
@@ -379,7 +374,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
                 embedContentContainer.appendChild(embedContent);
 
                 // embed image
-                if(embed.image) {
+                if (embed.image) {
                     const embedImage = document.createElement('div');
                     embedImage.classList.add('chatlog__embed-image-container');
 
@@ -397,14 +392,14 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
                     embedImage.appendChild(embedImageLink);
 
                     embedContentContainer.appendChild(embedImage);
-                } 
+                }
 
                 // footer
-                if(embed.footer?.text) {
+                if (embed.footer?.text) {
                     const embedFooter = document.createElement('div');
                     embedFooter.classList.add('chatlog__embed-footer');
 
-                    if(embed.footer.iconURL) {
+                    if (embed.footer.iconURL) {
                         const embedFooterIcon = document.createElement('img');
                         embedFooterIcon.classList.add('chatlog__embed-footer-icon');
                         embedFooterIcon.src = embed.footer.proxyIconURL ?? embed.footer.iconURL;
@@ -417,7 +412,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
                     const embedFooterText = document.createElement('span');
                     embedFooterText.classList.add('chatlog__embed-footer-text');
                     embedFooterText.textContent = embed.timestamp ? `${embed.footer.text} • ${new Date(embed.timestamp).toLocaleString()}` : embed.footer.text;
-                    
+
                     embedFooter.appendChild(embedFooterText);
 
                     embedContentContainer.appendChild(embedFooter);
@@ -425,16 +420,17 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
 
                 embedDiv.appendChild(embedContentContainer);
                 content.appendChild(embedDiv);
-            } 
+            }
         }
 
         messageGroup.appendChild(content);
         transcript.appendChild(messageGroup);
     }
 
-    return opts.returnBuffer ? Buffer.from(dom.serialize()) : new discord.MessageAttachment(Buffer.from(dom.serialize()), opts.fileName ?? 'transcript.html');
+    return opts.returnBuffer ? Buffer.from(dom.serialize()) : new MessageAttachment(Buffer.from(dom.serialize()), opts.fileName ?? 'transcript.html');
 }
 
+// @ts-ignore
 const languages = hljs.default.listLanguages();
 
 /**
@@ -443,29 +439,29 @@ const languages = hljs.default.listLanguages();
  * @param {Boolean} allowExtra Stuff that only webhooks can send or things that can only appear in a embed description (such as [embeded links](https://like.this))
  * @returns {String}
  */
-function formatContent(content, allowExtra=false, replyStyle = false, purify=he.escape) {
+function formatContent(content, allowExtra = false, replyStyle = false, purify = he.escape) {
     content = purify(content)
         .replace(/\&\#x60;/g, '`') // we dont want ` to be escaped
         .replace(/```(.+?)```/gs, code => {
             if (!replyStyle) {
-              const split = code.slice(3, -3).split('\n');
-              let language = split.shift().trim().toLowerCase();
+                const split = code.slice(3, -3).split('\n');
+                let language = split.shift().trim().toLowerCase();
 
-              if (static.LanguageAliases[language])
-                language = static.LanguageAliases[language];
+                if (staticType.LanguageAliases[language])
+                    language = staticType.LanguageAliases[language];
 
-              if (languages.includes(language)) {
-                const joined = he.unescape(split.join("\n"));
-                return `<div class="pre pre--multiline language-${language}">${
-                  hljs.default.highlight(joined, {
-                    language,
-                  }).value
-                }</div>`;
-              } else {
-                return `<div class="pre pre--multiline nohighlight">${code
-                  .slice(3, -3)
-                  .trim()}</div>`;
-              }
+                if (languages.includes(language)) {
+                    const joined = he.unescape(split.join("\n"));
+                    // @ts-ignore
+                    return `<div class="pre pre--multiline language-${language}">${hljs.default.highlight(joined, {
+                        language,
+                    }).value
+                        }</div>`;
+                } else {
+                    return `<div class="pre pre--multiline nohighlight">${code
+                        .slice(3, -3)
+                        .trim()}</div>`;
+                }
             } else {
                 const split = code.slice(3, -3).split('\n');
                 split.shift();
@@ -482,13 +478,13 @@ function formatContent(content, allowExtra=false, replyStyle = false, purify=he.
         .replace(/\_(.+?)\_/g, '<em>$1</em>')
         .replace(/`(.+?)`/g, `<span class="pre pre--inline">$1</span>`)
         .replace(/\|\|(.+?)\|\|/g, `<span class="spoiler-text spoiler-text--hidden" ${replyStyle ? '' : 'onclick="showSpoiler(event, this)"'}>$1</span>`);
-        
-    if(allowExtra) {
+
+    if (allowExtra) {
         content = content
-            .replace(/\[(.+?)\]\((.+?)\)/g, `<a href="$2">$1</a>`)
+            .replace(/\[(.+?)\]\((.+?)\)/g, `<a href="$2">$1</a>`);
     }
 
-    return replyStyle ? content.replace(/(?:\r\n|\r|\n)/g, ' ')  : content.replace(/(?:\r\n|\r|\n)/g, '<br />'); // do this last
+    return replyStyle ? content.replace(/(?:\r\n|\r|\n)/g, ' ') : content.replace(/(?:\r\n|\r|\n)/g, '<br />'); // do this last
 }
 
 function formatBytes(bytes, decimals = 2) {
@@ -502,5 +498,4 @@ function formatBytes(bytes, decimals = 2) {
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
-
-module.exports = generateTranscript;
+export default generateTranscript;

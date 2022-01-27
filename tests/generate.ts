@@ -1,14 +1,13 @@
-const discord = require('discord.js');
-const generateTranscript = require('discord-html-transcripts');
+import discord, { TextChannel } from 'discord.js';
+import { createTranscript } from '../src';
 const client = new discord.Client({
     intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES]
 });
 
 client.on('ready', async () => {
-    /** @type {discord.TextChannel} */
-    const channel = await client.channels.fetch(process.env.CHANNEL);
+    const channel = await client.channels.fetch(process.env.CHANNEL) as TextChannel;
 
-    const attachment = await generateTranscript.createTranscript(channel);
+    const attachment = await createTranscript(channel);
 
     await channel.send({
         files: [attachment]

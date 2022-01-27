@@ -1,35 +1,31 @@
-const exportHtml = require('./exporthtml');
-const discord    = require('discord.js');
+import exportHtml from './exporthtml';
+import { Message, Collection, MessageAttachment, TextChannel } from 'discord.js';
+import { Options } from 'types';
 
 /**
  * 
- * @param {discord.Collection<string, discord.Message> | discord.Message[]} messages 
- * @param {discord.Channel} channel
+ * @param {Collection<string, Message> | Message[]} messages 
+ * @param {Channel} channel
  * @param {Object} opts
  * @param {Boolean} opts.returnBuffer Whether to return a buffer of the html or a message attachment.
  * @param {String} opts.fileName The name of the file. [ONLY VALID WITH `returnBuffer` SET TO FALSE]
- * @returns {discord.MessageAttachment | Buffer} 
+ * @returns {MessageAttachment | Buffer} 
  */
-module.exports.generateFromMessages = (messages, channel, opts={ returnBuffer: false }) => {
-    if(!opts.returnBuffer) opts.returnBuffer = false;
-    if(!opts.fileName) opts.fileName = 'transcript.html';
-   
+const generateFromMessages = (messages: Collection<string, Message> | Message[], channel: TextChannel, opts: Options = { returnBuffer: false }): MessageAttachment | Buffer => {
+    if (!opts.fileName) opts.fileName = 'transcript.html';
+
     // check if is array
-    if(!Array.isArray(messages)) {
+    if (!Array.isArray(messages)) {
         throw new Error('Provided messages must be either an array or a collection of Messages.');
     }
 
-    if(messages.length === 0) {
-        return exportHtml(messages, opts);
-    }
-
     // check if array contains discord messages
-    if(!(messages[0] instanceof discord.Message)) {
+    if (!(messages[0] instanceof Message)) {
         throw new Error('Provided messages does not contain valid Messages.');
     }
 
     return exportHtml(messages, channel, opts);
-}
+};
 
 /**
  * 
@@ -39,16 +35,16 @@ module.exports.generateFromMessages = (messages, channel, opts={ returnBuffer: f
  * @param {Boolean} opts.returnBuffer Whether to return a buffer of the html or a message attachment.
  * @param {String} opts.fileName The name of the file. [ONLY VALID WITH `returnBuffer` SET TO FALSE]
  */
-module.exports.createTranscript = async (channel, opts={ limit: -1 }) => {
-    if(!opts.returnBuffer) opts.returnBuffer = false;
-    if(!opts.fileName) opts.fileName = 'transcript.html';
-    if(!opts.limit) opts.limit = -1;
+const createTranscript = async (channel: TextChannel, opts: Options = { limit: -1 }) => {
+    if (!opts.returnBuffer) opts.returnBuffer = false;
+    if (!opts.fileName) opts.fileName = 'transcript.html';
+    if (!opts.limit) opts.limit = -1;
 
-    if(!(channel.isText)) {
+    if (!(channel.isText)) {
         throw new Error('Provided channel must be a valid channel.');
     }
 
-    if(!channel.isText()) {
+    if (!channel.isText()) {
         throw new Error('Provided channel must be a text channel.');
     }
 
@@ -59,11 +55,13 @@ module.exports.createTranscript = async (channel, opts={ limit: -1 }) => {
         const messages = await channel.messages.fetch({ limit: 100, before: last_id });
         sum_messages.push(...messages.values());
         last_id = messages.last().id;
-    
-        if (messages.size != 100 || (opts.limit > 0 && sum_messages >= opts.limit)) {
+
+        if (messages.size != 100 || (opts.limit > 0 && sum_messages.length >= opts.limit)) {
             break;
         }
     }
 
-    return exportHtml(sum_messages, channel, opts)
-}
+    return exportHtml(sum_messages, channel, opts);
+};
+
+export { generateFromMessages, createTranscript };

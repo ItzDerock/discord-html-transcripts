@@ -1,6 +1,6 @@
-module.exports.defaultPFP = 'https://cdn.discordapp.com/embed/avatars/0.png';
+const defaultPFP = 'https://cdn.discordapp.com/embed/avatars/0.png';
 
-module.exports.DummyUser = {
+const DummyUser = {
     bot: false,
     id: '00000000000',
     tag: "Unknown User#0000",
@@ -8,14 +8,16 @@ module.exports.DummyUser = {
     username: "Unknown User",
     hexAccentColor: "#FFFFFF",
     avatarURL: () => 'https://cdn.discordapp.com/embed/avatars/0.png'
-}
+};
 
-module.exports.LanguageAliases = {
+const LanguageAliases = {
     'ts': 'typescript',
     'js': 'javascript',
     'py': 'python',
     'rb': 'ruby',
-}
+};
+
+export { defaultPFP, DummyUser, LanguageAliases };
 
 // for use with xss module
 // module.exports.xssSettings = {

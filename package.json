@@ -4,7 +4,7 @@
   "description": "A nicely formatted html transcript generator for discord.js.",
   "main": "src/index.js",
   "homepage": "https://github.com/ItzDerock/discord-html-transcripts",
-  "types": "./index.d.ts",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -27,5 +27,8 @@
     "he": "^1.2.0",
     "highlight.js": "^11.3.1",
     "jsdom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.12"
   }
 }
