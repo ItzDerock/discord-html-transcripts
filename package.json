@@ -25,7 +25,7 @@
     "discord.js": "^13.5.0",
     "dompurify": "^2.3.4",
     "he": "^1.2.0",
-    "highlight.js": "^11.3.1",
+    "highlight.js": "^11.4.0",
     "jsdom": "^19.0.0"
   }
 }
