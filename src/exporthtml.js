@@ -66,7 +66,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
             <span class="chatlog__reference-name" title="${author.username.replace(/"/g, '')}" style="color: ${author.hexAccentColor ?? '#FFFFFF'}">${author.bot ? `<span class="chatlog__bot-tag">BOT</span> ${xss(author.username)}` : xss(author.username)}</span>
             <div class="chatlog__reference-content">
                 <span class="chatlog__reference-link" onclick="scrollToMessage(event, '${message.reference.messageId}')">
-                        ${referencedMessage ? (referencedMessage?.content ? `${formatContent(referencedMessage?.content, false, true)}...` : '<em>Click to see attachment</em>') : '<em>Original message was deleted.</em>'}
+                        ${referencedMessage ? (referencedMessage?.content ? `${formatContent(referencedMessage?.content, channel, false, true)}...` : '<em>Click to see attachment</em>') : '<em>Original message was deleted.</em>'}
                 </span>
             </div>`;
 
@@ -132,7 +132,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
 
             const messageContentContentMarkdownSpan = document.createElement('span');
             messageContentContentMarkdownSpan.classList.add('preserve-whitespace');
-            messageContentContentMarkdownSpan.innerHTML = formatContent(message.content, message.webhookId !== null);
+            messageContentContentMarkdownSpan.innerHTML = formatContent(message.content, channel, message.webhookId !== null);
 
             messageContentContentMarkdown.appendChild(messageContentContentMarkdownSpan);
             messageContentContent.appendChild(messageContentContentMarkdown);
@@ -307,7 +307,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
 
                     const embedDescriptionMarkdown = document.createElement('div');
                     embedDescriptionMarkdown.classList.add('markdown', 'preserve-whitespace');
-                    embedDescriptionMarkdown.innerHTML = formatContent(embed.description, true);
+                    embedDescriptionMarkdown.innerHTML = formatContent(embed.description, channel, true);
 
                     embedDescription.appendChild(embedDescriptionMarkdown);
                     embedText.appendChild(embedDescription);
@@ -342,7 +342,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
 
                         const embedFieldValueMarkdown = document.createElement('div');
                         embedFieldValueMarkdown.classList.add('markdown', 'preserve-whitespace');
-                        embedFieldValueMarkdown.innerHTML = formatContent(field.value, true);
+                        embedFieldValueMarkdown.innerHTML = formatContent(field.value, channel, true);
 
                         embedFieldValue.appendChild(embedFieldValueMarkdown);
                         embedField.appendChild(embedFieldValue);
@@ -440,10 +440,11 @@ const languages = hljs.default.listLanguages();
 /**
  * 
  * @param {String} content 
+ * @param {discord.TextChannel} context
  * @param {Boolean} allowExtra Stuff that only webhooks can send or things that can only appear in a embed description (such as [embeded links](https://like.this))
  * @returns {String}
  */
-function formatContent(content, allowExtra=false, replyStyle = false, purify=he.escape) {
+function formatContent(content, context, allowExtra=false, replyStyle=false, purify=he.escape) {
     content = purify(content)
         .replace(/\&\#x60;/g, '`') // we dont want ` to be escaped
         .replace(/```(.+?)```/gs, code => {
@@ -481,7 +482,21 @@ function formatContent(content, allowExtra=false, replyStyle = false, purify=he.
         .replace(/__(.+?)__/g, '<u>$1</u>')
         .replace(/\_(.+?)\_/g, '<em>$1</em>')
         .replace(/`(.+?)`/g, `<span class="pre pre--inline">$1</span>`)
-        .replace(/\|\|(.+?)\|\|/g, `<span class="spoiler-text spoiler-text--hidden" ${replyStyle ? '' : 'onclick="showSpoiler(event, this)"'}>$1</span>`);
+        .replace(/\|\|(.+?)\|\|/g, `<span class="spoiler-text spoiler-text--hidden" ${replyStyle ? '' : 'onclick="showSpoiler(event, this)"'}>$1</span>`)
+        .replace(/\&lt\;@!*&*([0-9]{16,20})\&gt\;/g, user => {
+            const userId = user.match(/[0-9]{16,20}/)[0];
+            const userInGuild = context.client?.users?.resolve(userId);
+
+            return `<span class="mention" title="${userInGuild?.tag ?? userId}">@${userInGuild?.username ?? "Unknown User"}</span>`
+        })
+        .replace(/\&lt\;#!*&*([0-9]{16,20})\&gt\;/g, channel => {
+            const channelId = channel.match(/[0-9]{16,20}/)[0];
+            const channelInGuild = context.guild?.channels.resolve(channelId);
+
+            const pre = channelInGuild ? channelInGuild.isText() ? '#' : channelInGuild.isVoice() ? '🔊' : '📁' : "#";
+
+            return `<span class="mention" title="${channelInGuild?.name ?? channelId}">${pre}${channelInGuild?.name ?? "Unknown Channel"}</span>`;
+        });
         
     if(allowExtra) {
         content = content
