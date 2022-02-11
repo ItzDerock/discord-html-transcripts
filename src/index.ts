@@ -1,5 +1,10 @@
-const exportHtml = require('./exporthtml');
-const discord    = require('discord.js');
+import { Channel, Client, Collection, Message } from 'discord.js';
+import exportHtml from 'exporthtml';
+
+type GenerateFromMessagesOpts = {
+    returnBuffer?: boolean,
+    fileName?: string
+} 
 
 /**
  * 
@@ -10,21 +15,27 @@ const discord    = require('discord.js');
  * @param {String} opts.fileName The name of the file. [ONLY VALID WITH `returnBuffer` SET TO FALSE]
  * @returns {discord.MessageAttachment | Buffer} 
  */
-module.exports.generateFromMessages = (messages, channel, opts={ returnBuffer: false }) => {
-    if(!opts.returnBuffer) opts.returnBuffer = false;
-    if(!opts.fileName) opts.fileName = 'transcript.html';
+module.exports.generateFromMessages = (messages: Collection<string, Message> | Message[], channel: Channel, opts: GenerateFromMessagesOpts | undefined) => {
+    if(opts && !opts.returnBuffer) opts.returnBuffer = false;
+    if(opts && !opts.fileName) opts.fileName = 'transcript.html';
    
-    // check if is array
+    // Turn collection into an array
+    if(messages instanceof Collection) {
+        messages = Array.from(messages.values());
+    }
+
+    // Check if is array
     if(!Array.isArray(messages)) {
         throw new Error('Provided messages must be either an array or a collection of Messages.');
     }
 
+    // If no messages were provided, generate empty transcript
     if(messages.length === 0) {
         return exportHtml(messages, opts);
     }
 
-    // check if array contains discord messages
-    if(!(messages[0] instanceof discord.Message)) {
+    // Check if array contains discord messages
+    if(!(messages[0] instanceof Message)) {
         throw new Error('Provided messages does not contain valid Messages.');
     }
 
