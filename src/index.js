@@ -60,7 +60,7 @@ module.exports.createTranscript = async (channel, opts={ limit: -1 }) => {
         sum_messages.push(...messages.values());
         last_id = messages.last().id;
     
-        if (messages.size != 100 || (opts.limit > 0 && sum_messages >= opts.limit)) {
+        if (messages.size != 100 || (opts.limit > 0 && sum_messages.length >= opts.limit)) {
             break;
         }
     }
