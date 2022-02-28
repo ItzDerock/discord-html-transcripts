@@ -14,6 +14,7 @@ HTML Template stolen from [DiscordChatExporter](https://github.com/Tyrrrz/Discor
 ### Example usage using the built in message fetcher.
 ```js
 const discordTranscripts = require('discord-html-transcripts');
+// or (if using typescript) import * as discordTranscripts from 'discord-html-transcripts';
 
 const channel = message.channel; // or however you get your TextChannel
 
@@ -28,6 +29,7 @@ channel.send({
 ### Or if you prefer, you can pass in your own messages.
 ```js
 const discordTranscripts = require('discord-html-transcripts');
+// or (if using typescript) import * as discordTranscripts from 'discord-html-transcripts';
 
 const messages = someWayToGetMessages(); // Must be Collection<string, Message> or Message[]
 const channel  = someWayToGetChannel();  // Used for ticket name, guild icon, and guild name
