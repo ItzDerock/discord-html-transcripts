@@ -9,10 +9,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "discord.js": "^13.5.1"
-  },
   "devDependencies": {
+    "discord.js": "^13.6.0",
     "tsc": "^2.0.4"
   }
 }

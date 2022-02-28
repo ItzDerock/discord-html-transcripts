@@ -9,7 +9,7 @@ client.on('ready', async () => {
     /** @type {discord.TextChannel} */
     const channel = await client.channels.fetch(process.env.CHANNEL!);
 
-    if(!channel || !channel.isText()) {
+    if(!channel || !channel.isText() || channel.type === 'DM') {
         console.error('Invalid channel provided.');
         process.exit(1);
     }

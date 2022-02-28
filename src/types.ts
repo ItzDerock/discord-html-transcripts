@@ -3,9 +3,7 @@ import {
     Message, 
     DMChannel,
     PartialDMChannel,
-    NewsChannel,
-    TextChannel,
-    ThreadChannel
+    TextBasedChannel
 } from 'discord.js';
 
 export type GenerateFromMessagesOpts = {
@@ -24,4 +22,4 @@ export type internalGenerateOptions = {
     fileName: string
 }
 
-export type ValidTextChannels = DMChannel | PartialDMChannel | NewsChannel | TextChannel | ThreadChannel
+export type ValidTextChannels = Exclude<TextBasedChannel, DMChannel | PartialDMChannel>;
