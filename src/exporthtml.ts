@@ -1,46 +1,36 @@
-const discord = require('discord.js');
-const jsdom   = require('jsdom');
-const fs      = require('fs');
-const path    = require('path');
-const purify  = require('dompurify');
-const static  = require('./static');
-// const escape  = require('escape-html'); // replaced by he
-const hljs    = require('highlight.js');
-const he      = require('he');
+import * as discord      from 'discord.js';
+import { JSDOM }         from 'jsdom';
+import * as fs           from 'fs';
+import * as path         from 'path';
+import * as he           from 'he';
+import hljs              from 'highlight.js';
+import * as staticTypes  from './static';
 
+import { internalGenerateOptions } from './types';
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 
 // copilot helped so much here
 // copilot smart 🧠
 
-/**
- * 
- * @param {discord.Collection<string, discord.Message> | discord.Message[]} messages
- * @param {discord.TextChannel} channel
- */
-function generateTranscript(messages, channel, opts={ returnBuffer: false, fileName: 'transcript.html' }) {
-    const dom = new jsdom.JSDOM(template.replace('{{TITLE}}', channel.name));
+function generateTranscript(messages: discord.Message[], channel: discord.TextBasedChannel, opts: internalGenerateOptions = { returnBuffer: false, fileName: 'transcript.html' }) {
+    if(channel.type === "DM")
+        throw new Error("Cannot operate on DM channels");
+
+    const dom = new JSDOM(template.replace('{{TITLE}}', channel.name));
     const document = dom.window.document;
 
     // const xss = new XSS.FilterXSS({
-    //     whiteList: static.xssSettings
+    //     whiteList: staticTypes.xssSettings
     // }).process;
 
-    // Downside of DOMPurify is that it straight up removes the elements
-    // it doesn't escape it
-    // not good for use for stuff like message content.
-    const DOMPurify = purify(dom.window);
-    DOMPurify.setConfig({
-        ALLOWED_TAGS: []
-    });
-    const xss = DOMPurify.sanitize;
-    
     // Basic Info (header)
-    document.getElementsByClassName('preamble__guild-icon')[0].src = channel.guild.iconURL();
-    document.getElementById('guildname').textContent = channel.guild.name;
-    document.getElementById('ticketname').textContent = channel.name;
+    const guildIcon = document.getElementsByClassName('preamble__guild-icon')[0] as HTMLImageElement;
+    guildIcon.src = channel.guild.iconURL() ?? staticTypes.defaultPFP;
 
-    const transcript = document.getElementById('chatlog');
+    document.getElementById('guildname')!.textContent = channel.guild.name;
+    document.getElementById('ticketname')!.textContent = channel.name;
+
+    const transcript = document.getElementById('chatlog')!;
 
     // Messages
     for(const message of (Array.from(messages.values())).sort((a, b) => a.createdTimestamp - b.createdTimestamp)) {
@@ -58,12 +48,12 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
             const reference = document.createElement('div');
             reference.classList.add('chatlog__reference');
 
-            const referencedMessage = messages instanceof discord.Collection ? messages.get(message.reference.messageId) : messages.find(m => m.id === message.reference.messageId);
-            const author = referencedMessage?.author ?? static.DummyUser;
+            const referencedMessage = messages instanceof discord.Collection ? messages.get(message.reference.messageId) : messages.find(m => m.id === message.reference!.messageId);
+            const author = referencedMessage?.author ?? staticTypes.DummyUser;
 
             reference.innerHTML = 
-            `<img class="chatlog__reference-avatar" src="${author.avatarURL() ?? static.defaultPFP}" alt="Avatar" loading="lazy">
-            <span class="chatlog__reference-name" title="${author.username.replace(/"/g, '')}" style="color: ${author.hexAccentColor ?? '#FFFFFF'}">${author.bot ? `<span class="chatlog__bot-tag">BOT</span> ${xss(author.username)}` : xss(author.username)}</span>
+            `<img class="chatlog__reference-avatar" src="${author.avatarURL() ?? staticTypes.defaultPFP}" alt="Avatar" loading="lazy">
+            <span class="chatlog__reference-name" title="${author.username.replace(/"/g, '')}" style="color: ${author.hexAccentColor ?? '#FFFFFF'}">${author.bot ? `<span class="chatlog__bot-tag">BOT</span> ${he.escape(author.username)}` : he.escape(author.username)}</span>
             <div class="chatlog__reference-content">
                 <span class="chatlog__reference-link" onclick="scrollToMessage(event, '${message.reference.messageId}')">
                         ${referencedMessage ? (referencedMessage?.content ? `${formatContent(referencedMessage?.content, channel, false, true)}...` : '<em>Click to see attachment</em>') : '<em>Original message was deleted.</em>'}
@@ -75,14 +65,14 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
         }
 
         // message author pfp
-        const author = message.author ?? static.DummyUser;
+        const author = message.author ?? staticTypes.DummyUser;
         
         const authorElement = document.createElement('div');
         authorElement.classList.add('chatlog__author-avatar-container');
 
         const authorAvatar = document.createElement('img');
         authorAvatar.classList.add('chatlog__author-avatar');
-        authorAvatar.src = author.avatarURL() ?? static.defaultPFP;
+        authorAvatar.src = author.avatarURL() ?? staticTypes.defaultPFP;
         authorAvatar.alt = 'Avatar';
         authorAvatar.loading = 'lazy';
 
@@ -96,7 +86,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
         // message author name
         const authorName = document.createElement('span');
         authorName.classList.add('chatlog__author-name');
-        authorName.title = xss(author.tag);
+        authorName.title = he.escape(author.tag);
         authorName.textContent = author.username;
         authorName.setAttribute('data-user-id', author.id);
 
@@ -141,11 +131,11 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
 
         // message attachments
         if(message.attachments && message.attachments.size > 0) {
-            for(const attachment of message.attachments.values()) {
+            for(const attachment of Array.from(message.attachments.values())) {
                 const attachmentsDiv = document.createElement('div');
                 attachmentsDiv.classList.add('chatlog__attachment');
 
-                const attachmentType = attachment.name.split('.').pop();
+                const attachmentType = (attachment.name ?? "unknown.png").split('.').pop()!.toLowerCase();
 
                 if(['png', 'jpg', 'jpeg', 'gif'].includes(attachmentType)) {
                     const attachmentLink = document.createElement('a');
@@ -163,7 +153,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
                     const attachmentVideo = document.createElement('video');
                     attachmentVideo.classList.add('chatlog__attachment-media');
                     attachmentVideo.src = attachment.proxyURL ?? attachment.url;
-                    attachmentVideo.alt = 'Video attachment';
+                    // attachmentVideo.alt = 'Video attachment';
                     attachmentVideo.controls = true;
                     attachmentVideo.title = `Video: ${attachment.name} (${formatBytes(attachment.size)})`;
 
@@ -172,7 +162,7 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
                     const attachmentAudio = document.createElement('audio');
                     attachmentAudio.classList.add('chatlog__attachment-media');
                     attachmentAudio.src = attachment.proxyURL ?? attachment.url;
-                    attachmentAudio.alt = 'Audio attachment';
+                    // attachmentAudio.alt = 'Audio attachment';
                     attachmentAudio.controls = true;
                     attachmentAudio.title = `Audio: ${attachment.name} (${formatBytes(attachment.size)})`;
 
@@ -435,30 +425,23 @@ function generateTranscript(messages, channel, opts={ returnBuffer: false, fileN
     return opts.returnBuffer ? Buffer.from(dom.serialize()) : new discord.MessageAttachment(Buffer.from(dom.serialize()), opts.fileName ?? 'transcript.html');
 }
 
-const languages = hljs.default.listLanguages();
+const languages = hljs.listLanguages();
 
-/**
- * 
- * @param {String} content 
- * @param {discord.TextChannel} context
- * @param {Boolean} allowExtra Stuff that only webhooks can send or things that can only appear in a embed description (such as [embeded links](https://like.this))
- * @returns {String}
- */
-function formatContent(content, context, allowExtra=false, replyStyle=false, purify=he.escape) {
+function formatContent(content: string, context: discord.NewsChannel | discord.TextChannel | discord.ThreadChannel, allowExtra=false, replyStyle=false, purify=he.escape) {
     content = purify(content)
         .replace(/\&\#x60;/g, '`') // we dont want ` to be escaped
-        .replace(/```(.+?)```/gs, code => {
+        .replace(/```(.+?)```/gs, (code: string) => {
             if (!replyStyle) {
               const split = code.slice(3, -3).split('\n');
-              let language = split.shift().trim().toLowerCase();
+              let language = (split.shift() ?? "").trim().toLowerCase();
 
-              if (static.LanguageAliases[language])
-                language = static.LanguageAliases[language];
+              if (language in staticTypes.LanguageAliases)
+                language = staticTypes.LanguageAliases[language as (keyof typeof staticTypes.LanguageAliases)];
 
               if (languages.includes(language)) {
                 const joined = he.unescape(split.join("\n"));
                 return `<div class="pre pre--multiline language-${language}">${
-                  hljs.default.highlight(joined, {
+                  hljs.highlight(joined, {
                     language,
                   }).value
                 }</div>`;
@@ -483,15 +466,15 @@ function formatContent(content, context, allowExtra=false, replyStyle=false, pur
         .replace(/\_(.+?)\_/g, '<em>$1</em>')
         .replace(/`(.+?)`/g, `<span class="pre pre--inline">$1</span>`)
         .replace(/\|\|(.+?)\|\|/g, `<span class="spoiler-text spoiler-text--hidden" ${replyStyle ? '' : 'onclick="showSpoiler(event, this)"'}>$1</span>`)
-        .replace(/\&lt\;@!*&*([0-9]{16,20})\&gt\;/g, user => {
-            const userId = user.match(/[0-9]{16,20}/)[0];
+        .replace(/\&lt\;@!*&*([0-9]{16,20})\&gt\;/g, (user: string) => {
+            const userId = (user.match(/[0-9]{16,20}/) ?? [""])[0];
             const userInGuild = context.client?.users?.resolve(userId);
 
             return `<span class="mention" title="${userInGuild?.tag ?? userId}">@${userInGuild?.username ?? "Unknown User"}</span>`
         })
-        .replace(/\&lt\;#!*&*([0-9]{16,20})\&gt\;/g, channel => {
-            const channelId = channel.match(/[0-9]{16,20}/)[0];
-            const channelInGuild = context.guild?.channels.resolve(channelId);
+        .replace(/\&lt\;#!*&*([0-9]{16,20})\&gt\;/g, (channel: string) => {
+            const channelId = (channel.match(/[0-9]{16,20}/) ?? [""])[0];
+            const channelInGuild = context.guild.channels.resolve(channelId);
 
             const pre = channelInGuild ? channelInGuild.isText() ? '#' : channelInGuild.isVoice() ? '🔊' : '📁' : "#";
 
@@ -506,7 +489,7 @@ function formatContent(content, context, allowExtra=false, replyStyle=false, pur
     return replyStyle ? content.replace(/(?:\r\n|\r|\n)/g, ' ')  : content.replace(/(?:\r\n|\r|\n)/g, '<br />'); // do this last
 }
 
-function formatBytes(bytes, decimals = 2) {
+function formatBytes(bytes: number, decimals = 2) {
     if (bytes === 0) return '0 Bytes';
 
     const k = 1024;
@@ -518,4 +501,4 @@ function formatBytes(bytes, decimals = 2) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-module.exports = generateTranscript;
+export default generateTranscript;

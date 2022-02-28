@@ -1,12 +1,16 @@
 {
   "name": "discord-html-transcripts",
-  "version": "1.2.4",
+  "version": "2.2.4",
   "description": "A nicely formatted html transcript generator for discord.js.",
   "main": "src/index.js",
   "homepage": "https://github.com/ItzDerock/discord-html-transcripts",
   "types": "./index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "prepublish": "npm run build",
+    "test:commonjs": "node ./tests/generate.js",
+    "test:typescript": "ts-node ./tests/generate.ts"
   },
   "repository": {
     "type": "git",
@@ -21,11 +25,20 @@
   ],
   "author": "Derock <derock@derock.dev>",
   "license": "GNU GPLv3",
+  "files": [
+    "dist/**/*"
+  ],
   "dependencies": {
     "discord.js": "^13.6.0",
-    "dompurify": "^2.3.5",
     "he": "^1.2.0",
     "highlight.js": "^11.4.0",
     "jsdom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/dompurify": "^2.3.3",
+    "@types/he": "^1.1.2",
+    "@types/jsdom": "^16.2.14",
+    "ts-node": "^10.5.0",
+    "typescript": "^4.5.5"
   }
 }
