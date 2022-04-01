@@ -122,7 +122,13 @@ function generateTranscript(messages: discord.Message[], channel: discord.TextBa
 
             const messageContentContentMarkdownSpan = document.createElement('span');
             messageContentContentMarkdownSpan.classList.add('preserve-whitespace');
-            messageContentContentMarkdownSpan.innerHTML = formatContent(message.content, channel, message.webhookId !== null);
+            messageContentContentMarkdownSpan.innerHTML = formatContent(
+                message.content
+                    .replace(/<a:(.+):(\d+)>/g, (f, b, o) => { return `<img src="https://cdn.discordapp.com/emojis/${o}.gif?size=96&quality=lossless" width="${(/^<a:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}" height="${(/^<a:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}">`; })
+                    .replace(/<:(.+):(\d+)>/g, (f, b, o) => { return `<img src="https://cdn.discordapp.com/emojis/${o}.webp?size=96&quality=lossless" width="${(/^<:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}" height="${(/^<:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}">`; }),
+                channel,
+                message.webhookId !== null
+            );
 
             messageContentContentMarkdown.appendChild(messageContentContentMarkdownSpan);
             messageContentContent.appendChild(messageContentContentMarkdown);
