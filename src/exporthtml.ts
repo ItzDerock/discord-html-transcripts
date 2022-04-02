@@ -123,9 +123,7 @@ function generateTranscript(messages: discord.Message[], channel: discord.TextBa
             const messageContentContentMarkdownSpan = document.createElement('span');
             messageContentContentMarkdownSpan.classList.add('preserve-whitespace');
             messageContentContentMarkdownSpan.innerHTML = formatContent(
-                message.content
-                    .replace(/<a:(.+):(\d+)>/g, (f, b, o) => { return `<img src="https://cdn.discordapp.com/emojis/${o}.gif?size=96&quality=lossless" width="${(/^<a:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}" height="${(/^<a:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}">`; })
-                    .replace(/<:(.+):(\d+)>/g, (f, b, o) => { return `<img src="https://cdn.discordapp.com/emojis/${o}.webp?size=96&quality=lossless" width="${(/^<:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}" height="${(/^<:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}">`; }),
+                message.content,
                 channel,
                 message.webhookId !== null
             );
@@ -304,9 +302,7 @@ function generateTranscript(messages: discord.Message[], channel: discord.TextBa
                     const embedDescriptionMarkdown = document.createElement('div');
                     embedDescriptionMarkdown.classList.add('markdown', 'preserve-whitespace');
                     embedDescriptionMarkdown.innerHTML = formatContent(
-                        embed.description
-                            .replace(/<a:(.+):(\d+)>/g, (f, b, o) => { return `<img src="https://cdn.discordapp.com/emojis/${o}.gif?size=96&quality=lossless" width="${(/^<a:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}" height="${(/^<a:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}">`; })
-                            .replace(/<:(.+):(\d+)>/g, (f, b, o) => { return `<img src="https://cdn.discordapp.com/emojis/${o}.webp?size=96&quality=lossless" width="${(/^<:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}" height="${(/^<:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}">`; }),
+                        embed.description,
                         channel,
                         true
                     );
@@ -345,9 +341,7 @@ function generateTranscript(messages: discord.Message[], channel: discord.TextBa
                         const embedFieldValueMarkdown = document.createElement('div');
                         embedFieldValueMarkdown.classList.add('markdown', 'preserve-whitespace');
                         embedFieldValueMarkdown.innerHTML = formatContent(
-                            field.value
-                                .replace(/<a:(.+):(\d+)>/g, (f, b, o) => { return `<img src="https://cdn.discordapp.com/emojis/${o}.gif?size=96&quality=lossless" width="${(/^<a:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}" height="${(/^<a:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}">`; })
-                                .replace(/<:(.+):(\d+)>/g, (f, b, o) => { return `<img src="https://cdn.discordapp.com/emojis/${o}.webp?size=96&quality=lossless" width="${(/^<:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}" height="${(/^<:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}">`; }),
+                            field.value,
                             channel,
                             true
                         );
@@ -477,6 +471,8 @@ function formatContent(content: string, context: discord.NewsChannel | discord.T
                 return `<span class="pre pre--inline">${joined.substring(0, 42)}</span>`;
             }
         })
+        .replace(/<a:(.+):(\d+)>/g, (f, b, o) => { return `<img src="https://cdn.discordapp.com/emojis/${o}.gif?size=96&quality=lossless" width="${(/^<a:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}" height="${(/^<a:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}">`; })
+        .replace(/<:(.+):(\d+)>/g, (f, b, o) => { return `<img src="https://cdn.discordapp.com/emojis/${o}.webp?size=96&quality=lossless" width="${(/^<:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}" height="${(/^<:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}">`; })
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
         .replace(/~~(.+?)~~/g, '<s>$1</s>')
