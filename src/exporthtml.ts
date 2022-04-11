@@ -122,7 +122,11 @@ function generateTranscript(messages: discord.Message[], channel: discord.TextBa
 
             const messageContentContentMarkdownSpan = document.createElement('span');
             messageContentContentMarkdownSpan.classList.add('preserve-whitespace');
-            messageContentContentMarkdownSpan.innerHTML = formatContent(message.content, channel, message.webhookId !== null);
+            messageContentContentMarkdownSpan.innerHTML = formatContent(
+                message.content,
+                channel,
+                message.webhookId !== null
+            );
 
             messageContentContentMarkdown.appendChild(messageContentContentMarkdownSpan);
             messageContentContent.appendChild(messageContentContentMarkdown);
@@ -297,7 +301,11 @@ function generateTranscript(messages: discord.Message[], channel: discord.TextBa
 
                     const embedDescriptionMarkdown = document.createElement('div');
                     embedDescriptionMarkdown.classList.add('markdown', 'preserve-whitespace');
-                    embedDescriptionMarkdown.innerHTML = formatContent(embed.description, channel, true);
+                    embedDescriptionMarkdown.innerHTML = formatContent(
+                        embed.description,
+                        channel,
+                        true
+                    );
 
                     embedDescription.appendChild(embedDescriptionMarkdown);
                     embedText.appendChild(embedDescription);
@@ -332,7 +340,11 @@ function generateTranscript(messages: discord.Message[], channel: discord.TextBa
 
                         const embedFieldValueMarkdown = document.createElement('div');
                         embedFieldValueMarkdown.classList.add('markdown', 'preserve-whitespace');
-                        embedFieldValueMarkdown.innerHTML = formatContent(field.value, channel, true);
+                        embedFieldValueMarkdown.innerHTML = formatContent(
+                            field.value,
+                            channel,
+                            true
+                        );
 
                         embedFieldValue.appendChild(embedFieldValueMarkdown);
                         embedField.appendChild(embedFieldValue);
@@ -428,6 +440,10 @@ function generateTranscript(messages: discord.Message[], channel: discord.TextBa
 const languages = hljs.listLanguages();
 
 function formatContent(content: string, context: discord.NewsChannel | discord.TextChannel | discord.ThreadChannel, allowExtra=false, replyStyle=false, purify=he.escape) {
+    const emojiClass = // /^(<(a?):(.+?):(\d+?)>([ \t]+?)?){0,27}$/.test(content) < something is wrong with this regex - I would prefer to use this
+        Array.from(content.matchAll(/(<(a?):(.+?):(\d+?)>([ \t]+?)?)/g)).length <= 27
+        ? `emoji--large` : `emoji--small`;
+    
     content = purify(content)
         .replace(/\&\#x60;/g, '`') // we dont want ` to be escaped
         .replace(/```(.+?)```/gs, (code: string) => {
@@ -459,6 +475,8 @@ function formatContent(content: string, context: discord.NewsChannel | discord.T
                 return `<span class="pre pre--inline">${joined.substring(0, 42)}</span>`;
             }
         })
+        .replace(/\&lt\;a:(.+?):(\d+?)\&gt\;/g, (_content, _name, id) => `<img src="https://cdn.discordapp.com/emojis/${id}.gif?size=96" class="emoji ${emojiClass}">`)
+        .replace(/\&lt\;:(.+?):(\d+?)\&gt\;/g, (_content, _name, id) => `<img src="https://cdn.discordapp.com/emojis/${id}.webp?size=96" class="emoji ${emojiClass}">`)
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
         .replace(/~~(.+?)~~/g, '<s>$1</s>')
