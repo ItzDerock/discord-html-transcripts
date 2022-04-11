@@ -440,8 +440,7 @@ function generateTranscript(messages: discord.Message[], channel: discord.TextBa
 const languages = hljs.listLanguages();
 
 function formatContent(content: string, context: discord.NewsChannel | discord.TextChannel | discord.ThreadChannel, allowExtra=false, replyStyle=false, purify=he.escape) {
-    const emojiClass = // /^(<(a?):(.+?):(\d+?)>([ \t]+?)?){0,27}$/.test(content) < something is wrong with this regex - I would prefer to use this
-        Array.from(content.matchAll(/(<(a?):(.+?):(\d+?)>([ \t]+?)?)/g)).length <= 27
+    const emojiClass = /^(<(a?):([^:]+?):(\d+?)>([ \t]+?)?){0,27}$/.test(content)
         ? `emoji--large` : `emoji--small`;
     
     content = purify(content)
