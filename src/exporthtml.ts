@@ -440,6 +440,10 @@ function generateTranscript(messages: discord.Message[], channel: discord.TextBa
 const languages = hljs.listLanguages();
 
 function formatContent(content: string, context: discord.NewsChannel | discord.TextChannel | discord.ThreadChannel, allowExtra=false, replyStyle=false, purify=he.escape) {
+    const emojiClass = // /^(<(a?):(.+?):(\d+?)>([ \t]+?)?){0,27}$/.test(content) < something is wrong with this regex - I would prefer to use this
+        Array.from(content.matchAll(/(<(a?):(.+?):(\d+?)>([ \t]+?)?)/g)).length <= 27
+        ? `emoji--large` : `emoji--small`;
+    
     content = purify(content)
         .replace(/\&\#x60;/g, '`') // we dont want ` to be escaped
         .replace(/```(.+?)```/gs, (code: string) => {
@@ -471,8 +475,8 @@ function formatContent(content: string, context: discord.NewsChannel | discord.T
                 return `<span class="pre pre--inline">${joined.substring(0, 42)}</span>`;
             }
         })
-        .replace(/<a:(.+):(\d+)>/g, (f, b, o) => { return `<img src="https://cdn.discordapp.com/emojis/${o}.gif?size=96&quality=lossless" width="${(/^<a:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}" height="${(/^<a:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}">`; })
-        .replace(/<:(.+):(\d+)>/g, (f, b, o) => { return `<img src="https://cdn.discordapp.com/emojis/${o}.webp?size=96&quality=lossless" width="${(/^<:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}" height="${(/^<:(.+):(\d+)>$/).test(text) ? '48px' : '22px'}">`; })
+        .replace(/\&lt\;a:(.+?):(\d+?)\&gt\;/g, (_content, _name, id) => `<img src="https://cdn.discordapp.com/emojis/${id}.gif?size=96" class="emoji ${emojiClass}">`)
+        .replace(/\&lt\;:(.+?):(\d+?)\&gt\;/g, (_content, _name, id) => `<img src="https://cdn.discordapp.com/emojis/${id}.webp?size=96" class="emoji ${emojiClass}">`)
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
         .replace(/~~(.+?)~~/g, '<s>$1</s>')
