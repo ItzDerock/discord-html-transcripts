@@ -52,7 +52,7 @@ function generateTranscript(messages: discord.Message[], channel: discord.TextBa
             const author = referencedMessage?.author ?? staticTypes.DummyUser;
 
             reference.innerHTML = 
-            `<img class="chatlog__reference-avatar" src="${author.avatarURL() ?? staticTypes.defaultPFP}" alt="Avatar" loading="lazy">
+            `<img class="chatlog__reference-avatar" src="${author.avatarURL({dynamic : true}) ?? staticTypes.defaultPFP}" alt="Avatar" loading="lazy">
             <span class="chatlog__reference-name" title="${author.username.replace(/"/g, '')}" style="color: ${author.hexAccentColor ?? '#FFFFFF'}">${author.bot ? `<span class="chatlog__bot-tag">BOT</span> ${he.escape(author.username)}` : he.escape(author.username)}</span>
             <div class="chatlog__reference-content">
                 <span class="chatlog__reference-link" onclick="scrollToMessage(event, '${message.reference.messageId}')">
@@ -72,7 +72,7 @@ function generateTranscript(messages: discord.Message[], channel: discord.TextBa
 
         const authorAvatar = document.createElement('img');
         authorAvatar.classList.add('chatlog__author-avatar');
-        authorAvatar.src = author.avatarURL() ?? staticTypes.defaultPFP;
+        authorAvatar.src = author.avatarURL({dynamic : true}) ?? staticTypes.defaultPFP;
         authorAvatar.alt = 'Avatar';
         authorAvatar.loading = 'lazy';
 
