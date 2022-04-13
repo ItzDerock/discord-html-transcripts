@@ -619,6 +619,13 @@
     </script>
 
     <script>
+
+        window.onload = () => {
+            let element = document.documentElement;
+            let bottom = element.scrollHeight - element.clientHeight;
+            window.scroll(0, bottom);
+        }
+
         function scrollToMessage(event, id) {
             var element = document.getElementById('message-' + id);
 
