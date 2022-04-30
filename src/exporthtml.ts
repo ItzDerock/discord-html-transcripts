@@ -86,6 +86,7 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
         authorName.title = he.escape(author.tag);
         authorName.textContent = author.username;
         authorName.setAttribute('data-user-id', author.id);
+        authorName.style.color = message.member?.displayHexColor ?? `#ffffff`;
 
         content.appendChild(authorName);
 
