@@ -49,8 +49,9 @@ Both methods of generating a transcript allow for an option object as the last p
 ```js
 const attachment = await createTranscript(channel, {
     limit: -1, // Max amount of messages to fetch.
-    returnBuffer: false, // Return a buffer instead of a MessageAttachment 
-    fileName: 'transcript.html' // Only valid with returnBuffer false. Name of attachment. 
+    returnType: 'attachment', // Valid options: 'buffer' | 'string' | 'attachment' Default: 'attachment'
+    fileName: 'transcript.html', // Only valid with returnBuffer false. Name of attachment. 
+    minify: true // Minify the result? Uses html-minifier
 });
 ```
 
@@ -58,6 +59,7 @@ const attachment = await createTranscript(channel, {
 ```js
 const attachment = await generateFromMessages(messages, channel, {
     returnBuffer: false, // Return a buffer instead of a MessageAttachment 
-    fileName: 'transcript.html' // Only valid with returnBuffer false. Name of attachment. 
+    returnType: 'attachment', // Valid options: 'buffer' | 'string' | 'attachment' Default: 'attachment'
+    minify: true // Minify the result? Uses html-minifier
 });
 ```
