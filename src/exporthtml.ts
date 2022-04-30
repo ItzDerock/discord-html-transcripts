@@ -93,7 +93,7 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
         if(author.bot) {
             const botTag = document.createElement('span');
             botTag.classList.add('chatlog__bot-tag');
-            botTag.textContent = 'BOT';
+            botTag.textContent = (author.flags?.has("VERIFIED_BOT") ? '✔ ' : '') + 'BOT';
             content.appendChild(botTag);
         }
 
