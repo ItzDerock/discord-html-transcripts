@@ -6,22 +6,18 @@ import * as he           from 'he';
 import hljs              from 'highlight.js';
 import * as staticTypes  from './static';
 
-import { internalGenerateOptions } from './types';
+import { internalGenerateOptions, ObjectType, ReturnTypes } from './types';
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 
 // copilot helped so much here
 // copilot smart 🧠
 
-function generateTranscript(messages: discord.Message[], channel: discord.TextBasedChannel, opts: internalGenerateOptions = { returnBuffer: false, fileName: 'transcript.html' }) {
+function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], channel: discord.TextBasedChannel, opts: internalGenerateOptions = { returnType: 'buffer' as T, fileName: 'transcript.html' }): ObjectType<T> {
     if(channel.type === "DM")
         throw new Error("Cannot operate on DM channels");
 
     const dom = new JSDOM(template.replace('{{TITLE}}', channel.name));
     const document = dom.window.document;
-
-    // const xss = new XSS.FilterXSS({
-    //     whiteList: staticTypes.xssSettings
-    // }).process;
 
     // Basic Info (header)
     const guildIcon = document.getElementsByClassName('preamble__guild-icon')[0] as HTMLImageElement;
@@ -434,7 +430,19 @@ function generateTranscript(messages: discord.Message[], channel: discord.TextBa
         transcript.appendChild(messageGroup);
     }
 
-    return opts.returnBuffer ? Buffer.from(dom.serialize()) : new discord.MessageAttachment(Buffer.from(dom.serialize()), opts.fileName ?? 'transcript.html');
+    var serialized = dom.serialize();
+
+    if(opts.returnType === "string")
+        return serialized as ObjectType<T>;
+
+    if(opts.returnType === "buffer")
+        return Buffer.from(serialized) as ObjectType<T>;
+
+    if(opts.returnType === "attachment")
+        return new discord.MessageAttachment(Buffer.from(dom.serialize()), opts.fileName ?? 'transcript.html') as ObjectType<T>;
+
+    // should never get here.
+    return serialized as ObjectType<T>;
 }
 
 const languages = hljs.listLanguages();

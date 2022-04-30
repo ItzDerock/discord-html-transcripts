@@ -5,16 +5,16 @@ import {
     GenerateSource,
     GenerateFromMessagesOpts,
     CreateTranscriptOptions, 
-    internalGenerateOptions,
     ValidTextChannels
 } from './types';
 
 export const generateFromMessages = (messages: GenerateSource, channel: ValidTextChannels, opts?: GenerateFromMessagesOpts) => {
     var options = opts || {};
 
-    if(!('returnBuffer' in options)) options.returnBuffer = false;
-    if(!('fileName'     in options)) options.fileName     = `transcript-${channel.id}.html`;
-   
+    if(('returnBuffer' in options)) options.returnType = options.returnType ?? (options.returnBuffer ? 'buffer' : 'attachment')
+    if(!('fileName'    in options)) options.fileName   = `transcript-${channel.id}.html`;
+    if(!('returnType'  in options)) options.returnType = 'attachment';
+
     // Turn collection into an array
     if(messages instanceof Collection) {
         messages = Array.from(messages.values());
@@ -27,7 +27,7 @@ export const generateFromMessages = (messages: GenerateSource, channel: ValidTex
 
     // If no messages were provided, generate empty transcript
     if(messages.length === 0) {
-        return exportHtml(messages, channel, opts as internalGenerateOptions);
+        return exportHtml(messages, channel, options);
     }
 
     // Check if array contains discord messages
@@ -35,15 +35,16 @@ export const generateFromMessages = (messages: GenerateSource, channel: ValidTex
         throw new Error('Provided messages does not contain valid Messages.');
     }
 
-    return exportHtml(messages, channel, opts as internalGenerateOptions);
+    return exportHtml(messages, channel, options);
 }
 
 export const createTranscript = async (channel: ValidTextChannels, opts?: CreateTranscriptOptions) => {
     var options = opts || {};
 
-    if(!('returnBuffer' in options)) options.returnBuffer = false;
-    if(!('fileName'     in options)) options.fileName     = 'transcript.html';
-    if(!('limit'        in options)) options.limit        = -1;
+    if(('returnBuffer' in options))  options.returnType = options.returnType ?? (options.returnBuffer ? 'buffer' : 'attachment')
+    if(!('fileName'    in options))  options.fileName   = `transcript-${channel.id}.html`;
+    if(!('returnType'  in options))  options.returnType = 'attachment';
+    if(!('limit'       in options))  options.limit      = -1;
 
     if(!channel || !channel.isText || !(channel.isText())) {
         throw new Error('Provided channel must be a valid channel.');
@@ -60,5 +61,5 @@ export const createTranscript = async (channel: ValidTextChannels, opts?: Create
         if (messages.size != 100 || ((options.limit! > 0) && sum_messages.length >= options.limit!)) break;
     }
 
-    return exportHtml(sum_messages, channel, opts as internalGenerateOptions);
+    return exportHtml(sum_messages, channel, options);
 }

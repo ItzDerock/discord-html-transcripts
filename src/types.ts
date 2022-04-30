@@ -3,11 +3,24 @@ import {
     Message, 
     DMChannel,
     PartialDMChannel,
-    TextBasedChannel
+    TextBasedChannel,
+    MessageAttachment
 } from 'discord.js';
 
+export type ReturnTypes = 'buffer' | 'string' | 'attachment';
+
+export type ObjectType<T> = 
+    T extends "buffer"     ? Buffer :
+    T extends "string"     ? string :
+    T extends "attachment" ? MessageAttachment :
+    MessageAttachment;
+
 export type GenerateFromMessagesOpts = {
+    /**
+     * @deprecated Please use returnType instead
+     */
     returnBuffer?: boolean,
+    returnType?: ReturnTypes
     fileName?: string
 }
 
@@ -18,8 +31,9 @@ export type CreateTranscriptOptions = GenerateFromMessagesOpts & {
 }
 
 export type internalGenerateOptions = {
-    returnBuffer: boolean,
-    fileName: string
+    returnBuffer?: boolean,
+    returnType?: ReturnTypes
+    fileName?: string
 }
 
 export type ValidTextChannels = Exclude<TextBasedChannel, DMChannel | PartialDMChannel>;
