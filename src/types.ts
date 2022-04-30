@@ -22,6 +22,7 @@ export type GenerateFromMessagesOpts = {
     returnBuffer?: boolean,
     returnType?: ReturnTypes
     fileName?: string
+    minify?: boolean
 }
 
 export type GenerateSource = Collection<string, Message> | Message[];
@@ -34,6 +35,7 @@ export type internalGenerateOptions = {
     returnBuffer?: boolean,
     returnType?: ReturnTypes
     fileName?: string
+    minify?: boolean
 }
 
 export type ValidTextChannels = Exclude<TextBasedChannel, DMChannel | PartialDMChannel>;

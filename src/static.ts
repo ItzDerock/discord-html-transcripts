@@ -1,3 +1,5 @@
+import { Options } from "html-minifier";
+
 export const defaultPFP = 'https://cdn.discordapp.com/embed/avatars/0.png';
 
 export const DummyUser = {
@@ -21,4 +23,26 @@ export default {
     defaultPFP,
     DummyUser,
     LanguageAliases
+}
+
+export const MINIFY_OPTIONS: Options = {
+    caseSensitive: false,
+    collapseBooleanAttributes: true,
+    collapseInlineTagWhitespace: true,
+    collapseWhitespace: true, /* if spacing is broken this may be the issue */
+    conservativeCollapse: true,
+    keepClosingSlash: true,
+    minifyCSS: true,
+    minifyJS: true,
+    minifyURLs: true,
+    preserveLineBreaks: false, /* jsdom already removes linebreaks */
+    removeComments: true,
+    removeAttributeQuotes: true,
+    removeEmptyAttributes: true,
+    removeOptionalTags: true,
+    removeRedundantAttributes: true,
+    removeScriptTypeAttributes: true,
+    removeStyleLinkTypeAttributes: true,
+    removeTagWhitespace: true,
+    useShortDoctype: true
 }

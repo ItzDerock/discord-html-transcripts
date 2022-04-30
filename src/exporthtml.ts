@@ -5,6 +5,7 @@ import * as path         from 'path';
 import * as he           from 'he';
 import hljs              from 'highlight.js';
 import * as staticTypes  from './static';
+import { minify }        from 'html-minifier';
 
 import { internalGenerateOptions, ObjectType, ReturnTypes } from './types';
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
@@ -431,6 +432,7 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
     }
 
     var serialized = dom.serialize();
+    if(opts.minify) serialized = minify(serialized, staticTypes.MINIFY_OPTIONS)
 
     if(opts.returnType === "string")
         return serialized as ObjectType<T>;
@@ -439,7 +441,7 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
         return Buffer.from(serialized) as ObjectType<T>;
 
     if(opts.returnType === "attachment")
-        return new discord.MessageAttachment(Buffer.from(dom.serialize()), opts.fileName ?? 'transcript.html') as ObjectType<T>;
+        return new discord.MessageAttachment(Buffer.from(serialized), opts.fileName ?? 'transcript.html') as ObjectType<T>;
 
     // should never get here.
     return serialized as ObjectType<T>;

@@ -14,7 +14,7 @@ client.on('ready', async () => {
         process.exit(1);
     }
 
-    const attachment = await createTranscript(channel);
+    const attachment = await createTranscript(channel, { minify: true });
 
     await channel.send({
         files: [attachment]
