@@ -126,7 +126,7 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
 
         // message content
         if(message.content) {
-            if (message.content.startsWith('http://') || message.content.startsWith('https://')) {
+            if (validateURL(message.content) == true) {
                 var link = document.createElement('a');
                 link.classList.add('chatlog__content');
                 link.href = message.content;
@@ -550,6 +550,16 @@ function formatBytes(bytes: number, decimals = 2) {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+function validateURL(url: string) {
+    var regex = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
+
+    if (!regex.test(url)) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 export default generateTranscript;
