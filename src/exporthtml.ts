@@ -10,6 +10,15 @@ import { minify }        from 'html-minifier';
 import { internalGenerateOptions, ObjectType, ReturnTypes } from './types';
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 
+let options = {
+	weekday: 'long',
+	year: 'numeric',
+	month: 'short',
+	day: 'numeric',
+	hour: '2-digit',
+	minute: '2-digit',
+};
+
 // copilot helped so much here
 // copilot smart 🧠
 
@@ -100,7 +109,13 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
         // timestamp
         const timestamp = document.createElement('span');
         timestamp.classList.add('chatlog__timestamp');
-        timestamp.textContent = message.createdAt.toLocaleString();
+        const yyyy = message.createdAt.getFullYear();
+        let mm = message.createdAt.getMonth() + 1; // Months start at 0!
+        let dd = message.createdAt.getDate();
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+        timestamp.textContent = `${dd}/${mm}/${yyyy}`;
+        timestamp.title = he.escape(message.createdAt.toLocaleTimeString("en-us", options))
 
         content.appendChild(timestamp);
 
@@ -108,7 +123,6 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
         messageContent.classList.add('chatlog__message');
         messageContent.setAttribute('data-message-id', message.id);
         messageContent.setAttribute('id', `message-${message.id}`);
-        messageContent.title = `Message sent: ${message.createdAt.toLocaleString()}`;
 
         // message content
         if(message.content) {

@@ -38,7 +38,7 @@
         }
 
         body {
-            background-color: #36393e;
+            background-color: #36393f;
             color: #dcddde;
             font-family: "Whitney", "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-size: 17px;
@@ -168,6 +168,31 @@
         .preamble__guild-icon {
             max-width: 88px;
             max-height: 88px;
+            animation: border-radius-animation-out 0.25s ease-in-out;
+            border-radius: 50%;
+        }
+
+        .preamble__guild-icon:hover {
+            animation: border-radius-animation-in 0.25s ease-in-out;
+            border-radius: 25%;
+        }
+
+        @keyframes border-radius-animation-in {
+            0% {
+                border-radius: 50%;
+            }
+            100% {
+                border-radius: 25%;
+            }
+        }
+
+        @keyframes border-radius-animation-out {
+            0% {
+                border-radius: 25%;
+            }
+            100% {
+                border-radius: 50%;
+            }
         }
 
         .preamble__entries-container {
@@ -180,8 +205,19 @@
             color: #ffffff;
         }
 
+        .preamble__entry#guildname {
+            font-weight: bold;
+        }
+
         .preamble__entry--small {
             font-size: 1em;
+        }
+
+        .chatlog-divider {
+            height:1px;
+            border-width:0;
+            color:gray;
+            background-color: #42464d;
         }
 
         .chatlog {
@@ -192,8 +228,11 @@
             display: grid;
             margin: 0 0.6em;
             padding: 0.9em 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
             grid-template-columns: auto 1fr;
+        }
+
+        .chatlog__message-group:hover {
+            background-color: #32353b;
         }
 
         .chatlog__reference-symbol {
@@ -272,6 +311,7 @@
             border-radius: 50%;
             width: 40px;
             height: 40px;
+            margin-left: 15px;
         }
 
         .chatlog__messages {
@@ -282,6 +322,7 @@
         .chatlog__author-name {
             font-weight: 500;
             color: #ffffff;
+            margin-left: 15px;
         }
 
         .chatlog__timestamp {
@@ -308,11 +349,13 @@
         .chatlog__content {
             font-size: 0.95em;
             word-wrap: break-word;
+            margin-left: 15px;
         }
 
         .chatlog__edited-timestamp {
             margin-left: 0.15em;
             font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.2);
         }
 
         .chatlog__attachment {
@@ -398,10 +441,6 @@
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-        }
-
-        .chatlog__edited-timestamp {
-            color: rgba(255, 255, 255, 0.2);
         }
 
         .chatlog__embed {
@@ -676,6 +715,8 @@
             <div class="preamble__entry" id="ticketname">Channel Name Here</div>
         </div>
     </div>
+
+    <hr class="chatlog-divider">
 
     <div class="chatlog" id="chatlog">
 
