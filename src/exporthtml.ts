@@ -10,6 +10,16 @@ import { minify }        from 'html-minifier';
 import { internalGenerateOptions, ObjectType, ReturnTypes } from './types';
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 
+let options: Intl.DateTimeFormatOptions = {
+	weekday: 'long',
+	year: 'numeric',
+	month: 'short',
+	day: 'numeric',
+	hour: '2-digit',
+	minute: '2-digit',
+};
+export const date = { options };
+
 // copilot helped so much here
 // copilot smart 🧠
 
@@ -100,7 +110,11 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
         // timestamp
         const timestamp = document.createElement('span');
         timestamp.classList.add('chatlog__timestamp');
-        timestamp.textContent = message.createdAt.toLocaleString();
+        const yyyy = message.createdAt.getFullYear();
+        const mm = message.createdAt.getMonth() + 1;
+        const dd = message.createdAt.getUTCDate();
+        timestamp.textContent = `${dd}/${mm}/${yyyy}`;
+        timestamp.title = he.escape(message.createdAt.toLocaleTimeString("en-us", date.options))
 
         content.appendChild(timestamp);
 
@@ -108,27 +122,35 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
         messageContent.classList.add('chatlog__message');
         messageContent.setAttribute('data-message-id', message.id);
         messageContent.setAttribute('id', `message-${message.id}`);
-        messageContent.title = `Message sent: ${message.createdAt.toLocaleString()}`;
 
         // message content
         if(message.content) {
-            const messageContentContent = document.createElement('div');
-            messageContentContent.classList.add('chatlog__content');
+            if (validateURL(message.content)) {
+                var link = document.createElement('a');
+                link.classList.add('chatlog__content');
+                link.href = message.content;
+                link.target = '_blank';
+                link.textContent = message.content;
+                messageContent.appendChild(link);
+            } else {
+                const messageContentContent = document.createElement('div');
+                messageContentContent.classList.add('chatlog__content');
 
-            const messageContentContentMarkdown = document.createElement('div');
-            messageContentContentMarkdown.classList.add('markdown');
+                const messageContentContentMarkdown = document.createElement('div');
+                messageContentContentMarkdown.classList.add('markdown');
 
-            const messageContentContentMarkdownSpan = document.createElement('span');
-            messageContentContentMarkdownSpan.classList.add('preserve-whitespace');
-            messageContentContentMarkdownSpan.innerHTML = formatContent(
-                message.content,
-                channel,
-                message.webhookId !== null
-            );
-
-            messageContentContentMarkdown.appendChild(messageContentContentMarkdownSpan);
-            messageContentContent.appendChild(messageContentContentMarkdown);
-            messageContent.appendChild(messageContentContent);
+                const messageContentContentMarkdownSpan = document.createElement('span');
+                messageContentContentMarkdownSpan.classList.add('preserve-whitespace');
+                messageContentContentMarkdownSpan.innerHTML = formatContent(
+                    message.content,
+                    channel,
+                    message.webhookId !== null
+                );
+                
+                messageContentContentMarkdown.appendChild(messageContentContentMarkdownSpan);
+                messageContentContent.appendChild(messageContentContentMarkdown);
+                messageContent.appendChild(messageContentContent);
+            }
         }
 
         // message attachments
@@ -527,6 +549,10 @@ function formatBytes(bytes: number, decimals = 2) {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+function validateURL(url: string) {
+    return /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi.test(url);
 }
 
 export default generateTranscript;

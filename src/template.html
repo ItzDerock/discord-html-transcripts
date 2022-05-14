@@ -38,11 +38,13 @@
         }
 
         body {
-            background-color: #36393e;
+            background-color: #36393f;
             color: #dcddde;
             font-family: "Whitney", "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-size: 17px;
             font-weight: 400;
+            margin: 0;
+            overflow-x: hidden;
         }
 
         a {
@@ -126,8 +128,8 @@
         .mention {
             border-radius: 3px;
             padding: 0 2px;
-            color: #7289da;
-            background-color: rgba(114, 137, 218, .1);
+            color: #dee0fc;
+            background-color: rgb(89, 102, 243, 0.3);
             font-weight: 500;
         }
 
@@ -156,7 +158,7 @@
 
         .preamble {
             display: grid;
-            margin: 0 0.3em 0.6em 0.3em;
+            margin: 1em;
             max-width: 100%;
             grid-template-columns: auto 1fr;
         }
@@ -168,6 +170,33 @@
         .preamble__guild-icon {
             max-width: 88px;
             max-height: 88px;
+            animation: border-radius-animation-out 0.25s ease-in-out;
+            border-radius: 50%;
+        }
+
+        .preamble__guild-icon:hover {
+            animation: border-radius-animation-in 0.25s ease-in-out;
+            border-radius: 25%;
+        }
+
+        @keyframes border-radius-animation-in {
+            0% {
+                border-radius: 50%;
+            }
+
+            100% {
+                border-radius: 25%;
+            }
+        }
+
+        @keyframes border-radius-animation-out {
+            0% {
+                border-radius: 25%;
+            }
+
+            100% {
+                border-radius: 50%;
+            }
         }
 
         .preamble__entries-container {
@@ -180,28 +209,60 @@
             color: #ffffff;
         }
 
+        .preamble__entry#guildname {
+            font-weight: bold;
+        }
+
         .preamble__entry--small {
             font-size: 1em;
         }
 
+        .chatlog-divider {
+            height: 1px;
+            border-width: 0;
+            color: gray;
+            background-color: #42464d;
+        }
+
         .chatlog {
             max-width: 100%;
+            margin-bottom: 1.8em;
         }
 
         .chatlog__message-group {
             display: grid;
-            margin: 0 0.6em;
-            padding: 0.9em 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.1em 0;
             grid-template-columns: auto 1fr;
+            margin-top: 1.0625rem;
+        }
+
+        .chatlog__message-group:hover {
+            background-color: rgba(4, 4, 5, 0.07);
+        }
+
+        .chatlog__message-group--highlighted {
+            background-color: rgba(88, 101, 242, 0);
+            animation: highlight 1.5s;
+        }
+
+        @keyframes highlight {
+            0% {
+                background-color: rgba(88, 101, 242, 0.2);
+            }
+
+            100% {
+                background-color: rgba(88, 101, 242, 0);
+            }
         }
 
         .chatlog__reference-symbol {
             grid-column: 1;
-            margin: 8px 4px 4px 18px;
+            margin: 8px -1em 0 2.2em;
             border-left: 2px solid #4f545c;
             border-top: 2px solid #4f545c;
-            border-radius: 8px 0 0 0;
+            border-radius: 6px 0 0 0;
+            width: 32px;
+            height: 11px;
         }
 
         .chatlog__reference {
@@ -214,6 +275,7 @@
             text-overflow: ellipsis;
             align-items: center;
             color: #b5b6b8;
+            margin-left: 1.2em;
         }
 
         .chatlog__reference-avatar {
@@ -272,22 +334,28 @@
             border-radius: 50%;
             width: 40px;
             height: 40px;
+            margin-left: 1em;
+            margin-top: .25rem;
         }
 
         .chatlog__messages {
             grid-column: 2;
             min-width: 50%;
+            padding-left: 1em;
         }
 
         .chatlog__author-name {
             font-weight: 500;
             color: #ffffff;
+            font-size: 16.3px;
         }
 
         .chatlog__timestamp {
             margin-left: 0.3em;
-            font-size: 0.75em;
-            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.75rem;
+            line-height: 1.375rem;
+            color: #a3a6aa;
+            vertical-align: baseline;
         }
 
         .chatlog__message {
@@ -295,10 +363,6 @@
             margin: 0 -0.3em;
             background-color: transparent;
             transition: background-color 1s ease;
-        }
-
-        .chatlog__message--highlighted {
-            background-color: rgba(114, 137, 218, 0.2);
         }
 
         .chatlog__message--pinned {
@@ -313,6 +377,7 @@
         .chatlog__edited-timestamp {
             margin-left: 0.15em;
             font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.2);
         }
 
         .chatlog__attachment {
@@ -400,10 +465,6 @@
             text-overflow: ellipsis;
         }
 
-        .chatlog__edited-timestamp {
-            color: rgba(255, 255, 255, 0.2);
-        }
-
         .chatlog__embed {
             display: flex;
             margin-top: 0.3em;
@@ -424,9 +485,8 @@
         .chatlog__embed-content-container {
             display: flex;
             flex-direction: column;
-            padding: 0.5em 0.6em;
-            background-color: rgba(46, 48, 54, 0.3);
-            border: 1px solid rgba(46, 48, 54, 0.6);
+            padding: .5rem 1rem 1rem .75rem;
+            background-color: #2f3136;
             border-top-right-radius: 3px;
             border-bottom-right-radius: 3px;
         }
@@ -464,16 +524,18 @@
         }
 
         .chatlog__embed-title {
-            margin-bottom: 0.2em;
-            font-size: 0.875em;
+            font-size: 1rem;
             font-weight: 600;
             color: #ffffff;
+            margin-top: 8px;
         }
 
         .chatlog__embed-description {
-            font-weight: 500;
-            font-size: 0.85em;
             color: #dcddde;
+            margin-top: 8px;
+            font-size: 0.875rem;
+            line-height: 1.125rem;
+            font-weight: 400;
         }
 
         .chatlog__embed-fields {
@@ -497,19 +559,23 @@
         }
 
         .chatlog__embed-field-name {
-            margin-bottom: 0.2em;
+            color: white;
+            font-size: 0.875rem;
+            line-height: 1.125rem;
+            min-width: 0;
             font-weight: 600;
-            color: #ffffff;
+            margin-bottom: 2px;
         }
 
         .chatlog__embed-field-value {
-            font-weight: 500;
+            font-weight: 400;
             color: #dcddde;
         }
 
         .chatlog__embed-thumbnail {
             flex: 0;
-            margin-left: 1.2em;
+            margin-left: 16px;
+            margin-top: 8px;
             max-width: 80px;
             max-height: 80px;
             border-radius: 3px;
@@ -620,12 +686,12 @@
 
     <script>
         function scrollToMessage(event, id) {
-            var element = document.getElementById('message-' + id);
+            var element = document.getElementById('message-' + id).parentNode.parentNode;
 
             if (element) {
                 event.preventDefault();
 
-                element.classList.add('chatlog__message--highlighted');
+                element.classList.add('chatlog__message-group--highlighted');
 
                 window.scrollTo({
                     top: element.getBoundingClientRect().top - document.body.getBoundingClientRect().top - (window.innerHeight / 2),
@@ -633,7 +699,7 @@
                 });
 
                 window.setTimeout(function () {
-                    element.classList.remove('chatlog__message--highlighted');
+                    element.classList.remove('chatlog__message-group--highlighted');
                 }, 2000);
             }
         }
@@ -676,6 +742,8 @@
             <div class="preamble__entry" id="ticketname">Channel Name Here</div>
         </div>
     </div>
+
+    <hr class="chatlog-divider">
 
     <div class="chatlog" id="chatlog">
 
