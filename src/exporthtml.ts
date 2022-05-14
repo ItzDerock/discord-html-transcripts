@@ -126,23 +126,32 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
 
         // message content
         if(message.content) {
-            const messageContentContent = document.createElement('div');
-            messageContentContent.classList.add('chatlog__content');
+            if (message.content.startsWith('http://') || message.content.startsWith('https://')) {
+                var link = document.createElement('a');
+                link.classList.add('chatlog__content');
+                link.href = message.content;
+                link.target = '_blank';
+                link.textContent = message.content;
+                messageContent.appendChild(link);
+            } else {
+                const messageContentContent = document.createElement('div');
+                messageContentContent.classList.add('chatlog__content');
 
-            const messageContentContentMarkdown = document.createElement('div');
-            messageContentContentMarkdown.classList.add('markdown');
+                const messageContentContentMarkdown = document.createElement('div');
+                messageContentContentMarkdown.classList.add('markdown');
 
-            const messageContentContentMarkdownSpan = document.createElement('span');
-            messageContentContentMarkdownSpan.classList.add('preserve-whitespace');
-            messageContentContentMarkdownSpan.innerHTML = formatContent(
-                message.content,
-                channel,
-                message.webhookId !== null
-            );
-
-            messageContentContentMarkdown.appendChild(messageContentContentMarkdownSpan);
-            messageContentContent.appendChild(messageContentContentMarkdown);
-            messageContent.appendChild(messageContentContent);
+                const messageContentContentMarkdownSpan = document.createElement('span');
+                messageContentContentMarkdownSpan.classList.add('preserve-whitespace');
+                messageContentContentMarkdownSpan.innerHTML = formatContent(
+                    message.content,
+                    channel,
+                    message.webhookId !== null
+                );
+                
+                messageContentContentMarkdown.appendChild(messageContentContentMarkdownSpan);
+                messageContentContent.appendChild(messageContentContentMarkdown);
+                messageContent.appendChild(messageContentContent);
+            }
         }
 
         // message attachments
