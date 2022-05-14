@@ -126,7 +126,7 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
 
         // message content
         if(message.content) {
-            if (validateURL(message.content) == true) {
+            if (validateURL(message.content)) {
                 var link = document.createElement('a');
                 link.classList.add('chatlog__content');
                 link.href = message.content;
@@ -553,13 +553,7 @@ function formatBytes(bytes: number, decimals = 2) {
 }
 
 function validateURL(url: string) {
-    var regex = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
-
-    if (!regex.test(url)) {
-        return false;
-    } else {
-        return true;
-    }
+    return !(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi.test(url));
 }
 
 export default generateTranscript;
