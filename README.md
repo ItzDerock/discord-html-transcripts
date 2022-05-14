@@ -8,7 +8,7 @@ Discord HTML Transcripts is a node.js module to generate nice looking HTML trans
 HTML Template stolen from [DiscordChatExporter](https://github.com/Tyrrrz/DiscordChatExporter).
 
 ## Example Output
-![output](https://img.derock.dev/5f5q0a.png)
+![output](https://img.derock.dev/1wnf9q.gif)
 
 ## Usage
 ### Example usage using the built in message fetcher.
