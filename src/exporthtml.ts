@@ -36,7 +36,10 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
 
     document.getElementById('guildname')!.textContent = channel.guild.name;
     document.getElementById('ticketname')!.textContent = channel.name;
-    document.getElementById('tickettopic')!.textContent = `This is the start of the #${channel.name} channel. ${channel.topic  || ''}`;
+    document.getElementById('tickettopic')!.textContent = `This is the start of the #${channel.name} channel.`;
+    if (channel.topic && channel.topic != null) {
+        document.getElementById('tickettopic')!.innerHTML = channel.topic;
+    }
 
     const transcript = document.getElementById('chatlog')!;
 
