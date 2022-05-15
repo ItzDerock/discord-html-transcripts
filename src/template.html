@@ -213,6 +213,10 @@
             font-weight: bold;
         }
 
+        .preamble__entry#tickettopic {
+            font-size: 1em;
+        }
+
         .preamble__entry--small {
             font-size: 1em;
         }
@@ -370,13 +374,15 @@
         }
 
         .chatlog__content {
+            display: inline-block;
             font-size: 0.95em;
             word-wrap: break-word;
         }
 
-        .chatlog__edited-timestamp {
+        .chatlog__edited {
+            display: inline-block;
             margin-left: 0.15em;
-            font-size: 0.8em;
+            font-size: 0.65em;
             color: rgba(255, 255, 255, 0.2);
         }
 
@@ -740,6 +746,7 @@
         <div class="preamble__entries-container">
             <div class="preamble__entry" id="guildname">Guild Name Here</div>
             <div class="preamble__entry" id="ticketname">Channel Name Here</div>
+            <div class="preamble__entry" id="tickettopic">This is the start of the #Channel Name channel.</div>
         </div>
     </div>
 

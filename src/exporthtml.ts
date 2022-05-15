@@ -24,8 +24,8 @@ export const date = { options };
 // copilot smart 🧠
 
 function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], channel: discord.TextBasedChannel, opts: internalGenerateOptions = { returnType: 'buffer' as T, fileName: 'transcript.html' }): ObjectType<T> {
-    if(channel.type === "DM")
-        throw new Error("Cannot operate on DM channels");
+    if(channel.type === "DM" || channel.isThread())
+        throw new Error("Cannot operate on DM channels or thread channels");
 
     const dom = new JSDOM(template.replace('{{TITLE}}', channel.name));
     const document = dom.window.document;
@@ -36,6 +36,7 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
 
     document.getElementById('guildname')!.textContent = channel.guild.name;
     document.getElementById('ticketname')!.textContent = channel.name;
+    document.getElementById('tickettopic')!.textContent = `This is the start of the #${channel.name} channel. ${channel.topic  || ''}`;
 
     const transcript = document.getElementById('chatlog')!;
 
@@ -151,6 +152,14 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
                 messageContentContent.appendChild(messageContentContentMarkdown);
                 messageContent.appendChild(messageContentContent);
             }
+        }
+
+        // Edited tag
+        if(message.editedTimestamp != null) {
+            const edited = document.createElement('div');
+            edited.classList.add('chatlog__edited');
+            edited.textContent = '(edited)';
+            messageContent.appendChild(edited);
         }
 
         // message attachments
