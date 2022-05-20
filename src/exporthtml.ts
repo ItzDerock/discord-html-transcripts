@@ -10,22 +10,12 @@ import { minify }        from 'html-minifier';
 import { internalGenerateOptions, ObjectType, ReturnTypes } from './types';
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 
-let options: Intl.DateTimeFormatOptions = {
-	weekday: 'long',
-	year: 'numeric',
-	month: 'short',
-	day: 'numeric',
-	hour: '2-digit',
-	minute: '2-digit',
-};
-export const date = { options };
-
 // copilot helped so much here
 // copilot smart 🧠
 
 function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], channel: discord.TextBasedChannel, opts: internalGenerateOptions = { returnType: 'buffer' as T, fileName: 'transcript.html' }): ObjectType<T> {
-    if(channel.type === "DM")
-        throw new Error("Cannot operate on DM channels");
+    if(channel.type === "DM" || channel.isThread())
+        throw new Error("Cannot operate on DM channels or thread channels");
 
     const dom = new JSDOM(template.replace('{{TITLE}}', channel.name));
     const document = dom.window.document;
@@ -36,6 +26,10 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
 
     document.getElementById('guildname')!.textContent = channel.guild.name;
     document.getElementById('ticketname')!.textContent = channel.name;
+    document.getElementById('tickettopic')!.textContent = `This is the start of the #${channel.name} channel.`;
+    if (channel.topic && channel.topic != null) {
+        document.getElementById('tickettopic')!.innerHTML = `This is the start of the #${he.escape(channel.name)} channel. ${formatContent(channel.topic, channel, false, true)}`;
+    }
 
     const transcript = document.getElementById('chatlog')!;
 
@@ -110,11 +104,8 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
         // timestamp
         const timestamp = document.createElement('span');
         timestamp.classList.add('chatlog__timestamp');
-        const yyyy = message.createdAt.getFullYear();
-        const mm = message.createdAt.getMonth() + 1;
-        const dd = message.createdAt.getUTCDate();
-        timestamp.textContent = `${dd}/${mm}/${yyyy}`;
-        timestamp.title = he.escape(message.createdAt.toLocaleTimeString("en-us", date.options))
+        timestamp.textContent = message.createdAt.toLocaleString("en-us", staticTypes.timestampShort);
+        timestamp.title = he.escape(message.createdAt.toLocaleTimeString("en-us", staticTypes.timestampLong))
 
         content.appendChild(timestamp);
 
@@ -132,6 +123,13 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
                 link.target = '_blank';
                 link.textContent = message.content;
                 messageContent.appendChild(link);
+
+                if (message.editedTimestamp != null) {
+                    var edited = document.createElement('div');
+                    edited.classList.add('chatlog__edited');
+                    edited.textContent = '(edited)';
+                    messageContent.appendChild(edited);
+                }
             } else {
                 const messageContentContent = document.createElement('div');
                 messageContentContent.classList.add('chatlog__content');
@@ -146,10 +144,16 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
                     channel,
                     message.webhookId !== null
                 );
-                
                 messageContentContentMarkdown.appendChild(messageContentContentMarkdownSpan);
                 messageContentContent.appendChild(messageContentContentMarkdown);
                 messageContent.appendChild(messageContentContent);
+
+                if (message.editedTimestamp != null) {
+                    var edited = document.createElement('div');
+                    edited.classList.add('chatlog__edited');
+                    edited.textContent = '(edited)';
+                    messageContentContentMarkdownSpan.appendChild(edited);
+                }
             }
         }
 

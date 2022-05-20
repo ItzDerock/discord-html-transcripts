@@ -50,6 +50,7 @@
         a {
             color: #00aff4;
             text-decoration: none;
+            text-underline-offset: 1px;
         }
 
         a:hover {
@@ -108,10 +109,11 @@
 
         .pre--multiline {
             margin-top: 0.25em;
-            padding: 0.5em;
-            border: 2px solid #282b30;
-            border-radius: 5px;
+            padding: .5em;
+            border: 1px solid #202225;
+            border-radius: 4px;
             color: #b9bbbe;
+            font-size: 0.875rem;
         }
 
         .pre--multiline.hljs {
@@ -213,6 +215,10 @@
             font-weight: bold;
         }
 
+        .preamble__entry#tickettopic {
+            font-size: 1em;
+        }
+
         .preamble__entry--small {
             font-size: 1em;
         }
@@ -286,8 +292,9 @@
         }
 
         .chatlog__reference-name {
-            margin-right: 0.3em;
-            font-weight: 600;
+            margin-right: .25rem;
+            font-weight: 500;
+            opacity: .64;
         }
 
         .chatlog__reference-content {
@@ -304,23 +311,55 @@
             color: #b5b6b8;
         }
 
+        .chatlog__reference-link--disabled:hover {
+            cursor: default;
+            color: #b5b6b8 !important;
+        }
+
         .chatlog__reference-link * {
             display: inline;
             pointer-events: none;
         }
 
-        .chatlog__reference-link:hover {
+        .chatlog__reference-link:not(.chatlog__reference-link--disabled):hover {
             color: #ffffff;
         }
 
-        .chatlog__reference-link:hover *:not(.spoiler-text) {
+        .chatlog__reference-link:not(.chatlog__reference-link--disabled):hover *:not(.spoiler-text) {
             color: #ffffff;
         }
 
-        .chatlog__reference-edited-timestamp {
-            margin-left: 0.25em;
-            font-size: 0.8em;
-            color: rgba(255, 255, 255, 0.2);
+        .chatlog__reference-attachment-icon {
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 auto;
+            flex: 0 0 auto;
+            width: 20px;
+            height: 20px;
+            margin-left: 4px;
+            margin-bottom: -5px;
+        }
+
+        .chatlog__reference-replybadge {
+            flex: 0 0 auto;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            user-select: none;
+            margin-right: .25rem;
+            background: #202225;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+        }
+
+        .chatlog__reference-replyicon {
+            width: 10.8px;
+            height: 7.2px;
+            padding: 1px 0 1px 2px;
         }
 
         .chatlog__author-avatar-container {
@@ -356,10 +395,11 @@
             line-height: 1.375rem;
             color: #a3a6aa;
             vertical-align: baseline;
+            cursor: default;
         }
 
         .chatlog__message {
-            padding: 0.1em 0.3em;
+            padding: 0 .3em;
             margin: 0 -0.3em;
             background-color: transparent;
             transition: background-color 1s ease;
@@ -370,14 +410,22 @@
         }
 
         .chatlog__content {
+            display: inline-block;
             font-size: 0.95em;
             word-wrap: break-word;
+        }
+
+        .chatlog__edited {
+            display: inline-block;
+            margin-left: .25em;
+            font-size: 0.625rem;
+            color: #a3a6aa;
         }
 
         .chatlog__edited-timestamp {
             margin-left: 0.15em;
             font-size: 0.8em;
-            color: rgba(255, 255, 255, 0.2);
+            color: #a3a6aa;
         }
 
         .chatlog__attachment {
@@ -502,21 +550,25 @@
 
         .chatlog__embed-author {
             display: flex;
-            margin-bottom: 0.3em;
+            margin-top: 8px;
             align-items: center;
         }
 
         .chatlog__embed-author-icon {
-            margin-right: 0.5em;
-            width: 20px;
-            height: 20px;
+            margin-right: 8px;
+            width: 24px;
+            height: 24px;
+            -o-object-fit: contain;
+            object-fit: contain;
             border-radius: 50%;
         }
 
         .chatlog__embed-author-name {
-            font-size: 0.875em;
+            word-break: break-word;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 0.875rem;
             font-weight: 600;
-            color: #ffffff
         }
 
         .chatlog__embed-author-name-link {
@@ -555,7 +607,7 @@
         .chatlog__embed-field--inline {
             flex: 1;
             flex-basis: auto;
-            min-width: 150px;
+            min-width: 0;
         }
 
         .chatlog__embed-field-name {
@@ -582,17 +634,16 @@
         }
 
         .chatlog__embed-image-container {
-            margin-top: 0.6em;
+            margin-top: 16px;
         }
 
         .chatlog__embed-image {
             max-width: 500px;
             max-height: 400px;
-            border-radius: 3px;
+            border-radius: 4px;
         }
 
         .chatlog__embed-footer {
-            margin-top: 0.6em;
             color: #dcddde;
         }
 
@@ -607,7 +658,8 @@
 
         .chatlog__embed-footer-text {
             vertical-align: middle;
-            font-size: 0.75em;
+            font-size: 0.75rem;
+            line-height: 1rem;
             font-weight: 500;
         }
 
@@ -675,16 +727,72 @@
         }
     </style>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-dark.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
     <script>
-        // highlightjs done in exporthtml.js because doing it here caused newline issues.
-        // document.addEventListener('DOMContentLoaded', () => {
-        //     document.querySelectorAll('.pre--multiline').forEach(block => hljs.highlightBlock(block));
-        // });
+    // highlightjs done in exporthtml.js because doing it here caused newline issues.
+    // document.addEventListener('DOMContentLoaded', () => {
+    //     document.querySelectorAll('.pre--multiline').forEach(block => hljs.highlightBlock(block));
+    // });
     </script>
 
     <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('.chatlog__reference-name').forEach(function (element) {
+                if (element.title == "Unknown User") {
+                    let div = document.createElement("div");
+                    div.setAttribute("class", "chatlog__reference-replybadge");
+
+                    let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                    svg.setAttribute("width", "12");
+                    svg.setAttribute("height", "8");
+                    svg.setAttribute("viewBox", "0 0 12 8");
+                    svg.setAttribute("class", "chatlog__reference-replyicon");
+
+                    let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    path.setAttribute("d", "M0.809739 3.59646L5.12565 0.468433C5.17446 0.431163 5.23323 0.408043 5.2951 0.401763C5.35698 0.395482 5.41943 0.406298 5.4752 0.432954C5.53096 0.45961 5.57776 0.50101 5.61013 0.552343C5.64251 0.603676 5.65914 0.662833 5.6581 0.722939V2.3707C10.3624 2.3707 11.2539 5.52482 11.3991 7.21174C11.4028 7.27916 11.3848 7.34603 11.3474 7.40312C11.3101 7.46021 11.2554 7.50471 11.1908 7.53049C11.1262 7.55626 11.0549 7.56204 10.9868 7.54703C10.9187 7.53201 10.857 7.49695 10.8104 7.44666C8.72224 5.08977 5.6581 5.63359 5.6581 5.63359V7.28135C5.65831 7.34051 5.64141 7.39856 5.60931 7.44894C5.5772 7.49932 5.53117 7.54004 5.4764 7.5665C5.42163 7.59296 5.3603 7.60411 5.29932 7.59869C5.23834 7.59328 5.18014 7.57151 5.13128 7.53585L0.809739 4.40892C0.744492 4.3616 0.691538 4.30026 0.655067 4.22975C0.618596 4.15925 0.599609 4.08151 0.599609 4.00269C0.599609 3.92386 0.618596 3.84612 0.655067 3.77562C0.691538 3.70511 0.744492 3.64377 0.809739 3.59646Z");
+                    path.setAttribute("fill", "currentColor");
+
+                    svg.append(path);
+                    div.append(svg);
+
+                    element.parentNode.childNodes[0].remove();
+                    element.parentNode.prepend(div);
+                    element.remove();
+                } else {
+                    var id = element.parentNode.childNodes[4].childNodes[1].attributes[1].value.split("'")[1];
+                    element.style.color = document.getElementById('message-' + id).parentNode.childNodes[0].style.color;
+                }
+            });
+
+            document.querySelectorAll('.chatlog__reference-link').forEach(function (element) {
+                if (element.childNodes[1] && element.childNodes[1].textContent == "Original message was deleted.") {
+                    element.classList.add("chatlog__reference-link--disabled");
+                    element.removeAttribute("onclick");
+                }
+
+                if (element.childNodes[1] && element.childNodes[1].textContent == "Click to see attachment") {
+                    let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                    svg.setAttribute("width", "24");
+                    svg.setAttribute("height", "24");
+                    svg.setAttribute("viewBox", "0 0 24 24");
+                    svg.setAttribute("class", "chatlog__reference-attachment-icon");
+                    svg.setAttribute("aria-hidden", "false");
+
+                    let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    path.setAttribute("d", "M6 2C3.79086 2 2 3.79086 2 6V18C2 20.2091 3.79086 22 6 22H18C20.2091 22 22 20.2091 22 18V6C22 3.79086 20.2091 2 18 2H6ZM10 8C10 6.8952 9.1032 6 8 6C6.8944 6 6 6.8952 6 8C6 9.1056 6.8944 10 8 10C9.1032 10 10 9.1056 10 8ZM9 14L6 18H18L15 11L11 16L9 14Z");
+                    path.setAttribute("fill", "currentColor");
+                    path.setAttribute("fill-rule", "evenodd");
+                    path.setAttribute("clip-rule", "evenodd");
+
+                    svg.append(path);
+
+                    element.parentNode.append(svg);
+                }
+            });
+        });
+
         function scrollToMessage(event, id) {
             var element = document.getElementById('message-' + id).parentNode.parentNode;
 
@@ -740,6 +848,7 @@
         <div class="preamble__entries-container">
             <div class="preamble__entry" id="guildname">Guild Name Here</div>
             <div class="preamble__entry" id="ticketname">Channel Name Here</div>
+            <div class="preamble__entry" id="tickettopic">This is the start of the #Channel Name channel.</div>
         </div>
     </div>
 
