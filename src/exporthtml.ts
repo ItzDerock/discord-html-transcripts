@@ -10,15 +10,20 @@ import { minify }        from 'html-minifier';
 import { internalGenerateOptions, ObjectType, ReturnTypes } from './types';
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 
-let options: Intl.DateTimeFormatOptions = {
+let optionsShort: Intl.DateTimeFormatOptions = {
+	day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+};
+let optionsLong: Intl.DateTimeFormatOptions = {
 	weekday: 'long',
 	year: 'numeric',
-	month: 'short',
+	month: 'long',
 	day: 'numeric',
 	hour: '2-digit',
 	minute: '2-digit',
 };
-export const date = { options };
+export const date = { optionsShort, optionsLong };
 
 // copilot helped so much here
 // copilot smart 🧠
@@ -114,11 +119,8 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
         // timestamp
         const timestamp = document.createElement('span');
         timestamp.classList.add('chatlog__timestamp');
-        const yyyy = message.createdAt.getFullYear();
-        const mm = message.createdAt.getMonth() + 1;
-        const dd = message.createdAt.getUTCDate();
-        timestamp.textContent = `${dd}/${mm}/${yyyy}`;
-        timestamp.title = he.escape(message.createdAt.toLocaleTimeString("en-us", date.options))
+        timestamp.textContent = message.createdAt.toLocaleString("en-us", date.optionsShort);
+        timestamp.title = he.escape(message.createdAt.toLocaleTimeString("en-us", date.optionsLong))
 
         content.appendChild(timestamp);
 
@@ -136,6 +138,13 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
                 link.target = '_blank';
                 link.textContent = message.content;
                 messageContent.appendChild(link);
+
+                if (message.editedTimestamp != null) {
+                    var edited = document.createElement('div');
+                    edited.classList.add('chatlog__edited');
+                    edited.textContent = '(edited)';
+                    messageContent.appendChild(edited);
+                }
             } else {
                 const messageContentContent = document.createElement('div');
                 messageContentContent.classList.add('chatlog__content');
@@ -150,19 +159,17 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
                     channel,
                     message.webhookId !== null
                 );
-                
                 messageContentContentMarkdown.appendChild(messageContentContentMarkdownSpan);
                 messageContentContent.appendChild(messageContentContentMarkdown);
                 messageContent.appendChild(messageContentContent);
-            }
-        }
 
-        // Edited tag
-        if(message.editedTimestamp != null) {
-            const edited = document.createElement('div');
-            edited.classList.add('chatlog__edited');
-            edited.textContent = '(edited)';
-            messageContent.appendChild(edited);
+                if (message.editedTimestamp != null) {
+                    var edited = document.createElement('div');
+                    edited.classList.add('chatlog__edited');
+                    edited.textContent = '(edited)';
+                    messageContentContentMarkdownSpan.appendChild(edited);
+                }
+            }
         }
 
         // message attachments
