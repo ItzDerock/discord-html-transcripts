@@ -28,7 +28,7 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
     document.getElementById('ticketname')!.textContent = channel.name;
     document.getElementById('tickettopic')!.textContent = `This is the start of the #${channel.name} channel.`;
     if (channel.topic && channel.topic != null) {
-        document.getElementById('tickettopic')!.textContent = `This is the start of the #${channel.name} channel. ${channel.topic}`;
+        document.getElementById('tickettopic')!.innerHTML = `This is the start of the #${he.escape(channel.name)} channel. ${formatContent(channel.topic, channel, false, true)}`;
     }
 
     const transcript = document.getElementById('chatlog')!;
