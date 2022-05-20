@@ -10,21 +10,6 @@ import { minify }        from 'html-minifier';
 import { internalGenerateOptions, ObjectType, ReturnTypes } from './types';
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 
-let optionsShort: Intl.DateTimeFormatOptions = {
-	day: "2-digit",
-    month: "2-digit",
-    year: "2-digit",
-};
-let optionsLong: Intl.DateTimeFormatOptions = {
-	weekday: 'long',
-	year: 'numeric',
-	month: 'long',
-	day: 'numeric',
-	hour: '2-digit',
-	minute: '2-digit',
-};
-export const date = { optionsShort, optionsLong };
-
 // copilot helped so much here
 // copilot smart 🧠
 
@@ -119,8 +104,8 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
         // timestamp
         const timestamp = document.createElement('span');
         timestamp.classList.add('chatlog__timestamp');
-        timestamp.textContent = message.createdAt.toLocaleString("en-us", date.optionsShort);
-        timestamp.title = he.escape(message.createdAt.toLocaleTimeString("en-us", date.optionsLong))
+        timestamp.textContent = message.createdAt.toLocaleString("en-us", staticTypes.timestampShort);
+        timestamp.title = he.escape(message.createdAt.toLocaleTimeString("en-us", staticTypes.timestampLong))
 
         content.appendChild(timestamp);
 

@@ -46,3 +46,18 @@ export const MINIFY_OPTIONS: Options = {
     removeTagWhitespace: true,
     useShortDoctype: true
 }
+
+export const timestampShort: Intl.DateTimeFormatOptions = {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+}
+
+export const timestampLong: Intl.DateTimeFormatOptions = {
+    weekday: 'long',
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+	hour: '2-digit',
+	minute: '2-digit',
+}
