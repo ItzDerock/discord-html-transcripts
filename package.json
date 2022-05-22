@@ -32,7 +32,7 @@
   "dependencies": {
     "discord.js": "^13.6.0",
     "he": "^1.2.0",
-    "highlight.js": "^11.4.0",
+    "highlight.js": "^11.5.1",
     "html-minifier": "^4.0.0",
     "jsdom": "^19.0.0"
   },
