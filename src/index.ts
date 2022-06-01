@@ -8,6 +8,21 @@ import {
     ValidTextChannels
 } from './types';
 
+/** 
+ * @example
+ * const discordTranscripts = require('discord-html-transcripts');
+ * // or (if using typescript) import * as discordTranscripts from 'discord-html-transcripts';
+ * 
+ * const messages = someWayToGetMessages(); // Must be Collection<string, Message> or Message[]
+ * const channel  = someWayToGetChannel();  // Used for ticket name, guild icon, and guild name
+ * 
+ * // You do not need to await this
+ * const attachment = discordTranscripts.generateFromMessages(messages, channel);
+ * 
+ * channel.send({
+ *     files: [attachment]
+ * });
+ */
 export const generateFromMessages = (messages: GenerateSource, channel: ValidTextChannels, opts?: GenerateFromMessagesOpts) => {
     var options = opts || {};
 
@@ -38,6 +53,20 @@ export const generateFromMessages = (messages: GenerateSource, channel: ValidTex
     return exportHtml(messages, channel, options);
 }
 
+/**
+ * @example
+ * const discordTranscripts = require('discord-html-transcripts');
+ * // or (if using typescript) import * as discordTranscripts from 'discord-html-transcripts';
+ * 
+ * const channel = message.channel; // or however you get your TextChannel
+ * 
+ * // Must be awaited
+ * const attachment = await discordTranscripts.createTranscript(channel);
+ * 
+ * channel.send({
+ *     files: [attachment]
+ * });
+ */
 export const createTranscript = async (channel: ValidTextChannels, opts?: CreateTranscriptOptions) => {
     var options = opts || {};
 

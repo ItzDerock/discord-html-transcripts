@@ -1,4 +1,4 @@
-import { Options } from "html-minifier";
+import type { Options } from "html-minifier";
 
 export const defaultPFP = 'https://cdn.discordapp.com/embed/avatars/0.png';
 
