@@ -24,6 +24,7 @@ export type GenerateFromMessagesOpts = {
     fileName?: string
     minify?: boolean
     saveImages?: boolean
+    useCDN?: boolean
 }
 
 export type GenerateSource = Collection<string, Message> | Message[];
@@ -38,6 +39,7 @@ export type internalGenerateOptions = {
     fileName?: string
     minify?: boolean
     saveImages?: boolean
+    useCDN?: boolean
 }
 
 export type ValidTextChannels = Exclude<TextBasedChannel, DMChannel | PartialDMChannel>;

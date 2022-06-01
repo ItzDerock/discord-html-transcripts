@@ -11,6 +11,8 @@ import { internalGenerateOptions, ObjectType, ReturnTypes } from './types';
 import { downloadImageToDataURL } from './utils';
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 
+const version  = require('../package.json').version;
+
 // copilot helped so much here
 // copilot smart 🧠
 
@@ -24,6 +26,14 @@ async function generateTranscript<T extends ReturnTypes>(
 
     const dom = new JSDOM(template.replace('{{TITLE}}', channel.name));
     const document = dom.window.document;
+
+    // Replace <style>...</style> with <link rel="stylesheet" src="https://cdn.jsdelivr.net/npm/discord-html-transcripts@version/dist/template.css">
+    const style = document.querySelector('style')!;
+    style.parentNode!.removeChild(style);
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('href', 'https://cdn.jsdelivr.net/npm/discord-html-transcripts@' + (version ?? 'latest') + '/dist/template.css');
+    document.head.appendChild(link);
 
     // Basic Info (header)
     const guildIcon = document.getElementsByClassName('preamble__guild-icon')[0] as HTMLImageElement;

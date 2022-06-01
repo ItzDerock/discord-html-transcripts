@@ -56,6 +56,7 @@ const attachment = await createTranscript(channel, {
     fileName: 'transcript.html', // Only valid with returnBuffer false. Name of attachment. 
     minify: true, // Minify the result? Uses html-minifier
     saveImages: false, // Download all images and include the image data in the HTML (allows viewing the image even after it has been deleted) (! WILL INCREASE FILE SIZE !)
+    useCDN: false // Uses a CDN to serve discord styles rather than bundling it in HTML (saves ~8kb when minified)
 });
 ```
 
@@ -66,6 +67,7 @@ const attachment = await generateFromMessages(messages, channel, {
     returnType: 'attachment', // Valid options: 'buffer' | 'string' | 'attachment' Default: 'attachment'
     minify: true, // Minify the result? Uses html-minifier
     saveImages: false, // Download all images and include the image data in the HTML (allows viewing the image even after it has been deleted) (! WILL INCREASE FILE SIZE !)
+    useCDN: false // Uses a CDN to serve discord styles rather than bundling it in the HTML (saves ~8kb when minified)
 });
 ```
 

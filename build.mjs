@@ -1,5 +1,7 @@
 #!/usr/bin/env zx
-import { $, chalk } from 'zx';
+import { $, chalk, fs } from 'zx';
+import { JSDOM } from 'jsdom';
+import CleanCSS from 'clean-css';
 
 // show command outputs
 $.verbose = true;
@@ -33,6 +35,16 @@ await $`tsc`;
 console.log(chalk.green(`» Copying template file...`));
 if(isWin) await $`copy src\\template.html dist\\template.html`; // windows uses copy instead of cp
 else await $`cp ./src/template.html ./dist/template.html`; // mac/linux uses cp
+
+// extract the <style> tag from the template file
+console.log(chalk.green(`» Extracting template css...`));
+const template = fs.readFileSync('./dist/template.html', 'utf8');
+const dom      = new JSDOM(template);
+const style    = dom.window.document.querySelector('style').innerHTML;
+const minified = new CleanCSS().minify(style);
+
+if(minified.errors?.length) console.warn(chalk.yellow(`[!] CSS errors: ${minified.errors.join(', ')}`));
+fs.writeFileSync('./dist/template.css', minified.styles);
 
 // thats it for now!
 console.log(chalk.green(`» Done!`));
