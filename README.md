@@ -34,8 +34,8 @@ const discordTranscripts = require('discord-html-transcripts');
 const messages = someWayToGetMessages(); // Must be Collection<string, Message> or Message[]
 const channel  = someWayToGetChannel();  // Used for ticket name, guild icon, and guild name
 
-// You do not need to await this
-const attachment = discordTranscripts.generateFromMessages(messages, channel);
+// Must be awaited
+const attachment = await discordTranscripts.generateFromMessages(messages, channel);
 
 channel.send({
     files: [attachment]
@@ -51,7 +51,8 @@ const attachment = await createTranscript(channel, {
     limit: -1, // Max amount of messages to fetch.
     returnType: 'attachment', // Valid options: 'buffer' | 'string' | 'attachment' Default: 'attachment'
     fileName: 'transcript.html', // Only valid with returnBuffer false. Name of attachment. 
-    minify: true // Minify the result? Uses html-minifier
+    minify: true, // Minify the result? Uses html-minifier
+    saveImages: false, // Download all images and include the image data in the HTML (allows viewing the image even after it has been deleted) (! WILL INCREASE FILE SIZE !)
 });
 ```
 
@@ -60,6 +61,7 @@ const attachment = await createTranscript(channel, {
 const attachment = await generateFromMessages(messages, channel, {
     returnBuffer: false, // Return a buffer instead of a MessageAttachment 
     returnType: 'attachment', // Valid options: 'buffer' | 'string' | 'attachment' Default: 'attachment'
-    minify: true // Minify the result? Uses html-minifier
+    minify: true, // Minify the result? Uses html-minifier
+    saveImages: false, // Download all images and include the image data in the HTML (allows viewing the image even after it has been deleted) (! WILL INCREASE FILE SIZE !)
 });
 ```

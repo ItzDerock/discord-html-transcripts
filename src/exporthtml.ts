@@ -8,12 +8,17 @@ import * as staticTypes  from './static';
 import { minify }        from 'html-minifier';
 
 import { internalGenerateOptions, ObjectType, ReturnTypes } from './types';
+import { downloadImageToDataURL } from './utils';
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 
 // copilot helped so much here
 // copilot smart 🧠
 
-function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], channel: discord.TextBasedChannel, opts: internalGenerateOptions = { returnType: 'buffer' as T, fileName: 'transcript.html' }): ObjectType<T> {
+async function generateTranscript<T extends ReturnTypes>(
+    messages: discord.Message[], 
+    channel: discord.TextBasedChannel, 
+    opts: internalGenerateOptions = { returnType: 'buffer' as T, fileName: 'transcript.html' }
+): Promise<ObjectType<T>> {
     if(channel.type === "DM" || channel.isThread())
         throw new Error("Cannot operate on DM channels or thread channels");
 
@@ -33,8 +38,10 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
 
     const transcript = document.getElementById('chatlog')!;
 
+    const messagesArray = (Array.from(messages.values())).sort((a, b) => a.createdTimestamp - b.createdTimestamp);
+
     // Messages
-    for(const message of (Array.from(messages.values())).sort((a, b) => a.createdTimestamp - b.createdTimestamp)) {
+    await Promise.all(messagesArray.map(async message => {
         // create message group
         const messageGroup = document.createElement('div');
         messageGroup.classList.add('chatlog__message-group');
@@ -49,7 +56,7 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
             const reference = document.createElement('div');
             reference.classList.add('chatlog__reference');
 
-            const referencedMessage = messages instanceof discord.Collection ? messages.get(message.reference.messageId) : messages.find(m => m.id === message.reference!.messageId);
+            const referencedMessage: discord.Message | null = messages instanceof discord.Collection ? messages.get(message.reference.messageId) : messages.find(m => m.id === message.reference!.messageId);
             const author = referencedMessage?.author ?? staticTypes.DummyUser;
 
             reference.innerHTML = 
@@ -170,8 +177,8 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
 
                     const attachmentImage = document.createElement('img');
                     attachmentImage.classList.add('chatlog__attachment-media');
-                    attachmentImage.src = attachment.proxyURL ?? attachment.url;
-                    attachmentImage.alt = 'Image attachment';
+                    attachmentImage.src = (opts.saveImages ? await downloadImageToDataURL(attachment.proxyURL ?? attachment.url) : null) ?? attachment.proxyURL ?? attachment.url;
+                    attachmentImage.alt = attachment.description ? `Image: ${attachment.description}` : 'Image attachment';
                     attachmentImage.loading = 'lazy';
                     attachmentImage.title = `Image: ${attachment.name} (${formatBytes(attachment.size)})`;
 
@@ -456,7 +463,7 @@ function generateTranscript<T extends ReturnTypes>(messages: discord.Message[], 
 
         messageGroup.appendChild(content);
         transcript.appendChild(messageGroup);
-    }
+    }));
 
     var serialized = dom.serialize();
     if(opts.minify) serialized = minify(serialized, staticTypes.MINIFY_OPTIONS)

@@ -90,5 +90,5 @@ export const createTranscript = async (channel: ValidTextChannels, opts?: Create
         if (messages.size != 100 || ((options.limit! > 0) && sum_messages.length >= options.limit!)) break;
     }
 
-    return exportHtml(sum_messages, channel, options);
+    return await exportHtml(sum_messages, channel, options);
 }
