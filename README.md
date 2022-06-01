@@ -1,5 +1,8 @@
 # Discord.js HTML Transcripts
 [![Discord](https://img.shields.io/discord/555474311637499955?label=discord)](https://discord.gg/rf5qN7C)
+[![npm](https://img.shields.io/npm/dw/discord-html-transcripts)](http://npmjs.org/package/discord-html-transcripts)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/ItzDerock/discord-html-transcripts)
+![GitHub Repo stars](https://img.shields.io/github/stars/ItzDerock/discord-html-transcripts?style=social)
 
 Discord HTML Transcripts is a node.js module to generate nice looking HTML transcripts. Processes discord markdown like **bold**, *italics*, ~~strikethroughs~~, and more. Nicely formats attachments and embeds. Built in XSS protection, preventing users from inserting html tags. 
 
@@ -10,7 +13,7 @@ HTML Template stolen from [DiscordChatExporter](https://github.com/Tyrrrz/Discor
 ## Example Output
 ![output](https://img.derock.dev/1wnf9q.gif)
 
-## Usage
+## 📝 Usage
 ### Example usage using the built in message fetcher.
 ```js
 const discordTranscripts = require('discord-html-transcripts');
@@ -42,7 +45,7 @@ channel.send({
 });
 ```
 
-## Configuration
+## ⚙️ Configuration
 Both methods of generating a transcript allow for an option object as the last parameter.
 
 ### Built in Message Fetcher
@@ -65,3 +68,6 @@ const attachment = await generateFromMessages(messages, channel, {
     saveImages: false, // Download all images and include the image data in the HTML (allows viewing the image even after it has been deleted) (! WILL INCREASE FILE SIZE !)
 });
 ```
+
+## 🤝 Enjoy the package?
+Give it a star ⭐ and/or support me on [ko-fi](https://ko-fi.com/derock)
