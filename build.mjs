@@ -48,27 +48,8 @@ if(minified.errors?.length) console.warn(chalk.yellow(`[!] CSS errors: ${minifie
 fs.writeFileSync('./dist/template.css', minified.styles);
 
 // Create releases
-console.log(chalk.green(`» Creating releases...`));
-await fs.mkdir('./gh-release', { recursive: true });
-
-// read all the .__ignore files
-const alwaysIgnore = ['gh-release', 'node_modules', '.git'];
-const gitIgnore    = fs.readFileSync('./.gitignore', 'utf8').split('\n').map(e => e.trim()).filter(e => !alwaysIgnore.includes(e) && e);
-const npmIgnore    = fs.readFileSync('.npmignore', 'utf8')  .split('\n').map(e => e.trim()).filter(e => !alwaysIgnore.includes(e) && e);
-
-// before each element in the array add a "-x" element
-const excludeFlag          = isWin ? '--exclude' : '-x';
-const alwaysIgnoreCLIFlags = alwaysIgnore.map(x => [excludeFlag, x]).flat();
-const gitIgnoreCLIFlags    = gitIgnore   .map(x => [excludeFlag, x]).flat();
-const npmIgnoreCLIFlags    = npmIgnore   .map(x => [excludeFlag, x]).flat();
-
-// dist zip
-if(isWin) await $`tar.exe -c ${alwaysIgnoreCLIFlags} ${npmIgnoreCLIFlags} -a -f ./gh-release/dist-${version}.zip .`
-else      await $`zip ${alwaysIgnoreCLIFlags} ${npmIgnoreCLIFlags} -r ./gh-release/dist-${version}.zip .`;
-
-// source zip
-if(isWin) await $`tar.exe -c ${alwaysIgnoreCLIFlags} ${gitIgnoreCLIFlags} -a -f ./gh-release/source-${version}.zip .`
-else      await $`zip ${alwaysIgnoreCLIFlags} ${gitIgnoreCLIFlags} -r ./gh-release/source-${version}.zip .`;
+console.log(chalk.green(`» Creating release...`));
+await $`npm pack`;
 
 // thats it for now!
 console.log(chalk.green(`» Done!`));
