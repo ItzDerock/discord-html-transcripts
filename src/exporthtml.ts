@@ -537,19 +537,37 @@ function formatContent(content: string, context: discord.NewsChannel | discord.T
         .replace(/\_(.+?)\_/g, '<em>$1</em>')
         .replace(/`(.+?)`/g, `<span class="pre pre--inline">$1</span>`)
         .replace(/\|\|(.+?)\|\|/g, `<span class="spoiler-text spoiler-text--hidden" ${replyStyle ? '' : 'onclick="showSpoiler(event, this)"'}>$1</span>`)
-        .replace(/\&lt\;@!*&*([0-9]{16,20})\&gt\;/g, (user: string) => {
+        .replace(/\&lt\;@!*&*([0-9]{16,20})\&gt\;/g, (user: string) => { // matches @!<id> or @<id>
             const userId = (user.match(/[0-9]{16,20}/) ?? [""])[0];
             const userInGuild = context.client?.users?.resolve(userId);
 
             return `<span class="mention" title="${userInGuild?.tag ?? userId}">@${userInGuild?.username ?? "Unknown User"}</span>`
         })
-        .replace(/\&lt\;#!*&*([0-9]{16,20})\&gt\;/g, (channel: string) => {
+        .replace(/\&lt\;#!*&*([0-9]{16,20})\&gt\;/g, (channel: string) => { // matches #!<id> or #<id>
             const channelId = (channel.match(/[0-9]{16,20}/) ?? [""])[0];
             const channelInGuild = context.guild.channels.resolve(channelId);
 
             const pre = channelInGuild ? channelInGuild.isText() ? '#' : channelInGuild.isVoice() ? '🔊' : '📁' : "#";
 
             return `<span class="mention" title="${channelInGuild?.name ?? channelId}">${pre}${channelInGuild?.name ?? "Unknown Channel"}</span>`;
+        })
+        .replace(/\&lt\;\@\&amp\;([0-9]{16,20})\&gt\;/g, (channel: string) => { // matches &!<id> or &<id>
+            const roleId = (channel.match(/[0-9]{16,20}/) ?? [""])[0];
+            const roleInGuild = context.guild.roles.resolve(roleId);
+
+            if(!roleInGuild) 
+                return `<span class="mention" title="${roleId}">Unknown Role</span>`;
+            if(!roleInGuild.color) 
+                return `<span class="mention" title="${roleInGuild.name}">@${roleInGuild.name ?? "Unknown Role"}</span>`;
+            
+            const rgb  = roleInGuild.color ?? 0;
+            const r    = (rgb >> 16) & 0xFF;
+            const g    = (rgb >> 8) & 0xFF;
+            const b    = rgb & 0xFF;
+            const a    = 0.1;
+            const rgba = `rgba(${r}, ${g}, ${b}, ${a})`;
+
+            return `<span class="mention" style="color: ${roleInGuild.hexColor}; background-color: ${rgba};" title="${roleInGuild?.name ?? roleId}">@${roleInGuild?.name ?? "Unknown Role"}</span>`;
         });
         
     if(allowExtra) {
