@@ -1,6 +1,6 @@
 {
   "name": "discord-html-transcripts",
-  "version": "2.5.5",
+  "version": "2.5.6",
   "description": "A nicely formatted html transcript generator for discord.js.",
   "main": "dist/index.js",
   "homepage": "https://github.com/ItzDerock/discord-html-transcripts",
@@ -33,13 +33,15 @@
     "he": "^1.2.0",
     "highlight.js": "^11.5.1",
     "html-minifier": "^4.0.0",
-    "jsdom": "^19.0.0"
+    "jsdom": "^19.0.0",
+    "twemoji-parser": "^14.0.0"
   },
   "devDependencies": {
     "@types/dompurify": "^2.3.3",
     "@types/he": "^1.1.2",
     "@types/html-minifier": "^4.0.2",
     "@types/jsdom": "^16.2.14",
+    "@types/twemoji-parser": "^13.1.1",
     "clean-css": "^5.3.0",
     "discord.js": "^13.7.0",
     "ts-node": "^10.5.0",

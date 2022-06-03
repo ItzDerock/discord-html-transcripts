@@ -19,3 +19,8 @@ export async function downloadImageToDataURL(url: string): Promise<string | null
 
     return response;
 }
+
+// https://stackoverflow.com/questions/6639770/how-do-i-get-the-unicode-hex-representation-of-a-symbol-out-of-the-html-using-ja
+export const charCodeUTF32 = (char: string): number => {
+    return ((((char.charCodeAt(0)-0xD800)*0x400) + (char.charCodeAt(1)-0xDC00) + 0x10000));
+}

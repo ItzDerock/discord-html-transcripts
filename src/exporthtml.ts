@@ -1,14 +1,15 @@
-import * as discord      from 'discord.js';
-import { JSDOM }         from 'jsdom';
-import * as fs           from 'fs';
-import * as path         from 'path';
-import * as he           from 'he';
-import hljs              from 'highlight.js';
-import * as staticTypes  from './static';
-import { minify }        from 'html-minifier';
+import * as discord       from 'discord.js';
+import { JSDOM }          from 'jsdom';
+import * as fs            from 'fs';
+import * as path          from 'path';
+import * as he            from 'he';
+import hljs               from 'highlight.js';
+import * as staticTypes   from './static';
+import { minify }         from 'html-minifier';
+import { parse as emoji } from 'twemoji-parser';
 
 import { internalGenerateOptions, ObjectType, ReturnTypes } from './types';
-import { downloadImageToDataURL } from './utils';
+import { charCodeUTF32, downloadImageToDataURL } from './utils';
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 
 const version  = require('../package.json').version;
@@ -469,6 +470,49 @@ async function generateTranscript<T extends ReturnTypes>(
                 embedDiv.appendChild(embedContentContainer);
                 content.appendChild(embedDiv);
             } 
+        }
+
+        // reactions
+        if(message.reactions.cache.size > 0) {
+            const reactionsDiv = document.createElement('div');
+            reactionsDiv.classList.add('chatlog__reactions');
+
+            for(const reaction of Array.from(message.reactions.cache.values())) {
+                /*
+                    <div class="chatlog__reaction" title="upside_down"> - reactionContainer
+                        <img class="emoji emoji--small" alt="🙃" src="https://twemoji.maxcdn.com/2/svg/1f643.svg" loading="lazy"> - reactionEmoji
+                        <span class="chatlog__reaction-count">1</span> - reactionCount
+                    </div>
+                */
+
+                const reactionContainer = document.createElement('div');
+                reactionContainer.classList.add('chatlog__reaction');
+                reactionContainer.title = reaction.emoji.name ?? reaction.emoji.id ?? 'Unknown';
+                
+                const reactionEmoji = document.createElement('img');
+                reactionEmoji.classList.add('emoji', 'emoji--small');
+                reactionEmoji.alt = reaction.emoji.name ?? reaction.emoji.id ?? reaction.emoji.identifier;
+                if(reaction.emoji.url) {
+                    reactionEmoji.src = reaction.emoji.url;
+                } else if(reaction.emoji.name) {
+                    // console.log(reaction.emoji.identifier, reaction.emoji.name, reaction.emoji.id);
+                    reactionEmoji.src = emoji(reaction.emoji.name)[0].url;
+                } else {
+                    // reactionEmoji.src = `https://twemoji.maxcdn.com/2/svg/${reaction.emoji.id}.svg`;
+                    console.warn(`[discord-html-transcripts] [WARN] Failed to parse reaction emoji:`, reaction.emoji);
+                }
+
+                const reactionCount = document.createElement('span');
+                reactionCount.classList.add('chatlog__reaction-count');
+                reactionCount.textContent = reaction.count.toString();
+
+                reactionContainer.appendChild(reactionEmoji);
+                reactionContainer.appendChild(reactionCount);
+
+                reactionsDiv.appendChild(reactionContainer);
+            }
+
+            content.appendChild(reactionsDiv);
         }
 
         messageGroup.appendChild(content);
