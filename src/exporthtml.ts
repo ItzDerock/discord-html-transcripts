@@ -9,21 +9,34 @@ import { minify }         from 'html-minifier';
 import { parse as emoji } from 'twemoji-parser';
 
 import { internalGenerateOptions, ObjectType, ReturnTypes } from './types';
-import { charCodeUTF32, downloadImageToDataURL } from './utils';
+import { downloadImageToDataURL } from './utils';
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 
-const version  = require('../package.json').version;
+const version    = require('../package.json').version;
+const isDJSv14   = discord.version.startsWith('14');
+// @ts-ignore
+const Attachment = (isDJSv14 ? discord.Attachment : discord.MessageAttachment) as (typeof discord.MessageAttachment);
+
+if(!process.env.HIDE_TRANSCRIPT_WARNINGS && isDJSv14)
+    console.log('[WARN] discord-html-transcripts was designed to work with v13, but you are using v14. Please note that some bugs may occur.');
 
 // copilot helped so much here
 // copilot smart 🧠
 
 async function generateTranscript<T extends ReturnTypes>(
     messages: discord.Message[], 
-    channel: discord.TextBasedChannel, 
+    inputChannel: discord.TextBasedChannel, 
     opts: internalGenerateOptions = { returnType: 'buffer' as T, fileName: 'transcript.html' }
 ): Promise<ObjectType<T>> {
-    if(channel.type === "DM" || channel.isThread())
-        throw new Error("Cannot operate on DM channels or thread channels");
+    if(
+        (isDJSv14 
+            // @ts-ignore
+            ? inputChannel.type === 1 // djs v14 uses 1 for dm
+            : inputChannel.type === "DM")
+        || inputChannel.isThread()
+    ) throw new Error("Cannot operate on DM channels or thread channels");
+
+    const channel = inputChannel as (discord.NewsChannel | discord.TextChannel);
 
     const dom = new JSDOM(template.replace('{{TITLE}}', channel.name));
     const document = dom.window.document;
@@ -115,7 +128,7 @@ async function generateTranscript<T extends ReturnTypes>(
         if(author.bot) {
             const botTag = document.createElement('span');
             botTag.classList.add('chatlog__bot-tag');
-            botTag.textContent = (author.flags?.has("VERIFIED_BOT") ? '✔ ' : '') + 'BOT';
+            botTag.textContent = (author.flags?.has(65536 /* verified bot flag */) ? '✔ ' : '') + 'BOT';
             content.appendChild(botTag);
         }
 
@@ -529,7 +542,7 @@ async function generateTranscript<T extends ReturnTypes>(
         return Buffer.from(serialized) as ObjectType<T>;
 
     if(opts.returnType === "attachment")
-        return new discord.MessageAttachment(Buffer.from(serialized), opts.fileName ?? 'transcript.html') as ObjectType<T>;
+        return new Attachment(Buffer.from(serialized), opts.fileName ?? 'transcript.html') as ObjectType<T>;
 
     // should never get here.
     return serialized as ObjectType<T>;

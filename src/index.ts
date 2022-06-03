@@ -83,7 +83,10 @@ export const createTranscript = async (channel: ValidTextChannels, opts?: Create
     var last_id: string | undefined;
 
     while (true) {
-        const messages = await channel.messages.fetch({ limit: 100, before: last_id });
+        const options  = { limit: 100, before: last_id };
+        if(!last_id) delete options['before'];
+        
+        const messages = await channel.messages.fetch();
         sum_messages.push(...Array.from(messages.values()));
         last_id = messages.last()?.id;
     
