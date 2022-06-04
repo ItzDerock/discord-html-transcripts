@@ -533,7 +533,11 @@ async function generateTranscript<T extends ReturnTypes>(
     }));
 
     var serialized = dom.serialize();
-    if(opts.minify) serialized = minify(serialized, staticTypes.MINIFY_OPTIONS)
+    try {
+        if(opts.minify) serialized = minify(serialized, staticTypes.MINIFY_OPTIONS)
+    } catch (error) {
+        console.error(`[discord-html-transcripts] [ERROR] Failed to minify: `, error);
+    }
 
     if(opts.returnType === "string")
         return serialized as ObjectType<T>;
