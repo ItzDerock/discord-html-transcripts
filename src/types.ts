@@ -1,4 +1,4 @@
-import { 
+import type { 
     Collection, 
     Message, 
     DMChannel,
@@ -43,3 +43,6 @@ export type internalGenerateOptions = {
 }
 
 export type ValidTextChannels = Exclude<TextBasedChannel, DMChannel | PartialDMChannel>;
+
+/* some util types */
+export type Class<T> = new (...args: any[]) => T;

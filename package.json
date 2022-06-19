@@ -1,6 +1,6 @@
 {
   "name": "discord-html-transcripts",
-  "version": "2.5.7",
+  "version": "2.5.8",
   "description": "A nicely formatted html transcript generator for discord.js.",
   "main": "dist/index.js",
   "homepage": "https://github.com/ItzDerock/discord-html-transcripts",
@@ -8,7 +8,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node ./build.mjs",
-    "prepublish": "npm run build",
     "test:commonjs": "node ./tests/generate.js",
     "test:typescript": "ts-node ./tests/generate.ts"
   },
@@ -43,7 +42,9 @@
     "@types/jsdom": "^16.2.14",
     "@types/twemoji-parser": "^13.1.1",
     "clean-css": "^5.3.0",
-    "discord.js": "^13.7.0",
+    "discord.js": "^13.8.0",
+    "discord.js-13": "npm:discord.js@^13.8.0",
+    "discord.js-14": "npm:discord.js@dev",
     "ts-node": "^10.5.0",
     "typescript": "^4.5.5",
     "zx": "^6.1.0"

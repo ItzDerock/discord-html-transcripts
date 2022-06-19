@@ -1,42 +1,53 @@
-import * as discord       from 'discord.js';
-import { JSDOM }          from 'jsdom';
-import * as fs            from 'fs';
-import * as path          from 'path';
-import * as he            from 'he';
-import hljs               from 'highlight.js';
-import * as staticTypes   from './static';
-import { minify }         from 'html-minifier';
-import { parse as emoji } from 'twemoji-parser';
+import type * as discordv13 from 'discord.js-13';
+import type * as discordv14 from 'discord.js-14';
+import * as fs              from 'fs';
+import * as path            from 'path';
+import * as he              from 'he';
+import * as staticTypes     from './static';
+import * as userDiscord     from 'discord.js';
+import { minify }           from 'html-minifier';
+import { parse as emoji }   from 'twemoji-parser';
+import { JSDOM }            from 'jsdom';
+import hljs                 from 'highlight.js';
 
-import { internalGenerateOptions, ObjectType, ReturnTypes } from './types';
+import { 
+    internalGenerateOptions, 
+    ObjectType, 
+    ReturnTypes,
+    Class
+} from './types';
+
 import { downloadImageToDataURL } from './utils';
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 
 const version    = require('../package.json').version;
-const isDJSv14   = discord.version.startsWith('14');
-// @ts-ignore
-const Attachment = (isDJSv14 ? discord.Attachment : discord.MessageAttachment) as (typeof discord.MessageAttachment);
+const isDJSv14   = userDiscord.version.startsWith('14') as boolean;
+
+const Attachment = (isDJSv14 ? 
+        // @ts-ignore
+        userDiscord.Attachment
+        : userDiscord.MessageAttachment
+    ) as (Class<discordv14.Attachment | discordv13.MessageAttachment>)
 
 if(!process.env.HIDE_TRANSCRIPT_WARNINGS && isDJSv14)
     console.log('[WARN] discord-html-transcripts was designed to work with v13, but you are using v14. Please note that some bugs may occur.');
-
-// copilot helped so much here
-// copilot smart 🧠
+    // because of needing to support v13/14, you may seem some weird typescript "hacks"
 
 async function generateTranscript<T extends ReturnTypes>(
-    messages: discord.Message[], 
-    inputChannel: discord.TextBasedChannel, 
+    messages: userDiscord.Message[], 
+    inputChannel: userDiscord.TextBasedChannel, 
     opts: internalGenerateOptions = { returnType: 'buffer' as T, fileName: 'transcript.html' }
 ): Promise<ObjectType<T>> {
+    const channelTemp = inputChannel as (discordv13.TextBasedChannel | discordv14.TextBasedChannel);
+
     if(
         (isDJSv14 
-            // @ts-ignore
-            ? inputChannel.type === 1 // djs v14 uses 1 for dm
-            : inputChannel.type === "DM")
+            ? channelTemp.type === 1 // djs v14 uses 1 for dm
+            : channelTemp.type === "DM")
         || inputChannel.isThread()
     ) throw new Error("Cannot operate on DM channels or thread channels");
 
-    const channel = inputChannel as (discord.NewsChannel | discord.TextChannel);
+    const channel = inputChannel as (discordv13.NewsChannel | discordv13.TextChannel);
 
     const dom = new JSDOM(template.replace('{{TITLE}}', channel.name));
     const document = dom.window.document;
@@ -80,7 +91,7 @@ async function generateTranscript<T extends ReturnTypes>(
             const reference = document.createElement('div');
             reference.classList.add('chatlog__reference');
 
-            const referencedMessage: discord.Message | null = messages instanceof discord.Collection ? messages.get(message.reference.messageId) : messages.find(m => m.id === message.reference!.messageId);
+            const referencedMessage: userDiscord.Message | null = messages instanceof userDiscord.Collection ? messages.get(message.reference.messageId) : messages.find(m => m.id === message.reference!.messageId);
             const author = referencedMessage?.author ?? staticTypes.DummyUser;
 
             reference.innerHTML = 
@@ -147,6 +158,7 @@ async function generateTranscript<T extends ReturnTypes>(
 
         // message content
         if(message.content) {
+            console.log(message.content, validateURL(message.content));
             if (validateURL(message.content)) {
                 var link = document.createElement('a');
                 link.classList.add('chatlog__content');
@@ -554,7 +566,7 @@ async function generateTranscript<T extends ReturnTypes>(
 
 const languages = hljs.listLanguages();
 
-function formatContent(content: string, context: discord.NewsChannel | discord.TextChannel | discord.ThreadChannel, allowExtra=false, replyStyle=false, purify=he.escape) {
+function formatContent(content: string, context: discordv13.NewsChannel | discordv13.TextChannel | discordv13.ThreadChannel, allowExtra=false, replyStyle=false, purify=he.escape) {
     const emojiClass = /^(<(a?):([^:]+?):(\d+?)>([ \t]+?)?){0,27}$/.test(content)
         ? `emoji--large` : `emoji--small`;
     
@@ -652,7 +664,7 @@ function formatBytes(bytes: number, decimals = 2) {
 }
 
 function validateURL(url: string) {
-    return /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi.test(url);
+    return /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/i.test(url);
 }
 
 export default generateTranscript;

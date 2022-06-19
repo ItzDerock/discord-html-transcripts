@@ -24,3 +24,9 @@ export async function downloadImageToDataURL(url: string): Promise<string | null
 export const charCodeUTF32 = (char: string): number => {
     return ((((char.charCodeAt(0)-0xD800)*0x400) + (char.charCodeAt(1)-0xDC00) + 0x10000));
 }
+
+// i think this is cleaner than writing "variable as unknown as type"
+// used when i cant skip using "as unknown"
+export function castToType<T>(type: any) {
+    return type as unknown as T;
+}

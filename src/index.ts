@@ -1,4 +1,5 @@
 import { Collection, Message } from 'discord.js';
+import type { TextBasedChannel } from 'discord.js-14';
 import exportHtml from './exporthtml';
 
 import {
@@ -7,6 +8,7 @@ import {
     CreateTranscriptOptions, 
     ValidTextChannels
 } from './types';
+import { castToType } from './utils';
 
 /** 
  * @example
@@ -75,9 +77,27 @@ export const createTranscript = async (channel: ValidTextChannels, opts?: Create
     if(!('returnType'  in options))  options.returnType = 'attachment';
     if(!('limit'       in options))  options.limit      = -1;
 
-    if(!channel || !channel.isText || !(channel.isText())) {
-        throw new Error('Provided channel must be a valid channel.');
-    }
+    if(!channel)
+        throw new TypeError('Provided channel must be a valid channel.');
+
+    if(
+        // general checks
+        !channel
+        ||
+
+        // v13
+        (
+            (typeof channel.isText === 'function')
+            && (!channel.isText())
+        )
+        
+        || 
+        // v14 (dev)
+        (
+            (typeof castToType<TextBasedChannel>(channel).isTextBased === "function") 
+            && (!castToType<TextBasedChannel>(channel).isTextBased())
+        )
+    ) throw new TypeError('Provided channel must be a valid channel.');
 
     const sum_messages: Message[] = [];
     var last_id: string | undefined;
