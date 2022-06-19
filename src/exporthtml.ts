@@ -43,8 +43,13 @@ async function generateTranscript<T extends ReturnTypes>(
     if(
         (isDJSv14 
             ? channelTemp.type === 1 // djs v14 uses 1 for dm
-            : channelTemp.type === "DM")
-        || inputChannel.isThread()
+            : channelTemp.type === "DM"
+        )
+        || 
+        (
+            typeof inputChannel.isThread === "function" 
+            && inputChannel.isThread()
+        )
     ) throw new Error("Cannot operate on DM channels or thread channels");
 
     const channel = inputChannel as (discordv13.NewsChannel | discordv13.TextChannel);
@@ -158,7 +163,6 @@ async function generateTranscript<T extends ReturnTypes>(
 
         // message content
         if(message.content) {
-            console.log(message.content, validateURL(message.content));
             if (validateURL(message.content)) {
                 var link = document.createElement('a');
                 link.classList.add('chatlog__content');
