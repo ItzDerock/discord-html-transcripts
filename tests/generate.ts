@@ -1,23 +1,29 @@
-import * as discord from 'discord.js';
+import * as discord from 'discord.js-13';
 import { createTranscript } from '../src';
 
 const client = new discord.Client({
-    intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES]
+    intents: [
+        discord.Intents.FLAGS.GUILDS,
+        discord.Intents.FLAGS.GUILD_MESSAGES,
+    ],
 });
 
 client.on('ready', async () => {
     /** @type {discord.TextChannel} */
     const channel = await client.channels.fetch(process.env.CHANNEL!);
 
-    if(!channel || !channel.isText() || channel.type === 'DM') {
+    if (!channel || !channel.isText() || channel.type === 'DM') {
         console.error('Invalid channel provided.');
         process.exit(1);
     }
 
-    const attachment = await createTranscript(channel, { minify: true, useCDN: false });
+    const attachment = await createTranscript(channel, {
+        minify: true,
+        useCDN: false,
+    });
 
     await channel.send({
-        files: [attachment]
+        files: [attachment],
     });
 
     client.destroy();
