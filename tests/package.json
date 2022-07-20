@@ -10,7 +10,7 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "discord.js": "^13.9.0",
+        "discord.js": "^14.0.3",
         "tsc": "^2.0.4"
     }
 }

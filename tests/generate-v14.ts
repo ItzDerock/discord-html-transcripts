@@ -1,6 +1,7 @@
 import * as discord from 'discord.js-14';
 import { ChannelType } from 'discord.js-14';
 import { createTranscript } from '../src';
+require('dotenv').config();
 
 const client = new discord.Client({
     intents: [
