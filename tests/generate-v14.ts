@@ -24,7 +24,6 @@ client.on('ready', async () => {
         process.exit(1);
     }
 
-    // @ts-ignore
     const attachment = await createTranscript(channel, { minify: true });
 
     await channel.send({

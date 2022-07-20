@@ -8,29 +8,27 @@ import {
     GenerateFromMessagesOpts,
     CreateTranscriptOptions,
     ValidTextChannels,
+    ReturnTypeWrapper,
 } from './types';
 import { castToType, optsSetup } from './utils';
 
 /**
  * @example
- * const discordTranscripts = require('discord-html-transcripts');
- * // or (if using typescript) import * as discordTranscripts from 'discord-html-transcripts';
- *
- * const messages = someWayToGetMessages(); // Must be Collection<string, Message> or Message[]
- * const channel  = someWayToGetChannel();  // Used for ticket name, guild icon, and guild name
- *
- * // You do not need to await this
- * const attachment = discordTranscripts.generateFromMessages(messages, channel);
- *
- * channel.send({
- *     files: [attachment]
- * });
+ *   const attachment = await generateFromMessages(messages, channel, {
+ *       returnBuffer: false, // Return a buffer instead of a MessageAttachment 
+ *       returnType: 'attachment', // Valid options: 'buffer' | 'string' | 'attachment' Default: 'attachment'
+ *       minify: true, // Minify the result? Uses html-minifier
+ *       saveImages: false, // Download all images and include the image data in the HTML (allows viewing the image even after it has been deleted) (! WILL INCREASE FILE SIZE !)
+ *       useCDN: false // Uses a CDN to serve discord styles rather than bundling it in the HTML (saves ~8kb when minified)
+ *   });
  */
-export const generateFromMessages = (
+export function generateFromMessages<
+    T extends GenerateFromMessagesOpts = {}
+>(
     messages: GenerateSource,
     channel: ValidTextChannels,
-    opts?: GenerateFromMessagesOpts
-) => {
+    opts?: T
+): Promise<ReturnTypeWrapper<T>> {
     var options: GenerateFromMessagesOpts = optsSetup(opts, channel);
 
     // Turn collection into an array
@@ -47,7 +45,7 @@ export const generateFromMessages = (
 
     // If no messages were provided, generate empty transcript
     if (messages.length === 0) {
-        return exportHtml(messages, channel, options);
+        return exportHtml(messages, channel, options) as any;
     }
 
     // Check if array contains discord messages
@@ -55,27 +53,26 @@ export const generateFromMessages = (
         throw new Error('Provided messages does not contain valid Messages.');
     }
 
-    return exportHtml(messages, channel, options);
+    return exportHtml(messages, channel, options) as any;
 };
 
 /**
  * @example
- * const discordTranscripts = require('discord-html-transcripts');
- * // or (if using typescript) import * as discordTranscripts from 'discord-html-transcripts';
- *
- * const channel = message.channel; // or however you get your TextChannel
- *
- * // Must be awaited
- * const attachment = await discordTranscripts.createTranscript(channel);
- *
- * channel.send({
- *     files: [attachment]
- * });
+ *   const attachment = await createTranscript(channel, {
+ *       limit: -1, // Max amount of messages to fetch.
+ *       returnType: 'attachment', // Valid options: 'buffer' | 'string' | 'attachment' Default: 'attachment'
+ *       fileName: 'transcript.html', // Only valid with returnBuffer false. Name of attachment. 
+ *       minify: true, // Minify the result? Uses html-minifier
+ *       saveImages: false, // Download all images and include the image data in the HTML (allows viewing the image even after it has been deleted) (! WILL INCREASE FILE SIZE !)
+ *       useCDN: false // Uses a CDN to serve discord styles rather than bundling it in HTML (saves ~8kb when minified)
+ *   });
  */
-export const createTranscript = async (
+export async function createTranscript<
+    T extends CreateTranscriptOptions = {}
+>(
     channel: ValidTextChannels,
-    opts?: CreateTranscriptOptions
-) => {
+    opts?: T
+): Promise<ReturnTypeWrapper<T>> {
     var options: CreateTranscriptOptions = optsSetup(opts, channel);
     if (!('limit' in options)) options.limit = -1;
 
@@ -112,5 +109,5 @@ export const createTranscript = async (
             break;
     }
 
-    return await exportHtml(sum_messages, channel, options);
+    return await exportHtml(sum_messages, channel, options) as any;
 };

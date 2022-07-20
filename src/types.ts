@@ -4,18 +4,17 @@ import type {
     DMChannel,
     PartialDMChannel,
     TextBasedChannel,
-    MessageAttachment,
 } from 'discord.js';
+
+import type { AttachmentBuilder } from 'discord.js-14';
 
 export type ReturnTypes = 'buffer' | 'string' | 'attachment';
 
-export type ObjectType<T> = T extends 'buffer'
-    ? Buffer
-    : T extends 'string'
-    ? string
-    : T extends 'attachment'
-    ? MessageAttachment
-    : MessageAttachment;
+export type ObjectType<T> = 
+    T extends 'buffer' ? Buffer
+    : T extends 'string' ? string
+    : T extends 'attachment' ? AttachmentBuilder
+    : AttachmentBuilder;
 
 export type GenerateFromMessagesOpts = {
     returnType?: ReturnTypes;
@@ -47,3 +46,11 @@ export type ValidTextChannels = Exclude<
 
 /* some util types */
 export type Class<T> = new (...args: any[]) => T;
+
+// https://discord.com/channels/244230771232079873/544853878651355148/999323779379499119
+export type ReturnTypeWrapper<T> = 
+    T extends GenerateFromMessagesOpts ? 
+        T["returnType"] extends undefined 
+            ? AttachmentBuilder
+            : ObjectType<T["returnType"]>
+        : AttachmentBuilder
