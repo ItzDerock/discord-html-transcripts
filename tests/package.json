@@ -1,16 +1,16 @@
 {
-  "name": "tests",
-  "version": "1.0.0",
-  "description": "",
-  "main": "generate.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "discord.js": "^13.6.0",
-    "tsc": "^2.0.4"
-  }
+    "name": "tests",
+    "version": "1.0.0",
+    "description": "",
+    "main": "generate.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "discord.js": "^14.0.3",
+        "tsc": "^2.0.4"
+    }
 }
