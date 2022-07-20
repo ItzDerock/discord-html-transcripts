@@ -1,48 +1,49 @@
-import type { 
-    Collection, 
-    Message, 
+import type {
+    Collection,
+    Message,
     DMChannel,
     PartialDMChannel,
     TextBasedChannel,
-    MessageAttachment
+    MessageAttachment,
 } from 'discord.js';
 
 export type ReturnTypes = 'buffer' | 'string' | 'attachment';
 
-export type ObjectType<T> = 
-    T extends "buffer"     ? Buffer :
-    T extends "string"     ? string :
-    T extends "attachment" ? MessageAttachment :
-    MessageAttachment;
+export type ObjectType<T> = T extends 'buffer'
+    ? Buffer
+    : T extends 'string'
+    ? string
+    : T extends 'attachment'
+    ? MessageAttachment
+    : MessageAttachment;
 
 export type GenerateFromMessagesOpts = {
-    /**
-     * @deprecated Please use returnType instead
-     */
-    returnBuffer?: boolean,
-    returnType?: ReturnTypes
-    fileName?: string
-    minify?: boolean
-    saveImages?: boolean
-    useCDN?: boolean
-}
+    returnType?: ReturnTypes;
+    fileName?: string;
+    minify?: boolean;
+    saveImages?: boolean;
+    useCDN?: boolean;
+};
 
 export type GenerateSource = Collection<string, Message> | Message[];
 
 export type CreateTranscriptOptions = GenerateFromMessagesOpts & {
-    limit?: number
-}
+    limit?: number;
+};
 
 export type internalGenerateOptions = {
-    returnBuffer?: boolean,
-    returnType?: ReturnTypes
-    fileName?: string
-    minify?: boolean
-    saveImages?: boolean
-    useCDN?: boolean
-}
+    returnBuffer?: boolean;
+    returnType?: ReturnTypes;
+    fileName?: string;
+    minify?: boolean;
+    saveImages?: boolean;
+    useCDN?: boolean;
+};
 
-export type ValidTextChannels = Exclude<TextBasedChannel, DMChannel | PartialDMChannel>;
+export type ValidTextChannels = Exclude<
+    TextBasedChannel,
+    DMChannel | PartialDMChannel
+>;
 
 /* some util types */
 export type Class<T> = new (...args: any[]) => T;
