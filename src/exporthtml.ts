@@ -18,7 +18,7 @@ import {
 } from './types';
 
 import { downloadImageToDataURL } from './utils';
-const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
+const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8').replace('{{staticTypes.timestampShort}}', JSON.stringify(staticTypes.timestampShort));
 
 const version = require('../package.json').version;
 const isDJSv14 = userDiscord.version.startsWith('14');
@@ -67,17 +67,19 @@ async function generateTranscript<T extends ReturnTypes>(
     const document = dom.window.document;
 
     // Replace <style>...</style> with <link rel="stylesheet" src="https://cdn.jsdelivr.net/npm/discord-html-transcripts@version/dist/template.css">
-    const style = document.querySelector('style')!;
-    style.parentNode!.removeChild(style);
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute(
-        'href',
-        'https://cdn.jsdelivr.net/npm/discord-html-transcripts@' +
-            (version ?? 'latest') +
-            '/dist/template.css'
-    );
-    document.head.appendChild(link);
+    if(opts.useCDN) {
+        const style = document.querySelector('style')!;
+        style.parentNode!.removeChild(style);
+        const link = document.createElement('link');
+        link.setAttribute('rel', 'stylesheet');
+        link.setAttribute(
+            'href',
+            'https://cdn.jsdelivr.net/npm/discord-html-transcripts@' +
+                (version ?? 'latest') +
+                '/dist/template.css'
+        );
+        document.head.appendChild(link);
+    }
 
     // Basic Info (header)
     const guildIcon = document.getElementsByClassName(
@@ -209,6 +211,7 @@ async function generateTranscript<T extends ReturnTypes>(
             // timestamp
             const timestamp = document.createElement('span');
             timestamp.classList.add('chatlog__timestamp');
+            timestamp.setAttribute('data-timestamp', message.createdTimestamp.toString());
             timestamp.textContent = message.createdAt.toLocaleString(
                 'en-us',
                 staticTypes.timestampShort

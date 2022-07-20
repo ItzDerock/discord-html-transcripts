@@ -45,15 +45,20 @@ export function castToType<T>(type: any) {
     return type as unknown as T;
 }
 
-export function optsSetup(
-    opts: CreateTranscriptOptions | GenerateFromMessagesOpts | undefined,
-    channel: ValidTextChannels
+const DEFAULT_OPTIONS = {
+    returnType: 'attachment',
+    fileName: 'transcript.html',
+    minify: true,
+    saveImages: false,
+    useCDN: true
+}
+
+export function optsSetup<T extends CreateTranscriptOptions | GenerateFromMessagesOpts>(
+    opts: T = {} as T,
+    _channel: ValidTextChannels
 ) {
-    var options = opts || {};
-
-    if (!('fileName' in options))
-        options.fileName = `transcript-${channel.id}.html`;
-    if (!('returnType' in options)) options.returnType = 'attachment';
-
-    return options;
+    return {
+        ...DEFAULT_OPTIONS,
+        ...opts,
+    } as T
 }
