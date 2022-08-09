@@ -6,7 +6,7 @@
 
 Discord HTML Transcripts is a node.js module to generate nice looking HTML transcripts. Processes discord markdown like **bold**, *italics*, ~~strikethroughs~~, and more. Nicely formats attachments and embeds. Built in XSS protection, preventing users from inserting html tags. 
 
-**This module is designed to work with [discord.js](https://discord.js.org/#/) v13.**
+**This module is designed to work with [discord.js](https://discord.js.org/#/) v13 and v14.**
 
 HTML Template stolen from [DiscordChatExporter](https://github.com/Tyrrrz/DiscordChatExporter).
 
