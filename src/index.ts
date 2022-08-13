@@ -73,7 +73,7 @@ export async function createTranscript<
     channel: ValidTextChannels,
     opts?: T
 ): Promise<ReturnTypeWrapper<T>> {
-    var options: CreateTranscriptOptions = optsSetup(opts, channel);
+    const options: CreateTranscriptOptions = optsSetup(opts, channel);
     if (!('limit' in options)) options.limit = -1;
 
     if (!channel)
@@ -95,18 +95,14 @@ export async function createTranscript<
     var last_id: string | undefined;
 
     while (true) {
-        const options = { limit: 100, before: last_id };
-        if (!last_id) delete options['before'];
+        var fetchOptions = { limit: 100, before: last_id };
+        if (!last_id) delete fetchOptions['before'];
 
-        const messages = await channel.messages.fetch(options);
+        const messages = await channel.messages.fetch(fetchOptions);
         sum_messages.push(...Array.from(messages.values()));
         last_id = messages.last()?.id;
 
-        if (
-            messages.size != 100 ||
-            (options.limit! > 0 && sum_messages.length >= options.limit!)
-        )
-            break;
+        if (messages.size != 100 || (sum_messages.length >= options.limit! && options.limit! != -1)) break;
     }
 
     return await exportHtml(sum_messages, channel, options) as any;
