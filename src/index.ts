@@ -104,7 +104,7 @@ export async function createTranscript<
 
         if (
             messages.size != 100 ||
-            (options.limit! > 0 && (sum_messages.length >= options.limit! && options.limit! !== -1))
+            (options.limit! > 0 && (sum_messages.length >= options.limit! && options.limit! != -1))
         )
             break;
     }
