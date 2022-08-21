@@ -31,9 +31,9 @@ const Attachment = (
           userDiscord.MessageAttachment
 ) as Class<discordv14.AttachmentBuilder | discordv13.MessageAttachment>;
 
-if (!process.env.HIDE_TRANSCRIPT_WARNINGS && isDJSv14)
+if (!process.env.HIDE_TRANSCRIPT_WARNINGS && !isDJSv14)
     console.log(
-        '[WARN] discord-html-transcripts was designed to work with v13, but you are using v14. Please note that some bugs may occur.'
+        '[WARN] discord-html-transcripts will no longer support v13 in a later release, please update to v14.'
     );
 // because of needing to support v13/14, you may seem some weird typescript "hacks"
 
