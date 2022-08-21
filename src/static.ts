@@ -61,3 +61,5 @@ export const timestampLong: Intl.DateTimeFormatOptions = {
     hour: '2-digit',
     minute: '2-digit',
 };
+
+export const IMAGE_EXTS = ['png', 'jpg', 'jpeg', 'gif']
