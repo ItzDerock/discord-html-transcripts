@@ -50,7 +50,7 @@ Both methods of generating a transcript allow for an option object as the last p
 
 ### Built in Message Fetcher
 ```js
-const attachment = await createTranscript(channel, {
+const attachment = await discordTranscripts.createTranscript(channel, {
     limit: -1, // Max amount of messages to fetch.
     returnType: 'attachment', // Valid options: 'buffer' | 'string' | 'attachment' Default: 'attachment'
     fileName: 'transcript.html', // Only valid with returnBuffer false. Name of attachment. 
@@ -62,7 +62,7 @@ const attachment = await createTranscript(channel, {
 
 ### Providing your own messages
 ```js
-const attachment = await generateFromMessages(messages, channel, {
+const attachment = await discordTranscripts.generateFromMessages(messages, channel, {
     returnBuffer: false, // Return a buffer instead of a MessageAttachment 
     returnType: 'attachment', // Valid options: 'buffer' | 'string' | 'attachment' Default: 'attachment'
     minify: true, // Minify the result? Uses html-minifier
