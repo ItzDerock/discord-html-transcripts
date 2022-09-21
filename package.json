@@ -29,7 +29,7 @@
   ],
   "dependencies": {
     "axios": "^0.27.2",
-    "dotenv": "^16.0.1",
+    "dotenv": "^16.0.2",
     "he": "^1.2.0",
     "highlight.js": "^11.6.0",
     "html-minifier": "^4.0.0",
