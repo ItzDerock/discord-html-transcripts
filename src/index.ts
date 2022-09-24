@@ -4,7 +4,10 @@ import { CreateTranscriptOptions, ExportReturnType, GenerateFromMessagesOptions,
 
 // version check
 if(discord.version.split('.')[0] !== '14') {
-    console.error(`[discord-html-transcripts] Versions v3.x.x of discord-html-transcripts are only compatible with discord.js v14.x.x. You are using discord.js v${discord.version}.`);
+    console.error(
+        `[discord-html-transcripts] Versions v3.x.x of discord-html-transcripts are only compatible with discord.js v14.x.x, and you are using v${discord.version}.`
+        + `    Please install discord-html-transcripts v2.x.x using "npm install discord-html-transcripts@^2".`
+    );
     process.exit(1);
 }
 
