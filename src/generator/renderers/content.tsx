@@ -1,16 +1,41 @@
-import { DiscordBold, DiscordCustomEmoji, DiscordInlineCode, DiscordItalic, DiscordMention, DiscordQuote, DiscordSpoiler, DiscordUnderlined } from '@skyra/discord-components-react';
-import parse, { rulesExtended, RuleTypes } from 'discord-markdown-parser';
+import { DiscordBold, DiscordCodeBlock, DiscordCustomEmoji, DiscordInlineCode, DiscordItalic, DiscordMention, DiscordQuote, DiscordSpoiler, DiscordUnderlined } from '@derockdev/discord-components-react';
+import parse, { rulesExtended } from 'discord-markdown-parser';
 import React, { Fragment, ReactNode } from 'react';
 import { ASTNode, SingleASTNode } from 'simple-markdown';
-import { RenderMessageContext } from '../..';
+import { RenderMessageContext } from '../';
+
+export enum RenderType {
+  EMBED,
+  REPLY, 
+  NORMAL
+}
 
 type RenderContentContext = RenderMessageContext & {
-  inEmbed: boolean;
+  type: RenderType,
+
+  _internal?: {
+    largeEmojis?: boolean
+  }
 }
 
 export default async function renderContent(content: string, context: RenderContentContext) {
+  if(context.type === RenderType.REPLY && content.length > 180)
+    content = content.slice(0, 180) + '...'; 
+
   // parse the markdown
-  const parsed = parse(content, context.inEmbed ? "extended" : "normal");
+  const parsed = parse(content, context.type === RenderType.EMBED ? "extended" : "normal");
+
+  // check if the parsed content is only emojis
+  const isOnlyEmojis = parsed.every((node) => node.type === 'emoji' || (node.type === "text" && node.content.trim().length === 0));
+  if(isOnlyEmojis) {
+    // now check if there are less than 25 emojis
+    const emojis = parsed.filter((node) => node.type === 'emoji');
+    if(emojis.length <= 25) {
+      context._internal = {
+        largeEmojis: true
+      }
+    }
+  }
 
   return (
     <Fragment>
@@ -19,11 +44,13 @@ export default async function renderContent(content: string, context: RenderCont
   )
 }
 
-const renderNodes = async (nodes: ASTNode, context: RenderContentContext) => Array.isArray(nodes) 
-  ? await Promise.all(nodes.map((node) => renderASTNode(node, context))) 
+const renderNodes = async (nodes: ASTNode, context: RenderContentContext): Promise<React.ReactNode[]> => Array.isArray(nodes) 
+  ? (await Promise.all(nodes.map((node) => renderASTNode(node, context)))).map((each, i) => <Fragment key={i}>{each}</Fragment>)
   : [await renderASTNode(nodes, context)];
 
 export async function renderASTNode(node: SingleASTNode, context: RenderContentContext): Promise<ReactNode> {
+  if(!node) return null;
+
   const type = node.type as keyof typeof rulesExtended;
 
   switch (type) {
@@ -31,7 +58,7 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
       return node.content;
 
     case 'link':
-      return <a href={node.target}>{await renderNodes(node.children, context)}</a>;
+      return <a href={node.target}>{await renderNodes(node.content, context)}</a>;
 
     case 'url':
     case 'autolink':
@@ -42,6 +69,10 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
       )
 
     case 'blockQuote':
+      if(context.type === RenderType.REPLY) {
+        return await renderNodes(node.content, context);
+      };
+
       return (
         <DiscordQuote>
           {...(await renderNodes(node.content, context))}
@@ -50,6 +81,7 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
 
     case 'br':
     case 'newline':
+      if(context.type === RenderType.REPLY) return " ";
       return <br />
 
     case 'channel': {
@@ -82,7 +114,7 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
       return (
         <DiscordMention 
           type="role"
-          color={role?.hexColor}
+          color={context.type === RenderType.REPLY ? undefined : role?.hexColor}
         >
           {role ? role.name : `Unknown Role (${id})`}
         </DiscordMention>
@@ -113,6 +145,17 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
         </DiscordMention>
       )
 
+    case 'codeBlock':
+      if(context.type !== RenderType.REPLY) {
+        return (
+          <DiscordCodeBlock 
+            language={node.lang}
+            code={node.content}
+          />
+        )
+      }
+
+    case 'codeBlock':
     case 'inlineCode':
       return (
         <DiscordInlineCode>
@@ -163,7 +206,9 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
         <DiscordCustomEmoji
           name={node.name as string}
           url={`https://cdn.discordapp.com/emojis/${node.id}.${node.animated ? 'gif' : 'png'}`}
-          embedEmoji={context.inEmbed}
+          embedEmoji={context.type === RenderType.EMBED}
+          // @ts-ignore
+          largeEmoji={context._internal?.largeEmojis}
         />
       )
 

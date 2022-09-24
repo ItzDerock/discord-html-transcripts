@@ -17,12 +17,7 @@ export function calculateInlineIndex(fields: APIEmbedField[], currentFieldIndex:
     .slice(0, currentFieldIndex)
     .map(e => e.inline ?? false)
 
-  const amount = calculateAmountOfTrue(inlineFieldsBefore) + 2;
+  const amount = calculateAmountOfTrue(inlineFieldsBefore) + 1;
 
-  console.log(inlineFieldsBefore, currentFieldIndex, amount);
-
-  if(amount > 3) 
-    return amount % 3;
-
-  return amount;
+  return (amount % 3) + 1;
 }

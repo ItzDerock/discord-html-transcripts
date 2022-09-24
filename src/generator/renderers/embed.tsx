@@ -1,9 +1,9 @@
-import { DiscordEmbed, DiscordEmbedDescription, DiscordEmbedField, DiscordEmbedFields, DiscordEmbedFooter } from "@skyra/discord-components-react";
+import { DiscordEmbed, DiscordEmbedDescription, DiscordEmbedField, DiscordEmbedFields, DiscordEmbedFooter, DiscordReply } from "@derockdev/discord-components-react";
 import { Embed, Message } from "discord.js";
 import React from 'react';
 import { RenderMessageContext } from "..";
 import { calculateInlineIndex } from "../../utils/embeds";
-import renderContent from "./content";
+import renderContent, { RenderType } from "./content";
 
 type RenderEmbedContext = RenderMessageContext & {
   index: number;
@@ -13,7 +13,7 @@ type RenderEmbedContext = RenderMessageContext & {
 export async function renderEmbed(embed: Embed, context: RenderEmbedContext) {
   return (
     <DiscordEmbed
-      embedTitle="Embed Title"
+      embedTitle={embed.title ?? undefined}
       slot="embeds"
       key={`${context.message.id}-e-${context.index}`}
       
@@ -32,7 +32,7 @@ export async function renderEmbed(embed: Embed, context: RenderEmbedContext) {
         embed.description && (
           <DiscordEmbedDescription slot="description">
             {
-              await renderContent(embed.description, { ...context, inEmbed: true })
+              await renderContent(embed.description, { ...context, type: RenderType.EMBED })
             }
           </DiscordEmbedDescription>
         )
@@ -52,7 +52,7 @@ export async function renderEmbed(embed: Embed, context: RenderEmbedContext) {
                     inlineIndex={calculateInlineIndex(embed.fields, id)}
                   >
                     {
-                      await renderContent(field.value, { ...context, inEmbed: true })
+                      await renderContent(field.value, { ...context, type: RenderType.EMBED })
                     }
                   </DiscordEmbedField>
                 ))

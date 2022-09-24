@@ -1,33 +1,57 @@
-import { DiscordMessage, DiscordReaction, DiscordReactions, DiscordReply } from '@skyra/discord-components-react';
+import { DiscordAttachments, DiscordCommand, DiscordMessage, DiscordReaction, DiscordReactions, DiscordThread, DiscordThreadMessage } from '@derockdev/discord-components-react';
 import { Message, UserFlags } from 'discord.js';
 import React from 'react';
 import { RenderMessageContext } from "..";
-import renderContent from './content';
+import { parseDiscordEmoji } from '../../utils/utils';
+import renderAttachments from './attachment';
+import renderComponentRow from './components';
+import renderContent, { RenderType } from './content';
 import { renderEmbed } from './embed';
+import renderReply from './reply';
+import renderSystemMessage from './systemMessage';
 
 export default async function renderMessage(message: Message, context: RenderMessageContext) {
+  if(message.system) return renderSystemMessage(message, context);
+
   const isCrosspost = message.reference && message.reference.guildId !== message.guild?.id;
 
   return (
     <DiscordMessage 
-      author={message.member?.nickname ?? message.author.username} 
       id={`m-${message.id}`} 
-      avatar={message.author.avatarURL() ?? undefined}
-      roleColor={message.member?.displayHexColor ?? undefined}
       timestamp={message.createdAt}
       key={message.id}
       edited={message.editedAt !== null}
-      verified={message.author.flags?.has(UserFlags.VerifiedBot)}
-      roleIcon={message.member?.roles.icon?.iconURL() ?? undefined}
       server={isCrosspost ?? undefined}
-      bot={!isCrosspost && message.author.bot}
       highlight={message.mentions.everyone}
+
+      profile={message.author.id}
     >
+      {/* reply */}
+      {
+        await renderReply(message, context)
+      }
+
+      {/* slash command */}
+      {
+        message.interaction && (
+          <DiscordCommand 
+            slot="reply"
+            profile={message.interaction.user.id}
+            command={'/' + message.interaction.commandName}
+          />
+        )
+      }
+
       {/* message content */}
       {
         message.content && (
-          await renderContent(message.content, { ...context, inEmbed: false })
+          await renderContent(message.content, { ...context, type: RenderType.NORMAL })
         )
+      }
+
+      {/* attachments */}
+      {
+        await renderAttachments(message, context)
       }
 
       {/* message embeds */}
@@ -41,6 +65,19 @@ export default async function renderMessage(message: Message, context: RenderMes
         )
       }
 
+      {/* components */}
+      {
+        message.components.length > 0 && (
+          <DiscordAttachments slot="components">
+            {
+              message.components.map((component, id) => (
+                renderComponentRow(component, id)
+              ))
+            }
+          </DiscordAttachments>
+        )
+      }
+
       {/* reactions */}
       {
         message.reactions.cache.size > 0 && (
@@ -51,15 +88,15 @@ export default async function renderMessage(message: Message, context: RenderMes
               message.reactions.cache.map((reaction, id) => (
                 reaction.emoji.id ? (
                     <DiscordReaction
-                      key={`${message.id}-r-${id}`}
+                      key={`${message.id}r${id}`}
                       emoji={`https://cdn.discordapp.com/emojis/${reaction.emoji.id}.${reaction.emoji.animated ? "gif" : 'png'}`}
                       count={reaction.count}
                     />
                   ) : (
-                    (console.log(reaction, id) as unknown || true) && <DiscordReaction
-                      key={`${message.id}-r-${id}`}
+                    <DiscordReaction
+                      key={`${message.id}r${id}`}
                       name={reaction.emoji.name!}
-                      emoji={"https://discord.com/assets/7c010dc6da25c012643ea22c1f002bb4.svg"}
+                      emoji={parseDiscordEmoji(reaction.emoji)}
                       count={reaction.count}
                     />
                   )
@@ -67,6 +104,27 @@ export default async function renderMessage(message: Message, context: RenderMes
               )
             }
           </DiscordReactions>
+        )
+      }
+
+      {/* threads */}
+      {
+        message.hasThread && message.thread && (
+          <DiscordThread
+            slot="thread"
+            name={message.thread.name}
+            cta={message.thread.messageCount ? `${message.thread.messageCount} Message${message.thread.messageCount > 1 ? 's' : ''}` : 'View Thread'}
+          >
+            {
+              message.thread.lastMessage ? (
+                <DiscordThreadMessage profile={message.thread.lastMessage.id}>
+                  {await renderContent(message.thread.lastMessage.content.length > 128 ? (message.thread.lastMessage.content.substring(0, 125) + '...') : message.thread.lastMessage.content, { ...context, type: RenderType.REPLY })}
+                </DiscordThreadMessage>
+              ) : (
+                `Thread messages not saved.`
+              )
+            }
+          </DiscordThread>
         )
       }
     </DiscordMessage>
