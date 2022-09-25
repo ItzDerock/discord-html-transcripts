@@ -94,7 +94,10 @@ export default async function renderMessages({
     <html>
       <head>
         <meta name="viewport" content="width=device-width" />
-        
+
+        {/* title */}
+        <title>{ channel.isDMBased() ? 'Direct Messages' : channel.name }</title>
+
         {/* profiles */}
         <script dangerouslySetInnerHTML={
           {
