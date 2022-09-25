@@ -31,7 +31,7 @@ Styles from [@derockdev/discord-components](https://github.com/ItzDerock/discord
 Behind the scenes, this package uses React SSR to generate a static site.
 
 ## Example Output
-![output](https://img.derock.dev/3lQHT5.gif)
+![output](https://img.derock.dev/ZBk1G4.gif)
 
 ## 📝 Usage
 ### Example usage using the built in message fetcher.
