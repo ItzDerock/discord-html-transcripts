@@ -41,7 +41,7 @@ Behind the scenes, this package uses React SSR to generate a static site.
 ### Example usage using the built in message fetcher.
 
 ```js
-const discordTranscripts = require("discord-html-transcripts");
+const discordTranscripts = require('discord-html-transcripts');
 // or (if using typescript) import * as discordTranscripts from 'discord-html-transcripts';
 
 const channel = message.channel; // or however you get your TextChannel
@@ -57,7 +57,7 @@ channel.send({
 ### Or if you prefer, you can pass in your own messages.
 
 ```js
-const discordTranscripts = require("discord-html-transcripts");
+const discordTranscripts = require('discord-html-transcripts');
 // or (if using typescript) import * as discordTranscripts from 'discord-html-transcripts';
 
 const messages = someWayToGetMessages(); // Must be Collection<string, Message> or Message[]

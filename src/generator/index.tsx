@@ -1,11 +1,11 @@
-import { ChannelType, type Awaitable, type Channel, type Message, type Role, type User } from "discord.js";
-import ReactDOMServer from "react-dom/server";
-import React from "react";
-import { DiscordHeader, DiscordMessages } from "@derockdev/discord-components-react";
-import renderMessage from "./renderers/message";
-import renderContent, { RenderType } from "./renderers/content";
-import { buildProfiles } from "../utils/buildProfiles";
-import { scrollToMessage } from "../static/client";
+import { ChannelType, type Awaitable, type Channel, type Message, type Role, type User } from 'discord.js';
+import ReactDOMServer from 'react-dom/server';
+import React from 'react';
+import { DiscordHeader, DiscordMessages } from '@derockdev/discord-components-react';
+import renderMessage from './renderers/message';
+import renderContent, { RenderType } from './renderers/content';
+import { buildProfiles } from '../utils/buildProfiles';
+import { scrollToMessage } from '../static/client';
 
 export type RenderMessageContext = {
 	messages: Message[];
@@ -40,25 +40,25 @@ export default async function renderMessages({ messages, channel, callbacks, ...
 		<DiscordMessages>
 			{/* header */}
 			<DiscordHeader
-				guild={channel.isDMBased() ? "Direct Messages" : channel.guild.name}
+				guild={channel.isDMBased() ? 'Direct Messages' : channel.guild.name}
 				channel={
 					channel.isDMBased()
 						? channel.type === ChannelType.DM
-							? channel.recipient?.tag ?? "Unknown Recipient"
-							: "Unknown Recipient"
+							? channel.recipient?.tag ?? 'Unknown Recipient'
+							: 'Unknown Recipient'
 						: channel.name
 				}
 				icon={channel.isDMBased() ? undefined : channel.guild.iconURL({ size: 128 }) ?? undefined}
 			>
 				{channel.isThread()
-					? `Thread channel in ${channel.parent?.name ?? "Unknown Channel"}`
+					? `Thread channel in ${channel.parent?.name ?? 'Unknown Channel'}`
 					: channel.isDMBased()
 					? `Direct Messages`
 					: channel.isVoiceBased()
 					? `Voice Text Channel for ${channel.name}`
 					: channel.type === ChannelType.GuildCategory
 					? `Category Channel`
-					: "topic" in channel && channel.topic
+					: 'topic' in channel && channel.topic
 					? await renderContent(channel.topic, { messages, channel, callbacks, type: RenderType.REPLY, ...options })
 					: `This is the start of #${channel.name} channel.`}
 			</DiscordHeader>
@@ -67,12 +67,12 @@ export default async function renderMessages({ messages, channel, callbacks, ...
 			{chatBody}
 
 			{/* footer */}
-			<div style={{ textAlign: "center", width: "100%" }}>
-				Exported {messages.length} message{messages.length > 1 ? "s" : ""}.{" "}
+			<div style={{ textAlign: 'center', width: '100%' }}>
+				Exported {messages.length} message{messages.length > 1 ? 's' : ''}.{' '}
 				{options.poweredBy ? (
-					<span style={{ textAlign: "center" }}>
-						Powered by{" "}
-						<a href="https://github.com/ItzDerock/discord-html-transcripts" style={{ color: "lightblue" }}>
+					<span style={{ textAlign: 'center' }}>
+						Powered by{' '}
+						<a href="https://github.com/ItzDerock/discord-html-transcripts" style={{ color: 'lightblue' }}>
 							discord-html-transcripts
 						</a>
 						.
@@ -88,7 +88,7 @@ export default async function renderMessages({ messages, channel, callbacks, ...
 				<meta name="viewport" content="width=device-width" />
 
 				{/* title */}
-				<title>{channel.isDMBased() ? "Direct Messages" : channel.name}</title>
+				<title>{channel.isDMBased() ? 'Direct Messages' : channel.name}</title>
 
 				{/* profiles */}
 				<script
@@ -111,7 +111,7 @@ export default async function renderMessages({ messages, channel, callbacks, ...
 			<body
 				style={{
 					margin: 0,
-					minHeight: "100vh",
+					minHeight: '100vh',
 				}}
 			>
 				{elements}

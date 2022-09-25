@@ -1,14 +1,14 @@
-import { AttachmentBuilder, version, Collection, type Channel, type Message, type TextBasedChannel } from "discord.js";
-import renderMessages from "./generator";
+import { AttachmentBuilder, version, Collection, type Channel, type Message, type TextBasedChannel } from 'discord.js';
+import renderMessages from './generator';
 import {
 	ExportReturnType,
 	type CreateTranscriptOptions,
 	type GenerateFromMessagesOptions,
 	type ObjectType,
-} from "./types";
+} from './types';
 
 // version check
-if (version.split(".")[0] !== "14") {
+if (version.split('.')[0] !== '14') {
 	console.error(
 		`[discord-html-transcripts] Versions v3.x.x of discord-html-transcripts are only compatible with js v14.x.x, and you are using v${version}.` +
 			`    Please install discord-html-transcripts v2.x.x using "npm install discord-html-transcripts@^2".`,
@@ -113,4 +113,4 @@ export default {
 	createTranscript,
 	generateFromMessages,
 };
-export * from "./types";
+export * from './types';

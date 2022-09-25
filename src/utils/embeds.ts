@@ -1,4 +1,4 @@
-import type { APIEmbedField } from "discord.js";
+import type { APIEmbedField } from 'discord.js';
 
 export const calculateAmountOfTrue = (array: boolean[]) => {
 	// get the amount of true values before endIndex, stopping at the first false value

@@ -1,9 +1,9 @@
-import { DiscordAttachment, DiscordAttachments } from "@derockdev/discord-components-react";
-import React from "react";
-import type { Attachment, Message } from "discord.js";
-import type { RenderMessageContext } from "..";
-import type { AttachmentTypes } from "../../types";
-import { downloadImageToDataURL, formatBytes } from "../../utils/utils";
+import { DiscordAttachment, DiscordAttachments } from '@derockdev/discord-components-react';
+import React from 'react';
+import type { Attachment, Message } from 'discord.js';
+import type { RenderMessageContext } from '..';
+import type { AttachmentTypes } from '../../types';
+import { downloadImageToDataURL, formatBytes } from '../../utils/utils';
 
 export default async function renderAttachments(message: Message, context: RenderMessageContext) {
 	if (message.attachments.size === 0) return null;
@@ -19,9 +19,9 @@ export default async function renderAttachments(message: Message, context: Rende
 
 // "audio" | "video" | "image" | "file"
 function getAttachmentType(attachment: Attachment): AttachmentTypes {
-	const type = attachment.contentType?.split("/")?.[0] ?? "unknown";
-	if (["audio", "video", "image"].includes(type)) return type as AttachmentTypes;
-	return "file";
+	const type = attachment.contentType?.split('/')?.[0] ?? 'unknown';
+	if (['audio', 'video', 'image'].includes(type)) return type as AttachmentTypes;
+	return 'file';
 }
 
 export async function renderAttachment(attachment: Attachment, context: RenderMessageContext) {

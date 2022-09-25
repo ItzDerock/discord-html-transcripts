@@ -1,17 +1,17 @@
-import * as discord from "discord.js";
-import { createTranscript } from "../src";
+import * as discord from 'discord.js';
+import { createTranscript } from '../src';
 
-import("dotenv/config");
+import('dotenv/config');
 
 const client = new discord.Client({
 	intents: [discord.IntentsBitField.Flags.GuildMessages, discord.IntentsBitField.Flags.Guilds],
 });
 
-client.on("ready", async () => {
+client.on('ready', async () => {
 	const channel = await client.channels.fetch(process.env.CHANNEL!);
 
 	if (!channel || !channel.isTextBased()) {
-		console.error("Invalid channel provided.");
+		console.error('Invalid channel provided.');
 		process.exit(1);
 	}
 

@@ -4,12 +4,12 @@ import {
 	DiscordEmbedField,
 	DiscordEmbedFields,
 	DiscordEmbedFooter,
-} from "@derockdev/discord-components-react";
-import type { Embed, Message } from "discord.js";
-import React from "react";
-import type { RenderMessageContext } from "..";
-import { calculateInlineIndex } from "../../utils/embeds";
-import renderContent, { RenderType } from "./content";
+} from '@derockdev/discord-components-react';
+import type { Embed, Message } from 'discord.js';
+import React from 'react';
+import type { RenderMessageContext } from '..';
+import { calculateInlineIndex } from '../../utils/embeds';
+import renderContent, { RenderType } from './content';
 
 type RenderEmbedContext = RenderMessageContext & {
 	index: number;

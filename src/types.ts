@@ -1,12 +1,12 @@
-import type { AttachmentBuilder } from "discord.js";
-import type { RenderMessageContext } from "./generator";
+import type { AttachmentBuilder } from 'discord.js';
+import type { RenderMessageContext } from './generator';
 
-export type AttachmentTypes = "audio" | "video" | "image" | "file";
+export type AttachmentTypes = 'audio' | 'video' | 'image' | 'file';
 
 export enum ExportReturnType {
-	Buffer = "buffer",
-	String = "string",
-	Attachment = "attachment",
+	Buffer = 'buffer',
+	String = 'string',
+	Attachment = 'attachment',
 }
 
 export type ObjectType<T extends ExportReturnType> = T extends ExportReturnType.Buffer
@@ -31,7 +31,7 @@ export type GenerateFromMessagesOptions<T extends ExportReturnType> = Partial<{
 	/**
 	 * Callbacks for resolving channels, users, and roles
 	 */
-	callbacks: RenderMessageContext["callbacks"];
+	callbacks: RenderMessageContext['callbacks'];
 
 	/**
 	 * The name of the file to return if returnType is ExportReturnType.ATTACHMENT
