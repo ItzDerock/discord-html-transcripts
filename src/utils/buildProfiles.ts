@@ -45,7 +45,7 @@ export async function buildProfiles(messages: Message[]) {
 function buildProfile(member: GuildMember | null, author: User) {
   return {
     author: member?.nickname ?? author.username,
-    avatar: member?.displayAvatarURL() ?? author.displayAvatarURL(),
+    avatar: member?.displayAvatarURL({ size: 64 }) ?? author.displayAvatarURL({ size: 64 }),
     roleColor: member?.displayHexColor,
     roleIcon: member?.roles.icon?.iconURL() ?? undefined,
     roleName: member?.roles.hoist?.name ?? undefined,

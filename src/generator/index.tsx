@@ -93,6 +93,8 @@ export default async function renderMessages({
   return ReactDOMServer.renderToStaticMarkup(
     <html>
       <head>
+        <meta name="viewport" content="width=device-width" />
+        
         {/* profiles */}
         <script dangerouslySetInnerHTML={
           {
