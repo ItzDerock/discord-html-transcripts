@@ -1,6 +1,6 @@
 import { Awaitable, Channel, ChannelType, DMChannel, Emoji, Message, Role, User } from "discord.js";
 import ReactDOMServer from "react-dom/server";
-import React from "react";
+import React, { Fragment } from "react";
 import { DiscordHeader, DiscordMessages } from "@derockdev/discord-components-react";
 import renderMessage from "./renderers/message";
 import renderContent, { RenderType } from "./renderers/content";
@@ -28,6 +28,18 @@ export default async function renderMessages({
   ...options
 }: RenderMessageContext) {
   const profiles = buildProfiles(messages);
+  const chatBody = [] as React.ReactElement[];
+
+  for (const message of messages) {
+    const rendered = await renderMessage(message, {
+      messages,
+      channel,
+      callbacks,
+      ...options,
+    });
+
+    if (rendered) chatBody.push(rendered);
+  }
 
   const elements = (
     <DiscordMessages>
@@ -63,9 +75,7 @@ export default async function renderMessages({
       </DiscordHeader>
 
       {/* body */}
-      {await Promise.all(messages.map(
-        (message) => renderMessage(message, { messages, channel, callbacks, ...options })
-      ))}
+      {chatBody}
 
       {/* footer */}
       <div style={{ textAlign: "center", width: "100%" }}>
