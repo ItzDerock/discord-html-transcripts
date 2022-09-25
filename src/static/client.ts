@@ -11,7 +11,8 @@ document.addEventListener('click', (e) => {
   }
 });
 */
-export const scrollToMessage = 'document.addEventListener("click",t=>{const e=t.target.getAttribute("data-goto");if(e){const t=document.getElementById(`m-${e}`);t&&t.scrollIntoView({behavior:"smooth"})}});';
+export const scrollToMessage =
+	'document.addEventListener("click",t=>{const e=t.target.getAttribute("data-goto");if(e){const t=document.getElementById(`m-${e}`);t&&t.scrollIntoView({behavior:"smooth"})}});';
 
 /*
 wait for 
