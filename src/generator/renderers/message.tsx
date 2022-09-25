@@ -1,5 +1,5 @@
 import { DiscordAttachments, DiscordCommand, DiscordMessage, DiscordReaction, DiscordReactions, DiscordThread, DiscordThreadMessage } from '@derockdev/discord-components-react';
-import { Message, UserFlags } from 'discord.js';
+import { Message } from 'discord.js';
 import React from 'react';
 import { RenderMessageContext } from "..";
 import { parseDiscordEmoji } from '../../utils/utils';

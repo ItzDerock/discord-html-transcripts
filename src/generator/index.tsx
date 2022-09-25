@@ -1,6 +1,6 @@
-import { Awaitable, Channel, ChannelType, DMChannel, Emoji, Message, Role, User } from "discord.js";
+import { Awaitable, Channel, ChannelType, DMChannel, Message, Role, User } from "discord.js";
 import ReactDOMServer from "react-dom/server";
-import React, { Fragment } from "react";
+import React from "react";
 import { DiscordHeader, DiscordMessages } from "@derockdev/discord-components-react";
 import renderMessage from "./renderers/message";
 import renderContent, { RenderType } from "./renderers/content";

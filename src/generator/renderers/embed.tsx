@@ -1,4 +1,4 @@
-import { DiscordEmbed, DiscordEmbedDescription, DiscordEmbedField, DiscordEmbedFields, DiscordEmbedFooter, DiscordReply } from "@derockdev/discord-components-react";
+import { DiscordEmbed, DiscordEmbedDescription, DiscordEmbedField, DiscordEmbedFields, DiscordEmbedFooter } from "@derockdev/discord-components-react";
 import { Embed, Message } from "discord.js";
 import React from 'react';
 import { RenderMessageContext } from "..";

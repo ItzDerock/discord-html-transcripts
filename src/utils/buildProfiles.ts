@@ -1,4 +1,4 @@
-import { GuildIconFormat, GuildMember, Message, User, UserFlags } from "discord.js";
+import { GuildMember, Message, User, UserFlags } from "discord.js";
 
 export type Profile = {
   author: string; // author of the message
