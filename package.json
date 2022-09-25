@@ -7,10 +7,11 @@
 	"types": "./dist/index.d.ts",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"build": "tsc",
-		"release": "npm run build && npm pack",
+		"build": "tsc -p tsconfig.json",
+		"prepack": "npm run build",
 		"test:typescript": "ts-node ./tests/generate.ts",
-		"lint": "prettier --write --cache . && eslint --cache --fix ."
+		"lint": "prettier --write --cache . && eslint --cache --fix .",
+		"typecheck": "tsc -p tsconfig.eslint.json"
 	},
 	"repository": {
 		"type": "git",

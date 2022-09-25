@@ -132,11 +132,10 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
 		case "codeBlock":
 			if (context.type !== RenderType.REPLY) {
 				return <DiscordCodeBlock language={node.lang} code={node.content} />;
+			} else {
+				return <DiscordInlineCode>{node.content}</DiscordInlineCode>;
 			}
 
-		// code blocks in replies are rendered as inline code
-		// eslint-disable-next-line no-duplicate-case, no-fallthrough
-		case "codeBlock":
 		case "inlineCode":
 			return <DiscordInlineCode>{node.content}</DiscordInlineCode>;
 

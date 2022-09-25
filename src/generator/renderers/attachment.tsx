@@ -8,13 +8,13 @@ import { downloadImageToDataURL, formatBytes } from "../../utils/utils";
 export default async function renderAttachments(message: Message, context: RenderMessageContext) {
 	if (message.attachments.size === 0) return null;
 
-	return (
-		<DiscordAttachments slot="attachments">
-			{await Promise.all(
-				message.attachments.map(async (attachment) => await renderAttachment(attachment, message, context)),
-			)}
-		</DiscordAttachments>
-	);
+	const attachments: React.ReactNode[] = [];
+
+	for (const attachment of message.attachments.values()) {
+		attachments.push(await renderAttachment(attachment, context));
+	}
+
+	return <DiscordAttachments slot="attachments">{attachments}</DiscordAttachments>;
 }
 
 // "audio" | "video" | "image" | "file"
@@ -24,7 +24,7 @@ function getAttachmentType(attachment: Attachment): AttachmentTypes {
 	return "file";
 }
 
-export async function renderAttachment(attachment: Attachment, message: Message, context: RenderMessageContext) {
+export async function renderAttachment(attachment: Attachment, context: RenderMessageContext) {
 	let url = attachment.url;
 	const name = attachment.name;
 	const width = attachment.width;
