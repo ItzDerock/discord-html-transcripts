@@ -5,7 +5,7 @@
 		"strict": true,
 		"forceConsistentCasingInFileNames": true,
 		"esModuleInterop": true,
-		"module": "esnext",
+		"module": "commonjs",
 		"noImplicitAny": true,
 		"strictNullChecks": true,
 		"noImplicitThis": true,
