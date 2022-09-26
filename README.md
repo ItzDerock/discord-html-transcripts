@@ -74,7 +74,7 @@ Both methods of generating a transcript allow for an option object as the last p
 const attachment = await discordTranscripts.createTranscript(channel, {
     limit: -1, // Max amount of messages to fetch.
     returnType: 'attachment', // Valid options: 'buffer' | 'string' | 'attachment' Default: 'attachment' OR use the enum ExportReturnType
-    fileName: 'transcript.html', // Only valid with returnType is 'attachment'. Name of attachment.
+    filename: 'transcript.html', // Only valid with returnType is 'attachment'. Name of attachment.
     saveImages: false, // Download all images and include the image data in the HTML (allows viewing the image even after it has been deleted) (! WILL INCREASE FILE SIZE !)
     callbacks: {
       // register custom callbacks for the following:
