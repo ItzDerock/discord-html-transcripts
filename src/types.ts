@@ -1,16 +1,19 @@
-import { Attachment } from "discord.js";
-import { RenderMessageContext } from "./generator";
+import type { AttachmentBuilder } from 'discord.js';
+import type { RenderMessageContext } from './generator';
+
+export type AttachmentTypes = 'audio' | 'video' | 'image' | 'file';
 
 export enum ExportReturnType {
-  BUFFER = 'buffer',
-  STRING = 'string',
-  ATTACHMENT = 'attachment',
-};
+  Buffer = 'buffer',
+  String = 'string',
+  Attachment = 'attachment',
+}
 
-export type ObjectType<T> = 
-  T extends 'buffer' ? Buffer :
-  T extends 'string' ? string :
-  Attachment;
+export type ObjectType<T extends ExportReturnType> = T extends ExportReturnType.Buffer
+  ? Buffer
+  : T extends ExportReturnType.String
+  ? string
+  : AttachmentBuilder;
 
 export type GenerateFromMessagesOptions<T extends ExportReturnType> = Partial<{
   /**
@@ -28,7 +31,7 @@ export type GenerateFromMessagesOptions<T extends ExportReturnType> = Partial<{
   /**
    * Callbacks for resolving channels, users, and roles
    */
-  callbacks: RenderMessageContext['callbacks'],
+  callbacks: RenderMessageContext['callbacks'];
 
   /**
    * The name of the file to return if returnType is ExportReturnType.ATTACHMENT
@@ -43,9 +46,11 @@ export type GenerateFromMessagesOptions<T extends ExportReturnType> = Partial<{
   poweredBy: boolean;
 }>;
 
-export type CreateTranscriptOptions<T extends ExportReturnType> = Partial<GenerateFromMessagesOptions<T> & {
-  /**
-   * The max amount of messages to fetch
-   */
-  limit: number;
-}>;
+export type CreateTranscriptOptions<T extends ExportReturnType> = Partial<
+  GenerateFromMessagesOptions<T> & {
+    /**
+     * The max amount of messages to fetch
+     */
+    limit: number;
+  }
+>;

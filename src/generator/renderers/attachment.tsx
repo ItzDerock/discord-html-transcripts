@@ -1,33 +1,28 @@
-import { DiscordAttachment, DiscordAttachments } from "@derockdev/discord-components-react";
-import { Attachment, Message } from "discord.js";
-import { RenderMessageContext } from "..";
+import { DiscordAttachment, DiscordAttachments } from '@derockdev/discord-components-react';
 import React from 'react';
-import { downloadImageToDataURL, formatBytes } from "../../utils/utils";
+import type { Attachment, Message } from 'discord.js';
+import type { RenderMessageContext } from '..';
+import type { AttachmentTypes } from '../../types';
+import { downloadImageToDataURL, formatBytes } from '../../utils/utils';
 
 export default async function renderAttachments(message: Message, context: RenderMessageContext) {
-  if(message.attachments.size === 0) return null;
+  if (message.attachments.size === 0) return null;
 
   return (
     <DiscordAttachments slot="attachments">
-      {
-        await Promise.all(
-          message.attachments.map(async (attachment) => (
-            await renderAttachment(attachment, message, context)
-          ))
-        )
-      }
+      {await Promise.all(message.attachments.map((attachment) => renderAttachment(attachment, context)))}
     </DiscordAttachments>
-  )
+  );
 }
 
 // "audio" | "video" | "image" | "file"
-function getAttachmentType(attachment: Attachment): "audio" | "video" | "image" | "file" {
-  var type = attachment.contentType?.split("/")?.[0] ?? "unknown";
-  if(["audio", "video", "image"].includes(type)) return type as any;
-  return "file";
+function getAttachmentType(attachment: Attachment): AttachmentTypes {
+  const type = attachment.contentType?.split('/')?.[0] ?? 'unknown';
+  if (['audio', 'video', 'image'].includes(type)) return type as AttachmentTypes;
+  return 'file';
 }
 
-export async function renderAttachment(attachment: Attachment, message: Message, context: RenderMessageContext) {
+export async function renderAttachment(attachment: Attachment, context: RenderMessageContext) {
   let url = attachment.url;
   const name = attachment.name;
   const width = attachment.width;
@@ -35,9 +30,9 @@ export async function renderAttachment(attachment: Attachment, message: Message,
 
   const type = getAttachmentType(attachment);
 
-  if(context.saveImages) {
+  if (context.saveImages) {
     const downloaded = await downloadImageToDataURL(url);
-    if(downloaded) {
+    if (downloaded) {
       url = downloaded;
     }
   }
@@ -53,5 +48,5 @@ export async function renderAttachment(attachment: Attachment, message: Message,
       width={width ?? undefined}
       height={height ?? undefined}
     />
-  )
+  );
 }

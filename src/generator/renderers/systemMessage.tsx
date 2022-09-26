@@ -1,35 +1,22 @@
-import { DiscordSystemMessage } from "@derockdev/discord-components-react";
-import { GuildMember, Message, MessageType, User } from "discord.js";
-import { RenderMessageContext } from "..";
-import React from "react";
+import { DiscordSystemMessage } from '@derockdev/discord-components-react';
+import { MessageType, type GuildMember, type Message, type User } from 'discord.js';
+import React from 'react';
 
-export default async function renderSystemMessage(
-  message: Message,
-  _context: RenderMessageContext
-) {
+export default async function renderSystemMessage(message: Message) {
   switch (message.type) {
     case MessageType.RecipientAdd:
     case MessageType.UserJoin:
       return (
-        <DiscordSystemMessage
-          id={`m-${message.id}`}
-          key={message.id}
-          type="join"
-        >
+        <DiscordSystemMessage id={`m-${message.id}`} key={message.id} type="join">
           {JoinMessage(message.member, message.author)}
         </DiscordSystemMessage>
       );
 
     case MessageType.ChannelPinnedMessage:
       return (
-        <DiscordSystemMessage
-          id={`m-${message.id}`}
-          key={message.id}
-          type="edit"
-        >
-          <Highlight color={message.member?.roles.hoist?.hexColor}>{message.author.username}</Highlight>{" "}
-          pinned <i data-goto={message.reference?.messageId}>a message</i>{" "}
-          to this channel.
+        <DiscordSystemMessage id={`m-${message.id}`} key={message.id} type="edit">
+          <Highlight color={message.member?.roles.color?.hexColor}>{message.author.username}</Highlight> pinned{' '}
+          <i data-goto={message.reference?.messageId}>a message</i> to this channel.
         </DiscordSystemMessage>
       );
 
@@ -38,25 +25,17 @@ export default async function renderSystemMessage(
     case MessageType.GuildBoostTier2:
     case MessageType.GuildBoostTier3:
       return (
-        <DiscordSystemMessage
-          id={`m-${message.id}`}
-          key={message.id}
-          type="boost"
-        >
-          <Highlight color={message.member?.roles.hoist?.hexColor}>{message.author.username}</Highlight>{" "}
-          boosted the server!
+        <DiscordSystemMessage id={`m-${message.id}`} key={message.id} type="boost">
+          <Highlight color={message.member?.roles.color?.hexColor}>{message.author.username}</Highlight> boosted the
+          server!
         </DiscordSystemMessage>
       );
 
     case MessageType.ThreadStarterMessage:
       return (
-        <DiscordSystemMessage
-          id={`ms-${message.id}`}
-          key={message.id}
-          type="thread"
-        >
-          <Highlight color={message.member?.roles.hoist?.hexColor}>{message.author.username}</Highlight>{" "}
-          started a thread: <i data-goto={message.reference?.messageId}>{message.content}</i>
+        <DiscordSystemMessage id={`ms-${message.id}`} key={message.id} type="thread">
+          <Highlight color={message.member?.roles.color?.hexColor}>{message.author.username}</Highlight> started a
+          thread: <i data-goto={message.reference?.messageId}>{message.content}</i>
         </DiscordSystemMessage>
       );
 
@@ -65,8 +44,8 @@ export default async function renderSystemMessage(
   }
 }
 
-export function Highlight({ children, color }: { children: React.ReactNode, color?: string }) {
-  return <i style={{ color: color ?? "white" }}>{children}</i>;
+export function Highlight({ children, color }: { children: React.ReactNode; color?: string }) {
+  return <i style={{ color: color ?? 'white' }}>{children}</i>;
 }
 
 const allJoinMessages = [
@@ -88,31 +67,37 @@ const allJoinMessages = [
   '{user} just slid into the server.',
   'A {user} has spawned in the server.',
   'Big {user} showed up!',
-  'Where\'s {user}? In the server!',
+  "Where's {user}? In the server!",
   '{user} hopped into the server. Kangaroo!!',
   '{user} just showed up. Hold my beer.',
   'Challenger approaching - {user} has appeared!',
-  'It\'s a bird! It\'s a plane! Nevermind, it\'s just {user}.',
-  'It\'s {user}! Praise the sun! \\\\[T]/',
+  "It's a bird! It's a plane! Nevermind, it's just {user}.",
+  "It's {user}! Praise the sun! \\\\[T]/",
   'Never gonna give {user} up. Never gonna let {user} down.',
   'Ha! {user} has joined! You activated my trap card!',
   'Cheers, love! {user} is here!',
   'Hey! Listen! {user} has joined!',
-  'We\'ve been expecting you {user}',
-  'It\'s dangerous to go alone, take {user}!',
-  '{user} has joined the server! It\'s super effective!',
+  "We've been expecting you {user}",
+  "It's dangerous to go alone, take {user}!",
+  "{user} has joined the server! It's super effective!",
   'Cheers, love! {user} is here!',
   '{user} is here, as the prophecy foretold.',
-  '{user} has arrived. Party\'s over.',
+  "{user} has arrived. Party's over.",
   'Ready player {user}',
   '{user} is here to kick butt and chew bubblegum. And {user} is all out of gum.',
-  'Hello. Is it {user} you\'re looking for?',
-]
+  "Hello. Is it {user} you're looking for?",
+];
 
 export function JoinMessage(member: GuildMember | null, fallbackUser: User) {
   const randomMessage = allJoinMessages[Math.floor(Math.random() * allJoinMessages.length)];
 
-  return randomMessage.split('{user}').flatMap((item, i) => [item, (
-    <Highlight color={member?.roles.hoist?.hexColor} key={i}>{member?.nickname ?? fallbackUser.username}</Highlight>
-  )]).slice(0, -1);
+  return randomMessage
+    .split('{user}')
+    .flatMap((item, i) => [
+      item,
+      <Highlight color={member?.roles.color?.hexColor} key={i}>
+        {member?.nickname ?? fallbackUser.username}
+      </Highlight>,
+    ])
+    .slice(0, -1);
 }

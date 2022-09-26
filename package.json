@@ -7,9 +7,11 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "release": "npm run build && npm pack",
-    "test:typescript": "ts-node ./tests/generate.ts"
+    "build": "tsc -p tsconfig.json",
+    "prepack": "npm run build",
+    "test:typescript": "ts-node ./tests/generate.ts",
+    "lint": "prettier --write --cache . && eslint --cache --fix .",
+    "typecheck": "tsc -p tsconfig.eslint.json"
   },
   "repository": {
     "type": "git",
@@ -26,7 +28,9 @@
   "author": "Derock <derock@derock.dev>",
   "license": "GNU GPLv3",
   "files": [
-    "dist/**/*"
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "dist/**/*.js.map"
   ],
   "devDependencies": {
     "@types/node": "^18.7.18",
@@ -46,13 +50,13 @@
   "dependencies": {
     "@derockdev/discord-components-core": "^3.4.4",
     "@derockdev/discord-components-react": "^3.4.2",
-    "axios": "^0.27.2",
     "discord-markdown-parser": "^1.0.1",
     "html-minifier": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "simple-markdown": "^0.7.3",
-    "twemoji": "^14.0.2"
+    "twemoji": "^14.0.2",
+    "undici": "^5.10.0"
   },
   "peerDependencies": {
     "discord.js": "^14.0.0"
