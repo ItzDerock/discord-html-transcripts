@@ -22,7 +22,8 @@
     "pretty": true,
     "moduleResolution": "node",
     "jsx": "react",
-    "incremental": true
+    "incremental": true,
+    "declaration": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]

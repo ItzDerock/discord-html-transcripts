@@ -28,7 +28,9 @@
   "author": "Derock <derock@derock.dev>",
   "license": "GNU GPLv3",
   "files": [
-    "dist/**/*"
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "dist/**/*.js.map"
   ],
   "devDependencies": {
     "@types/node": "^18.7.18",
