@@ -132,9 +132,8 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
     case 'codeBlock':
       if (context.type !== RenderType.REPLY) {
         return <DiscordCodeBlock language={node.lang} code={node.content} />;
-      } else {
-        return <DiscordInlineCode>{node.content}</DiscordInlineCode>;
       }
+      return <DiscordInlineCode>{node.content}</DiscordInlineCode>;
 
     case 'inlineCode':
       return <DiscordInlineCode>{node.content}</DiscordInlineCode>;
