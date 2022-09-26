@@ -50,7 +50,7 @@ const channel = message.channel; // or however you get your TextChannel
 const attachment = await discordTranscripts.createTranscript(channel);
 
 channel.send({
-	files: [attachment],
+  files: [attachment],
 });
 ```
 
@@ -67,7 +67,7 @@ const channel = someWayToGetChannel(); // Used for ticket name, guild icon, and 
 const attachment = await discordTranscripts.generateFromMessages(messages, channel);
 
 channel.send({
-	files: [attachment],
+  files: [attachment],
 });
 ```
 
@@ -98,7 +98,7 @@ const attachment = await discordTranscripts.createTranscript(channel, {
 
 ```js
 const attachment = await discordTranscripts.generateFromMessages(messages, channel, {
-	// Same as createTranscript, except no limit
+  // Same as createTranscript, except no limit
 });
 ```
 
