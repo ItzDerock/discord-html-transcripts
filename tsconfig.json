@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "es2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -21,7 +21,7 @@
     "noUnusedParameters": true,
     "pretty": true,
     "moduleResolution": "node",
-    "jsx": "preserve",
+    "jsx": "react",
     "incremental": true
   },
   "include": ["src"],
