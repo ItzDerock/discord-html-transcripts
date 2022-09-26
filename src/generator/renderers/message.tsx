@@ -54,7 +54,7 @@ export default async function renderMessage(message: Message, context: RenderMes
       {/* message embeds */}
       {message.embeds.length > 0 &&
         (await Promise.all(
-          message.embeds.map(async (embed, id) => await renderEmbed(embed, { ...context, index: id, message })),
+          message.embeds.map(async (embed, id) => await renderEmbed(embed, { ...context, index: id, message }))
         ))}
 
       {/* components */}
@@ -67,24 +67,14 @@ export default async function renderMessage(message: Message, context: RenderMes
       {/* reactions */}
       {message.reactions.cache.size > 0 && (
         <DiscordReactions slot="reactions">
-          {message.reactions.cache.map((reaction, id) =>
-            reaction.emoji.id ? (
-              <DiscordReaction
-                key={`${message.id}r${id}`}
-                emoji={`https://cdn.discordapp.com/emojis/${reaction.emoji.id}.${
-                  reaction.emoji.animated ? 'gif' : 'png'
-                }`}
-                count={reaction.count}
-              />
-            ) : (
-              <DiscordReaction
-                key={`${message.id}r${id}`}
-                name={reaction.emoji.name!}
-                emoji={parseDiscordEmoji(reaction.emoji)}
-                count={reaction.count}
-              />
-            ),
-          )}
+          {message.reactions.cache.map((reaction, id) => (
+            <DiscordReaction
+              key={`${message.id}r${id}`}
+              name={reaction.emoji.name!}
+              emoji={parseDiscordEmoji(reaction.emoji)}
+              count={reaction.count}
+            />
+          ))}
         </DiscordReactions>
       )}
 
@@ -105,7 +95,7 @@ export default async function renderMessage(message: Message, context: RenderMes
                 message.thread.lastMessage.content.length > 128
                   ? message.thread.lastMessage.content.substring(0, 125) + '...'
                   : message.thread.lastMessage.content,
-                { ...context, type: RenderType.REPLY },
+                { ...context, type: RenderType.REPLY }
               )}
             </DiscordThreadMessage>
           ) : (

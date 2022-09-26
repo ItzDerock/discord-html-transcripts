@@ -35,7 +35,7 @@ export async function buildProfiles(messages: Message[]) {
     if (message.thread && message.thread.lastMessage) {
       profiles[message.thread.lastMessage.author.id] = buildProfile(
         message.thread.lastMessage.member,
-        message.thread.lastMessage.author,
+        message.thread.lastMessage.author
       );
     }
   }

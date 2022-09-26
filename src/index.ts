@@ -11,7 +11,7 @@ import {
 if (version.split('.')[0] !== '14') {
   console.error(
     `[discord-html-transcripts] Versions v3.x.x of discord-html-transcripts are only compatible with js v14.x.x, and you are using v${version}.` +
-      `    Please install discord-html-transcripts v2.x.x using "npm install discord-html-transcripts@^2".`,
+      `    Please install discord-html-transcripts v2.x.x using "npm install discord-html-transcripts@^2".`
   );
   process.exit(1);
 }
@@ -26,7 +26,7 @@ if (version.split('.')[0] !== '14') {
 export async function generateFromMessages<T extends ExportReturnType = ExportReturnType.Attachment>(
   messages: Message[] | Collection<string, Message>,
   channel: Channel,
-  options: GenerateFromMessagesOptions<T> = {},
+  options: GenerateFromMessagesOptions<T> = {}
 ): Promise<ObjectType<T>> {
   // turn messages into an array
   const transformedMessages = messages instanceof Collection ? Array.from(messages.values()) : messages;
@@ -72,7 +72,7 @@ export async function generateFromMessages<T extends ExportReturnType = ExportRe
  */
 export async function createTranscript<T extends ExportReturnType = ExportReturnType.Attachment>(
   channel: TextBasedChannel,
-  options: CreateTranscriptOptions<T> = {},
+  options: CreateTranscriptOptions<T> = {}
 ): Promise<ObjectType<T>> {
   // validate type
   if (!channel.isTextBased()) {

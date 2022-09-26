@@ -50,7 +50,7 @@ export async function renderEmbed(embed: Embed, context: RenderEmbedContext) {
               >
                 {await renderContent(field.value, { ...context, type: RenderType.EMBED })}
               </DiscordEmbedField>
-            )),
+            ))
           )}
         </DiscordEmbedFields>
       )}

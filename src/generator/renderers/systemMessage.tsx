@@ -15,7 +15,7 @@ export default async function renderSystemMessage(message: Message) {
     case MessageType.ChannelPinnedMessage:
       return (
         <DiscordSystemMessage id={`m-${message.id}`} key={message.id} type="edit">
-          <Highlight color={message.member?.roles.hoist?.hexColor}>{message.author.username}</Highlight> pinned{' '}
+          <Highlight color={message.member?.roles.color?.hexColor}>{message.author.username}</Highlight> pinned{' '}
           <i data-goto={message.reference?.messageId}>a message</i> to this channel.
         </DiscordSystemMessage>
       );
@@ -26,7 +26,7 @@ export default async function renderSystemMessage(message: Message) {
     case MessageType.GuildBoostTier3:
       return (
         <DiscordSystemMessage id={`m-${message.id}`} key={message.id} type="boost">
-          <Highlight color={message.member?.roles.hoist?.hexColor}>{message.author.username}</Highlight> boosted the
+          <Highlight color={message.member?.roles.color?.hexColor}>{message.author.username}</Highlight> boosted the
           server!
         </DiscordSystemMessage>
       );
@@ -34,7 +34,7 @@ export default async function renderSystemMessage(message: Message) {
     case MessageType.ThreadStarterMessage:
       return (
         <DiscordSystemMessage id={`ms-${message.id}`} key={message.id} type="thread">
-          <Highlight color={message.member?.roles.hoist?.hexColor}>{message.author.username}</Highlight> started a
+          <Highlight color={message.member?.roles.color?.hexColor}>{message.author.username}</Highlight> started a
           thread: <i data-goto={message.reference?.messageId}>{message.content}</i>
         </DiscordSystemMessage>
       );
@@ -95,7 +95,7 @@ export function JoinMessage(member: GuildMember | null, fallbackUser: User) {
     .split('{user}')
     .flatMap((item, i) => [
       item,
-      <Highlight color={member?.roles.hoist?.hexColor} key={i}>
+      <Highlight color={member?.roles.color?.hexColor} key={i}>
         {member?.nickname ?? fallbackUser.username}
       </Highlight>,
     ])

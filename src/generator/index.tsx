@@ -116,6 +116,6 @@ export default async function renderMessages({ messages, channel, callbacks, ...
       >
         {elements}
       </body>
-    </html>,
+    </html>
   );
 }

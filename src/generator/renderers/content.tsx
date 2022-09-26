@@ -36,7 +36,7 @@ export default async function renderContent(content: string, context: RenderCont
 
   // check if the parsed content is only emojis
   const isOnlyEmojis = parsed.every(
-    (node) => node.type === 'emoji' || (node.type === 'text' && node.content.trim().length === 0),
+    (node) => node.type === 'emoji' || (node.type === 'text' && node.content.trim().length === 0)
   );
   if (isOnlyEmojis) {
     // now check if there are less than 25 emojis
