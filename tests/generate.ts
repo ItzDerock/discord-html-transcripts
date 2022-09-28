@@ -1,7 +1,8 @@
 import * as discord from 'discord.js';
 import { createTranscript } from '../src';
 
-import('dotenv/config');
+import { config } from 'dotenv';
+config();
 
 const client = new discord.Client({
   intents: [discord.IntentsBitField.Flags.GuildMessages, discord.IntentsBitField.Flags.Guilds],
