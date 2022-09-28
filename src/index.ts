@@ -44,6 +44,7 @@ export async function generateFromMessages<T extends ExportReturnType = ExportRe
       resolveRole: channel.isDMBased() ? () => null : async (id) => channel.guild?.roles.fetch(id),
     },
     poweredBy: options.poweredBy ?? true,
+    favicon: options.favicon ?? 'guild',
   });
 
   // get the time it took to render the messages

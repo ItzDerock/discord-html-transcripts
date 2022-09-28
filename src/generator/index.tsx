@@ -19,6 +19,7 @@ export type RenderMessageContext = {
 
   poweredBy?: boolean;
   saveImages: boolean;
+  favicon: 'guild' | string;
 };
 
 export default async function renderMessages({ messages, channel, callbacks, ...options }: RenderMessageContext) {
@@ -86,6 +87,19 @@ export default async function renderMessages({ messages, channel, callbacks, ...
     <html>
       <head>
         <meta name="viewport" content="width=device-width" />
+
+        {/* favicon */}
+        <link
+          rel="icon"
+          type="image/png"
+          href={
+            options.favicon === 'guild'
+              ? channel.isDMBased()
+                ? undefined
+                : channel.guild.iconURL({ size: 16, extension: 'png' }) ?? undefined
+              : options.favicon
+          }
+        />
 
         {/* title */}
         <title>{channel.isDMBased() ? 'Direct Messages' : channel.name}</title>

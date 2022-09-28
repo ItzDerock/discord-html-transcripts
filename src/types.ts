@@ -44,6 +44,14 @@ export type GenerateFromMessagesOptions<T extends ExportReturnType> = Partial<{
    * @default true
    */
   poweredBy: boolean;
+
+  /**
+   * Whether to show the guild icon or a custom icon as the favicon
+   * 'guild' - use the guild icon
+   * or pass in a url to use a custom icon
+   * @default "guild"
+   */
+  favicon: 'guild' | string;
 }>;
 
 export type CreateTranscriptOptions<T extends ExportReturnType> = Partial<
