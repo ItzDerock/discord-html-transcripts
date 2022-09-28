@@ -9,10 +9,12 @@ import {
   DiscordSpoiler,
   DiscordUnderlined,
 } from '@derockdev/discord-components-react';
-import parse, { type rulesExtended } from 'discord-markdown-parser';
+import parse, { type RuleTypesExtended } from 'discord-markdown-parser';
+import type { APIMessageComponentEmoji } from 'discord.js';
 import React, { Fragment, type ReactNode } from 'react';
 import type { ASTNode, SingleASTNode } from 'simple-markdown';
 import type { RenderMessageContext } from '../';
+import { parseDiscordEmoji } from '../../utils/utils';
 
 export enum RenderType {
   EMBED,
@@ -36,11 +38,11 @@ export default async function renderContent(content: string, context: RenderCont
 
   // check if the parsed content is only emojis
   const isOnlyEmojis = parsed.every(
-    (node) => node.type === 'emoji' || (node.type === 'text' && node.content.trim().length === 0)
+    (node) => ['emoji', 'twemoji'].includes(node.type) || (node.type === 'text' && node.content.trim().length === 0)
   );
   if (isOnlyEmojis) {
-    // now check if there are less than 25 emojis
-    const emojis = parsed.filter((node) => node.type === 'emoji');
+    // now check if there are less than or equal to 25 emojis
+    const emojis = parsed.filter((node) => ['emoji', 'twemoji'].includes(node.type));
     if (emojis.length <= 25) {
       context._internal = {
         largeEmojis: true,
@@ -61,7 +63,7 @@ const renderNodes = async (nodes: ASTNode, context: RenderContentContext): Promi
 export async function renderASTNode(node: SingleASTNode, context: RenderContentContext): Promise<ReactNode> {
   if (!node) return null;
 
-  const type = node.type as keyof typeof rulesExtended;
+  const type = node.type as RuleTypesExtended;
 
   switch (type) {
     case 'text':
@@ -157,10 +159,11 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
       return <DiscordSpoiler>{await renderNodes(node.content, context)}</DiscordSpoiler>;
 
     case 'emoji':
+    case 'twemoji':
       return (
         <DiscordCustomEmoji
-          name={node.name as string}
-          url={`https://cdn.discordapp.com/emojis/${node.id}.${node.animated ? 'gif' : 'png'}`}
+          name={node.name}
+          url={parseDiscordEmoji(node as APIMessageComponentEmoji)}
           embedEmoji={context.type === RenderType.EMBED}
           largeEmoji={context._internal?.largeEmojis}
         />
