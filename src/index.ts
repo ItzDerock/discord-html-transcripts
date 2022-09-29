@@ -38,10 +38,12 @@ export async function generateFromMessages<T extends ExportReturnType = ExportRe
     messages: transformedMessages,
     channel,
     saveImages: options.saveImages ?? false,
-    callbacks: options.callbacks ?? {
-      resolveChannel: async (id) => channel.client.channels.fetch(id),
-      resolveUser: async (id) => channel.client.users.fetch(id),
-      resolveRole: channel.isDMBased() ? () => null : async (id) => channel.guild?.roles.fetch(id),
+    callbacks: {
+      resolveChannel: async (id) => channel.client.channels.fetch(id).catch(() => null),
+      resolveUser: async (id) => channel.client.users.fetch(id).catch(() => null),
+      resolveRole: channel.isDMBased() ? () => null : async (id) => channel.guild?.roles.fetch(id).catch(() => null),
+
+      ...(options.callbacks ?? {}),
     },
     poweredBy: options.poweredBy ?? true,
     favicon: options.favicon ?? 'guild',
