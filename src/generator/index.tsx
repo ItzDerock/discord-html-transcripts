@@ -38,7 +38,7 @@ export default async function renderMessages({ messages, channel, callbacks, ...
   }
 
   const elements = (
-    <DiscordMessages>
+    <DiscordMessages style={{ minHeight: '100vh' }}>
       {/* header */}
       <DiscordHeader
         guild={channel.isDMBased() ? 'Direct Messages' : channel.guild.name}
