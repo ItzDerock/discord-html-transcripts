@@ -7,6 +7,7 @@ import {
   DiscordMention,
   DiscordQuote,
   DiscordSpoiler,
+  DiscordTime,
   DiscordUnderlined,
 } from '@derockdev/discord-components-react';
 import parse, { type RuleTypesExtended } from 'discord-markdown-parser';
@@ -172,6 +173,9 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
           largeEmoji={context._internal?.largeEmojis}
         />
       );
+
+    case 'timestamp':
+      return <DiscordTime timestamp={parseInt(node.timestamp) * 1000} format={node.format} />;
 
     default: {
       console.log(`Unknown node type: ${type}`, node);
