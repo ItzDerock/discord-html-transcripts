@@ -46,7 +46,11 @@ export default async function renderMessage(message: Message, context: RenderMes
       )}
 
       {/* message content */}
-      {message.content && (await renderContent(message.content, { ...context, type: RenderType.NORMAL }))}
+      {message.content &&
+        (await renderContent(message.content, {
+          ...context,
+          type: message.webhookId ? RenderType.WEBHOOK : RenderType.NORMAL,
+        }))}
 
       {/* attachments */}
       {await renderAttachments(message, context)}

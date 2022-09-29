@@ -20,6 +20,7 @@ export enum RenderType {
   EMBED,
   REPLY,
   NORMAL,
+  WEBHOOK,
 }
 
 type RenderContentContext = RenderMessageContext & {
@@ -34,7 +35,10 @@ export default async function renderContent(content: string, context: RenderCont
   if (context.type === RenderType.REPLY && content.length > 180) content = content.slice(0, 180) + '...';
 
   // parse the markdown
-  const parsed = parse(content, context.type === RenderType.EMBED ? 'extended' : 'normal');
+  const parsed = parse(
+    content,
+    context.type === RenderType.EMBED || context.type === RenderType.WEBHOOK ? 'extended' : 'normal'
+  );
 
   // check if the parsed content is only emojis
   const isOnlyEmojis = parsed.every(
