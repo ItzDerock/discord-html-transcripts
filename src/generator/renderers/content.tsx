@@ -182,7 +182,7 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
   }
 }
 
-export function getChannelType(channelType: ChannelType): 'channel' | 'voice' | 'thread' | 'forum' | undefined {
+export function getChannelType(channelType: ChannelType): 'channel' | 'voice' | 'thread' | 'forum' {
   switch (channelType) {
     case ChannelType.GuildCategory:
     case ChannelType.GuildAnnouncement:
@@ -198,6 +198,6 @@ export function getChannelType(channelType: ChannelType): 'channel' | 'voice' | 
     case ChannelType.GuildForum:
       return 'forum';
     default:
-      return undefined;
+      return 'channel';
   }
 }
