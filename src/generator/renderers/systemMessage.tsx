@@ -1,6 +1,7 @@
-import { DiscordSystemMessage } from '@derockdev/discord-components-react';
+import { DiscordReaction, DiscordReactions, DiscordSystemMessage } from '@derockdev/discord-components-react';
 import { MessageType, type GuildMember, type Message, type User } from 'discord.js';
 import React from 'react';
+import { parseDiscordEmoji } from '../../utils/utils';
 
 export default async function renderSystemMessage(message: Message) {
   switch (message.type) {
@@ -17,6 +18,19 @@ export default async function renderSystemMessage(message: Message) {
         <DiscordSystemMessage id={`m-${message.id}`} key={message.id} type="edit">
           <Highlight color={message.member?.roles.color?.hexColor}>{message.author.username}</Highlight> pinned{' '}
           <i data-goto={message.reference?.messageId}>a message</i> to this channel.
+          {/* reactions */}
+          {message.reactions.cache.size > 0 && (
+            <DiscordReactions slot="reactions">
+              {message.reactions.cache.map((reaction, id) => (
+                <DiscordReaction
+                  key={`${message.id}r${id}`}
+                  name={reaction.emoji.name!}
+                  emoji={parseDiscordEmoji(reaction.emoji)}
+                  count={reaction.count}
+                />
+              ))}
+            </DiscordReactions>
+          )}
         </DiscordSystemMessage>
       );
 
