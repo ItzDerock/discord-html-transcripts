@@ -11,7 +11,7 @@ import {
   DiscordUnderlined,
 } from '@derockdev/discord-components-react';
 import parse, { type RuleTypesExtended } from 'discord-markdown-parser';
-import type { APIMessageComponentEmoji } from 'discord.js';
+import { ChannelType, type APIMessageComponentEmoji } from 'discord.js';
 import React, { Fragment, type ReactNode } from 'react';
 import type { ASTNode, SingleASTNode } from 'simple-markdown';
 import type { RenderMessageContext } from '../';
@@ -102,10 +102,8 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
       const channel = await context.callbacks.resolveChannel(id);
 
       return (
-        <DiscordMention
-          type={channel ? (channel.isTextBased() ? (channel.isThread() ? 'thread' : 'channel') : 'voice') : 'channel'}
-        >
-          {channel ? (channel.isDMBased() ? 'DM Channel' : channel.name) : `Unknown Channel (${id})`}
+        <DiscordMention type={channel ? (channel.isDMBased() ? 'channel' : getChannelType(channel.type)) : 'channel'}>
+          {channel ? (channel.isDMBased() ? 'DM Channel' : channel.name) : `<#${id}>`}
         </DiscordMention>
       );
     }
@@ -116,7 +114,7 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
 
       return (
         <DiscordMention type="role" color={context.type === RenderType.REPLY ? undefined : role?.hexColor}>
-          {role ? role.name : `Unknown Role (${id})`}
+          {role ? role.name : `<@&${id}>`}
         </DiscordMention>
       );
     }
@@ -125,14 +123,14 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
       const id = node.id as string;
       const user = await context.callbacks.resolveUser(id);
 
-      return <DiscordMention type="user">{user ? user.username : `Unknown User (${id})`}</DiscordMention>;
+      return <DiscordMention type="user">{user ? user.username : `<@${id}>`}</DiscordMention>;
     }
 
     case 'here':
     case 'everyone':
       return (
         <DiscordMention type={'role'} highlight>
-          {type === 'here' ? '@here' : '@everyone'}
+          {`@${type}`}
         </DiscordMention>
       );
 
@@ -181,5 +179,25 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
       console.log(`Unknown node type: ${type}`, node);
       return typeof node.content === 'string' ? node.content : await renderNodes(node.content, context);
     }
+  }
+}
+
+export function getChannelType(channelType: ChannelType): 'channel' | 'voice' | 'thread' | 'forum' | undefined {
+  switch (channelType) {
+    case ChannelType.GuildCategory:
+    case ChannelType.GuildAnnouncement:
+    case ChannelType.GuildText:
+      return 'channel';
+    case ChannelType.GuildVoice:
+    case ChannelType.GuildStageVoice:
+      return 'voice';
+    case ChannelType.PublicThread:
+    case ChannelType.PrivateThread:
+    case ChannelType.AnnouncementThread:
+      return 'thread';
+    case ChannelType.GuildForum:
+      return 'forum';
+    default:
+      return undefined;
   }
 }

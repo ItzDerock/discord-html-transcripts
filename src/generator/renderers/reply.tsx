@@ -18,7 +18,7 @@ export default async function renderReply(message: Message, context: RenderMessa
   return (
     <DiscordReply
       slot="reply"
-      edited={referencedMessage.editedAt !== null}
+      edited={!isCommand && referencedMessage.editedAt !== null}
       attachment={referencedMessage.attachments.size > 0}
       author={referencedMessage.member?.nickname ?? referencedMessage.author.username}
       avatar={referencedMessage.author.avatarURL() ?? undefined}
