@@ -94,7 +94,7 @@ export default async function renderMessage(message: Message, context: RenderMes
           }
         >
           {message.thread.lastMessage ? (
-            <DiscordThreadMessage profile={message.thread.lastMessage.id}>
+            <DiscordThreadMessage profile={message.thread.lastMessage.author.id}>
               {await renderContent(
                 message.thread.lastMessage.content.length > 128
                   ? message.thread.lastMessage.content.substring(0, 125) + '...'
