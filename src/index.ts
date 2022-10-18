@@ -84,29 +84,33 @@ export async function createTranscript<T extends ExportReturnType = ExportReturn
   }
 
   // fetch messages
-  const allMessages: Message[] = [];
+  let allMessages: Message[] = [];
   let lastMessageId: string | undefined;
+  const limit = options.limit ?? 100;
 
   // until there are no more messages, keep fetching
   // eslint-disable-next-line no-constant-condition
   while (true) {
     // create fetch options
-    const options = { limit: 100, before: lastMessageId };
-    if (!lastMessageId) delete options.before;
+    const fetchLimitOptions = { limit: 100, before: lastMessageId };
+    if (!lastMessageId) delete fetchLimitOptions.before;
 
     // fetch messages
-    const messages = await channel.messages.fetch(options);
+    const messages = await channel.messages.fetch(fetchLimitOptions);
 
     // add the messages to the array
     allMessages.push(...messages.values());
-    lastMessageId = messages.last()?.id;
+    lastMessageId = messages.lastKey();
 
     // if there are no more messages, break
     if (messages.size < 100) break;
 
     // if the limit has been reached, break
-    if (allMessages.length >= (options.limit ?? Infinity)) break;
+    if (allMessages.length >= (limit === -1 ? Infinity : limit)) break;
   }
+
+  if (limit !== -1 && limit < allMessages.length)
+    allMessages = allMessages.slice(0, limit);
 
   // generate the transcript
   return generateFromMessages<T>(allMessages.reverse(), channel, options);
