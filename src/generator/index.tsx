@@ -6,6 +6,17 @@ import renderMessage from './renderers/message';
 import renderContent, { RenderType } from './renderers/content';
 import { buildProfiles } from '../utils/buildProfiles';
 import { scrollToMessage } from '../static/client';
+import { readFileSync } from 'fs';
+
+// read the package.json file and get the @derockdev/discord-components-core version
+let discordComponentsVersion = "^3.5.0";
+
+try {
+  const packageJSON = JSON.parse(readFileSync('./package.json', 'utf8'));
+  discordComponentsVersion = packageJSON.dependencies['@derockdev/discord-components-core'];
+// eslint-disable-next-line no-empty
+} catch {} // ignore errors
+
 
 export type RenderMessageContext = {
   messages: Message[];
@@ -119,7 +130,7 @@ export default async function renderMessages({ messages, channel, callbacks, ...
         />
 
         {/* component library */}
-        <script type="module" src="https://unpkg.com/@derockdev/discord-components-core"></script>
+        <script type="module" src={`https://cdn.jsdelivr.net/npm/@derockdev/discord-components-core@${discordComponentsVersion}/dist/derockdev-discord-components-core/derockdev-discord-components-core.esm.js`}></script>
       </head>
 
       <body
