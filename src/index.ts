@@ -86,7 +86,8 @@ export async function createTranscript<T extends ExportReturnType = ExportReturn
   // fetch messages
   let allMessages: Message[] = [];
   let lastMessageId: string | undefined;
-  const limit = options.limit ?? 100;
+  const { limit } = options;
+  const resolvedLimit = typeof limit === "undefined" || limit === -1 ? Infinity : limit;
 
   // until there are no more messages, keep fetching
   // eslint-disable-next-line no-constant-condition
@@ -106,10 +107,10 @@ export async function createTranscript<T extends ExportReturnType = ExportReturn
     if (messages.size < 100) break;
 
     // if the limit has been reached, break
-    if (allMessages.length >= (limit === -1 ? Infinity : limit)) break;
+    if (allMessages.length >= resolvedLimit) break;
   }
 
-  if (limit !== -1 && limit < allMessages.length)
+  if (resolvedLimit < allMessages.length)
     allMessages = allMessages.slice(0, limit);
 
   // generate the transcript

@@ -58,7 +58,6 @@ export type CreateTranscriptOptions<T extends ExportReturnType> = Partial<
   GenerateFromMessagesOptions<T> & {
     /**
      * The max amount of messages to fetch. Use `-1` to recursively fetch.
-     * @default 100
      */
     limit: number;
   }
