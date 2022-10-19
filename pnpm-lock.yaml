@@ -1,8 +1,8 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@derockdev/discord-components-core': ^3.5.0
-  '@derockdev/discord-components-react': ^3.5.0
+  '@derockdev/discord-components-core': ^3.5.1
+  '@derockdev/discord-components-react': ^3.5.1
   '@types/node': ^18.7.23
   '@types/react': ^18.0.21
   '@types/react-dom': ^18.0.6
@@ -25,8 +25,8 @@ specifiers:
   undici: ^5.10.0
 
 dependencies:
-  '@derockdev/discord-components-core': 3.5.0
-  '@derockdev/discord-components-react': 3.5.0_biqbaboplfbrettd7655fr4n2y
+  '@derockdev/discord-components-core': 3.5.1
+  '@derockdev/discord-components-react': 3.5.1_biqbaboplfbrettd7655fr4n2y
   discord-markdown-parser: 1.1.0
   html-minifier: 4.0.0
   react: 18.2.0
@@ -59,24 +59,24 @@ packages:
       '@jridgewell/trace-mapping': 0.3.9
     dev: true
 
-  /@derockdev/discord-components-core/3.5.0:
-    resolution: {integrity: sha512-r3xlWyLL/FAJcKnT4spNkru4UKkBxy6Ajw0QqvwARcuKIiTfFPuxBay1NX5PrSCYOHxrOaqzPSJ04PJ5dFFFJA==}
+  /@derockdev/discord-components-core/3.5.1:
+    resolution: {integrity: sha512-5EBNbHB376LTgBrWsTS2kJ8P7FOYfmCcaXOLHlZ0Sya3IAu7THfZ/xcd/qnV3VVPdzv5y1Ug8MnliFYAedW6QQ==}
     engines: {node: '>=v14.0.0'}
     dependencies:
-      '@stencil/core': 2.18.0
+      '@stencil/core': 2.18.1
       clsx: 1.2.1
       hex-to-rgba: 2.0.1
       highlight.js: 11.6.0
     dev: false
 
-  /@derockdev/discord-components-react/3.5.0_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-fxJ6UOijChZCzH0KHrSixqyFPyDE6X5xZWFeq6tbvZNHY5wat9q4ijPSwMUOHtxhTqtO2WmMvOVs0INI23GEcA==}
+  /@derockdev/discord-components-react/3.5.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-PCFXouc3aBrSOeWHQHa7rgE5/hZNlYT9dMWQkpzQWgULupr8DMGkUFJ2he+Dk5idVvh1/Kzz+dHOZal5GrD6/Q==}
     engines: {node: '>=v14.0.0'}
     peerDependencies:
       react: 16.8.x || 17.x || 18.x
       react-dom: 16.8.x || 17.x || 18.x
     dependencies:
-      '@derockdev/discord-components-core': 3.5.0
+      '@derockdev/discord-components-core': 3.5.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       tslib: 2.4.0
@@ -207,8 +207,8 @@ packages:
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
     dev: true
 
-  /@stencil/core/2.18.0:
-    resolution: {integrity: sha512-NLEY8Jq59smyiivBAxHKipsp9YkkW/K/Vm90zAyXQqukb12i2SFucWHJ1Ik7ropVlhmMVvigyxXgRfQ9quIqtg==}
+  /@stencil/core/2.18.1:
+    resolution: {integrity: sha512-/fXkh1lwZ+X9JQCw50mPjhBogzEHOBvVC5pLoDLZqodVYK0DGWILM2YLV4dcIUBNEK8/HMDpO/Rq81/rS3mNOw==}
     engines: {node: '>=12.10.0', npm: '>=6.0.0'}
     hasBin: true
     dev: false
