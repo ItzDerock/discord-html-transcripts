@@ -30,7 +30,8 @@ export async function renderAttachment(attachment: Attachment, context: RenderMe
 
   const type = getAttachmentType(attachment);
 
-  if (context.saveImages) {
+  // if the attachment is an image, download it to a data url
+  if (context.saveImages && type === 'image') { 
     const downloaded = await downloadImageToDataURL(url);
     if (downloaded) {
       url = downloaded;
