@@ -7,16 +7,17 @@ import renderContent, { RenderType } from './renderers/content';
 import { buildProfiles } from '../utils/buildProfiles';
 import { scrollToMessage } from '../static/client';
 import { readFileSync } from 'fs';
+import path from 'path';
 
 // read the package.json file and get the @derockdev/discord-components-core version
 let discordComponentsVersion = "^3.5.0";
 
 try {
-  const packageJSON = JSON.parse(readFileSync('./package.json', 'utf8'));
-  discordComponentsVersion = packageJSON.dependencies['@derockdev/discord-components-core'];
-// eslint-disable-next-line no-empty
+  const packagePath = path.join(__dirname, '..', '..', 'package.json');
+  const packageJSON = JSON.parse(readFileSync(packagePath, 'utf8'));
+  discordComponentsVersion = packageJSON.dependencies['@derockdev/discord-components-core'] ?? discordComponentsVersion;
+  // eslint-disable-next-line no-empty
 } catch {} // ignore errors
-
 
 export type RenderMessageContext = {
   messages: Message[];
