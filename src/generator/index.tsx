@@ -30,6 +30,7 @@ export type RenderMessageContext = {
   };
 
   poweredBy?: boolean;
+  footerText?:string;
   saveImages: boolean;
   favicon: 'guild' | string;
 };
@@ -81,7 +82,7 @@ export default async function renderMessages({ messages, channel, callbacks, ...
 
       {/* footer */}
       <div style={{ textAlign: 'center', width: '100%' }}>
-        Exported {messages.length} message{messages.length > 1 ? 's' : ''}.{' '}
+        {options.footerText ? options.footerText.replaceAll("{number}", messages.length.toString()).replace("{s}", messages.length > 1 ? "s" : "") : `Exported ${messages.length} message${messages.length > 1 ? 's' : ''}.`}{' '}
         {options.poweredBy ? (
           <span style={{ textAlign: 'center' }}>
             Powered by{' '}
