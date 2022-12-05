@@ -98,6 +98,7 @@ export default async function renderMessages({ messages, channel, callbacks, ...
   return ReactDOMServer.renderToStaticMarkup(
     <html>
       <head>
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width" />
 
         {/* favicon */}
