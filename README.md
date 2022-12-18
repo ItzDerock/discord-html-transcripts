@@ -34,7 +34,7 @@ Behind the scenes, this package uses React SSR to generate a static site.
 
 ## Example Output
 
-![output](https://img.derock.dev/6G6FIl.gif)
+![output](https://derock.media/r/6G6FIl.gif)
 
 ## 📝 Usage
 
