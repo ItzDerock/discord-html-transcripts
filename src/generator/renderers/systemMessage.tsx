@@ -15,7 +15,7 @@ export default async function renderSystemMessage(message: Message) {
 
     case MessageType.ChannelPinnedMessage:
       return (
-        <DiscordSystemMessage id={`m-${message.id}`} key={message.id} type="edit">
+        <DiscordSystemMessage id={`m-${message.id}`} key={message.id} type="pin">
           <Highlight color={message.member?.roles.color?.hexColor}>{message.author.username}</Highlight> pinned{' '}
           <i data-goto={message.reference?.messageId}>a message</i> to this channel.
           {/* reactions */}
