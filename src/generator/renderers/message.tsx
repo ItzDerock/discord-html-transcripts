@@ -26,7 +26,7 @@ export default async function renderMessage(message: Message, context: RenderMes
   return (
     <DiscordMessage
       id={`m-${message.id}`}
-      timestamp={message.createdAt}
+      timestamp={message.createdAt.toISOString()}
       key={message.id}
       edited={message.editedAt !== null}
       server={isCrosspost ?? undefined}
