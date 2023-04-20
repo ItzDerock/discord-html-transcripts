@@ -32,7 +32,11 @@ This module can format the following:
 Styles from [@derockdev/discord-components](https://github.com/ItzDerock/discord-components).  
 Behind the scenes, this package uses React SSR to generate a static site.
 
-## Example Output
+## 👋 Support
+Please do not DM me requesting support with this package, I will not respond.  
+Instead, please open a thread on [this](https://discord.gg/MZQN8QMJg8) server. 
+
+## 🖨️ Example Output
 
 ![output](https://derock.media/r/6G6FIl.gif)
 
