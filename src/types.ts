@@ -46,11 +46,10 @@ export type GenerateFromMessagesOptions<T extends ExportReturnType> = Partial<{
   poweredBy: boolean;
 
   /**
-    * The message right before "Powered by" text. Remember to put the {s} 
-    * @default 'Exported {number} message{s}.'
-     */
+   * The message right before "Powered by" text. Remember to put the {s}
+   * @default 'Exported {number} message{s}.'
+   */
   footerText: string;
-
 
   /**
    * Whether to show the guild icon or a custom icon as the favicon

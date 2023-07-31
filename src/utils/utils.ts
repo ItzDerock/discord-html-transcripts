@@ -19,11 +19,11 @@ export function parseDiscordEmoji(emoji: Emoji | APIMessageComponentEmoji) {
     return `https://cdn.discordapp.com/emojis/${emoji.id}.${emoji.animated ? 'gif' : 'png'}`;
   }
 
-  const codepoints = twemoji.convert.toCodePoint(
-    emoji.name!.indexOf(String.fromCharCode(0x200D)) < 0 
-      ? emoji.name!.replace(/\uFE0F/g, '') 
-      : emoji.name!
-  ).toLowerCase();
+  const codepoints = twemoji.convert
+    .toCodePoint(
+      emoji.name!.indexOf(String.fromCharCode(0x200d)) < 0 ? emoji.name!.replace(/\uFE0F/g, '') : emoji.name!
+    )
+    .toLowerCase();
 
   return `https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${codepoints}.svg`;
 }

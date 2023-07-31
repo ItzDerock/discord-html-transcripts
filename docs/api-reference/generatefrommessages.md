@@ -6,6 +6,7 @@ If you want to provide your own messages for finer control of what `discord-html
 
 {% tabs %}
 {% tab title="JavaScript" %}
+
 ```javascript
 const discordTranscripts = require("discord-html-transcripts");
 const { Collection } = require("discord.js");
@@ -28,9 +29,11 @@ channel.send({
     files: [attachment]
 });
 ```
+
 {% endtab %}
 
 {% tab title="TypeScript" %}
+
 ```typescript
 import * as discordTranscripts from "discord-html-transcripts";
 import { Collection, Message } from "discord.js";
@@ -53,13 +56,14 @@ channel.send({
     files: [attachment]
 });
 ```
+
 {% endtab %}
 {% endtabs %}
 
 ## Parameters
 
 ```javascript
-generateFromMessages(messages, channel, options={})
+generateFromMessages(messages, channel, (options = {}));
 ```
 
 ### `messages: Message[] | Collection<string, Message>`
@@ -102,9 +106,9 @@ const attachment = await discordTranscripts.createTranscript(channel, {
 It's recommended to use the `ExportReturnType` enum instead of passing in a string.\
 This option determines what this function will return.&#x20;
 
-* **buffer**: the HTML data as a buffer.
-* string: the HTML data as a string.
-* attachment: the HTML data as an `AttachmentBuilder`
+- **buffer**: the HTML data as a buffer.
+- string: the HTML data as a string.
+- attachment: the HTML data as an `AttachmentBuilder`
 
 The default value is `attachment`
 
@@ -126,8 +130,8 @@ The default value is `false`
 
 The text that will be used in the footer of the transcript. You can use the following placeholders:
 
-* `{number}`: the total number of messages exported. Useful when you are using `createTranscript(...)`
-* `{s}`: Adds an s if the number is >0, otherwise it is replaced with nothing
+- `{number}`: the total number of messages exported. Useful when you are using `createTranscript(...)`
+- `{s}`: Adds an s if the number is >0, otherwise it is replaced with nothing
 
 The default value is `Exported {number} message{s}`
 
@@ -154,6 +158,3 @@ The default option uses `channel.client.users.fetch(...)`
 #### A custom function that will be used by the module whenever it needs to resolve a role (for example, if a role is mentioned)
 
 The default option uses `channel.guild?.roles.fetch(...)`
-
-
-
