@@ -8,10 +8,12 @@ import {
 } from './types';
 
 // version check
-if (version.split('.')[0] !== '14') {
+const versionPrefix = version.split('.')[0];
+
+if (versionPrefix !== '14' && versionPrefix !== '15') {
   console.error(
-    `[discord-html-transcripts] Versions v3.x.x of discord-html-transcripts are only compatible with js v14.x.x, and you are using v${version}.` +
-      `    Please install discord-html-transcripts v2.x.x using "npm install discord-html-transcripts@^2".`
+    `[discord-html-transcripts] Versions v3.x.x of discord-html-transcripts are only compatible with discord.js v14.x.x and v15.x.x, and you are using v${version}.` +
+      `    For v13.x.x support, please install discord-html-transcripts v2.x.x using "npm install discord-html-transcripts@^2".`
   );
   process.exit(1);
 }
