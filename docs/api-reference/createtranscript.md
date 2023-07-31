@@ -7,6 +7,7 @@ Will fetch (by default, all) the messages from the provided channel and can retu
 {% tabs %}
 {% tab title="JavaScript" %}
 {% code lineNumbers="true" %}
+
 ```javascript
 const discordTranscripts = require("discord-html-transcripts");
 
@@ -25,7 +26,7 @@ client.on('messageCreate', async (message) => {
                 footerText: "Saved {number} message{s}"
             }
         );
-        
+
         // and by default, createTranscript will return an AttachmentBuilder
         // which you can directly send to discord.js
         message.reply({
@@ -35,11 +36,13 @@ client.on('messageCreate', async (message) => {
     }
 });
 ```
+
 {% endcode %}
 {% endtab %}
 
 {% tab title="TypeScript" %}
 {% code lineNumbers="true" %}
+
 ```typescript
 import * as discordTranscripts from "discord-html-transcripts";
 
@@ -58,7 +61,7 @@ client.on('messageCreate', async (message) => {
                 footerText: "Saved {number} message{s}"
             }
         );
-        
+
         // and by default, createTranscript will return an AttachmentBuilder
         // which you can directly send to discord.js
         message.reply({
@@ -68,6 +71,7 @@ client.on('messageCreate', async (message) => {
     }
 });
 ```
+
 {% endcode %}
 {% endtab %}
 {% endtabs %}
@@ -75,7 +79,7 @@ client.on('messageCreate', async (message) => {
 ## Parameters
 
 ```javascript
-createTranscript(channel, options={});
+createTranscript(channel, (options = {}));
 ```
 
 ### `channel: TextBasedChannel`
@@ -85,4 +89,4 @@ Defined in [discord.js](https://discord.js.org/#/docs/discord.js/main/typedef/Gu
 
 ### `options: CreateTranscriptOptions`
 
-The same options as [generatefrommessages.md](generatefrommessages.md "mention") but adds the `limit` option which lets you limit set the number of messages to fetch.
+The same options as [generatefrommessages.md](generatefrommessages.md 'mention') but adds the `limit` option which lets you limit set the number of messages to fetch.

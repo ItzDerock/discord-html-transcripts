@@ -10,7 +10,7 @@ import { readFileSync } from 'fs';
 import path from 'path';
 
 // read the package.json file and get the @derockdev/discord-components-core version
-let discordComponentsVersion = "^3.5.0";
+let discordComponentsVersion = '^3.5.0';
 
 try {
   const packagePath = path.join(__dirname, '..', '..', 'package.json');
@@ -30,7 +30,7 @@ export type RenderMessageContext = {
   };
 
   poweredBy?: boolean;
-  footerText?:string;
+  footerText?: string;
   saveImages: boolean;
   favicon: 'guild' | string;
 };
@@ -82,7 +82,11 @@ export default async function renderMessages({ messages, channel, callbacks, ...
 
       {/* footer */}
       <div style={{ textAlign: 'center', width: '100%' }}>
-        {options.footerText ? options.footerText.replaceAll("{number}", messages.length.toString()).replace("{s}", messages.length > 1 ? "s" : "") : `Exported ${messages.length} message${messages.length > 1 ? 's' : ''}.`}{' '}
+        {options.footerText
+          ? options.footerText
+              .replaceAll('{number}', messages.length.toString())
+              .replace('{s}', messages.length > 1 ? 's' : '')
+          : `Exported ${messages.length} message${messages.length > 1 ? 's' : ''}.`}{' '}
         {options.poweredBy ? (
           <span style={{ textAlign: 'center' }}>
             Powered by{' '}
@@ -133,7 +137,10 @@ export default async function renderMessages({ messages, channel, callbacks, ...
         />
 
         {/* component library */}
-        <script type="module" src={`https://cdn.jsdelivr.net/npm/@derockdev/discord-components-core@${discordComponentsVersion}/dist/derockdev-discord-components-core/derockdev-discord-components-core.esm.js`}></script>
+        <script
+          type="module"
+          src={`https://cdn.jsdelivr.net/npm/@derockdev/discord-components-core@${discordComponentsVersion}/dist/derockdev-discord-components-core/derockdev-discord-components-core.esm.js`}
+        ></script>
       </head>
 
       <body

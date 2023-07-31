@@ -33,8 +33,9 @@ Styles from [@derockdev/discord-components](https://github.com/ItzDerock/discord
 Behind the scenes, this package uses React SSR to generate a static site.
 
 ## 👋 Support
+
 Please do not DM me requesting support with this package, I will not respond.  
-Instead, please open a thread on [this](https://discord.gg/MZQN8QMJg8) server. 
+Instead, please open a thread on [this](https://discord.gg/MZQN8QMJg8) server.
 
 ## 🖨️ Example Output
 

@@ -18,21 +18,27 @@ To get started with `discord-html-transcripts` install the module and ensure you
 
 {% tabs %}
 {% tab title="NPM" %}
+
 ```shell
 npm install --save discord-html-transcripts
 ```
+
 {% endtab %}
 
 {% tab title="PNPM" %}
+
 ```shell
 pnpm i -S discord-html-transcripts`
 ```
+
 {% endtab %}
 
 {% tab title="Yarn" %}
+
 ```shell
 yarn add discord-html-transcripts
 ```
+
 {% endtab %}
 {% endtabs %}
 
@@ -51,4 +57,3 @@ The markdown files to this documentation can also be found there.
 {% content-ref url="broken-reference" %}
 [Broken link](broken-reference)
 {% endcontent-ref %}
-
