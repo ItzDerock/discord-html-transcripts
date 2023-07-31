@@ -1,6 +1,6 @@
 {
   "name": "discord-html-transcripts",
-  "version": "3.1.3",
+  "version": "3.1.5",
   "description": "A nicely formatted html transcript generator for discord.js.",
   "main": "dist/index.js",
   "homepage": "https://github.com/ItzDerock/discord-html-transcripts",
