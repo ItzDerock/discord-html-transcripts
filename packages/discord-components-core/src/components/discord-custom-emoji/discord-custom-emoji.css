@@ -1,0 +1,27 @@
+.discord-custom-emoji {
+	display: inline-block;
+	cursor: pointer;
+	vertical-align: bottom;
+}
+
+.discord-custom-emoji .discord-custom-emoji-image {
+	object-fit: contain;
+	width: 1.375rem;
+	height: 1.375rem;
+	vertical-align: bottom;
+}
+
+.discord-custom-emoji .discord-custom-emoji-image-large {
+	width: 2.8em;
+	height: 2.8em;
+}
+
+.discord-embed-custom-emoji {
+	display: inline-block;
+}
+
+.discord-embed-custom-emoji .discord-embed-custom-emoji-image {
+	width: 18px;
+	height: 18px;
+	vertical-align: bottom;
+}

@@ -1,0 +1,87 @@
+{
+	"name": "@derockdev/discord-components-core",
+	"version": "3.5.2",
+	"description": "Web components to easily build and display fake Discord messages on your webpages.",
+	"author": "@derock",
+	"license": "MIT",
+	"main": "dist/index.cjs.js",
+	"module": "dist/index.js",
+	"es2015": "dist/esm/index.js",
+	"es2017": "dist/esm/index.js",
+	"types": "dist/types/index.d.ts",
+	"unpkg": "dist/derockdev-discord-components-core/derockdev-discord-components-core.esm.js",
+	"collection:main": "dist/collection/index.js",
+	"collection": "dist/collection/collection-manifest.json",
+	"exports": {
+		".": [
+			{
+				"require": "./dist/index.cjs.js",
+				"import": "./dist/index.js"
+			},
+			"./dist/index.cjs.js"
+		],
+		"./loader": [
+			{
+				"require": "./loader/index.cjs.js",
+				"import": "./loader/index.js"
+			},
+			"./loader/index.cjs.js"
+		]
+	},
+	"sideEffects": [
+		"./loader/index.js",
+		"./loader/index.cjs.js",
+		"./dist/derockdev-discord-components-core/p-*",
+		"**/*derockdev-discord-components-core*.js",
+		"./dist/esm/loader.js",
+		"./dist/esm/polyfills/*"
+	],
+	"homepage": "https://github.com/itzderock/discord-components/tree/main/packages/core#readme",
+	"scripts": {
+		"build": "stencil build --docs && replace-in-file --configFile=scripts/replaceImportInPolyfills.cjs",
+		"start": "stencil build --dev --watch --serve",
+		"generate": "stencil generate"
+	},
+	"dependencies": {
+		"@stencil/core": "^2.22.1",
+		"clsx": "^1.2.1",
+		"hex-to-rgba": "^2.0.1",
+		"highlight.js": "^11.6.0"
+	},
+	"directories": {
+		"lib": "src"
+	},
+	"files": [
+		"dist/",
+		"loader/"
+	],
+	"engines": {
+		"node": ">=v14.0.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/itzderock/discord-components.git"
+	},
+	"bugs": {
+		"url": "https://github.com/itzderock/discord-components/issues"
+	},
+	"keywords": [
+		"skyra",
+		"typescript",
+		"ts",
+		"yarn",
+		"discord",
+		"bot",
+		"components",
+		"webcomponents",
+		"stencil"
+	],
+	"devDependencies": {
+		"@sapphire/ts-config": "^3.3.4",
+		"replace-in-file": "^6.3.5",
+		"tslib": "^2.4.0"
+	}
+}
