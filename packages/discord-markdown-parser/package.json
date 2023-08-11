@@ -1,0 +1,44 @@
+{
+  "name": "discord-markdown-parser",
+  "version": "1.1.0",
+  "description": "Parse discord-style markdown into an abstract syntax tree.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "homepage": "https://github.com/ItzDerock/discord-markdown-parser",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ItzDerock/discord-markdown-parser"
+  },
+  "scripts": {
+    "build": "tsc -b src",
+    "format": "prettier --write --cache \"{src,scripts}/**/*.{mjs,ts,js}\"",
+    "test": "vitest run",
+    "release": "npm run build && npm pack"
+  },
+  "keywords": [
+    "discord",
+    "markdown",
+    "parser",
+    "discord-markdown-parser",
+    "discord-markdown",
+    "simple-markdown",
+    "discord-parser"
+  ],
+  "author": "Derock <derock@derock.dev>",
+  "license": "GNU GPLv3",
+  "devDependencies": {
+    "@types/node": "^18.7.13",
+    "@vitest/coverage-c8": "^0.23.4",
+    "colorette": "^2.0.19",
+    "prettier": "^2.7.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.2",
+    "vitest": "^0.23.4"
+  },
+  "dependencies": {
+    "simple-markdown": "^0.7.3"
+  },
+  "files": [
+    "dist"
+  ]
+}
