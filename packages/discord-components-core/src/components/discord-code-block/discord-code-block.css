@@ -1,0 +1,39 @@
+/*  .discord-message .discord-message-body .discord-spoiler */
+
+.discord-code-block-pre {
+	background-color: #2f3136;
+	font-family: 'Consolas', 'Courier New', Courier, monospace;
+	margin-top: 0.25rem;
+	white-space: pre-wrap;
+}
+
+.discord-code-block-pre--multiline {
+	display: block;
+	margin-bottom: 0.5rem;
+	margin-top: 0.25em;
+	padding: 0.5em;
+	border: 1px solid #202225;
+	border-radius: 4px;
+	color: #b9bbbe;
+	font-size: 0.875rem;
+}
+
+.discord-code-block-pre--multiline.hljs {
+	background-color: #2f3136;
+	color: #b9bbbe;
+}
+
+.discord-embed .discord-code-block-pre {
+	background-color: #202225;
+}
+
+.discord-embed .discord-code-block-pre .hljs {
+	background-color: #202225;
+}
+
+code.hljs {
+	padding: unset !important;
+}
+
+/* I dont know what theme discord uses, but i thought this was close enough */
+@import '~highlight.js/styles/base16/helios.css';

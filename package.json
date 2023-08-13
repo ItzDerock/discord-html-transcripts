@@ -1,63 +1,24 @@
 {
   "name": "discord-html-transcripts",
-  "version": "3.1.5",
-  "description": "A nicely formatted html transcript generator for discord.js.",
-  "main": "dist/index.js",
-  "homepage": "https://github.com/ItzDerock/discord-html-transcripts",
-  "types": "./dist/index.d.ts",
+  "version": "1.0.0",
+  "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc -p tsconfig.json",
-    "prepack": "npm run build",
-    "test:typescript": "ts-node ./tests/generate.ts",
-    "lint": "prettier --write --cache . && eslint --cache --fix .",
-    "typecheck": "tsc -p tsconfig.eslint.json"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
+  "author": "Derock <derock@derock.dev>",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ItzDerock/discord-html-transcripts.git"
+    "url": "git+https://github.com/ItzDerock/discord-html-transcripts"
   },
-  "keywords": [
-    "discord.js",
-    "discord.js-transcripts",
-    "discord.js-html-transcripts",
-    "html-transcripts",
-    "discord-html-transcripts",
-    "discord-transcripts"
-  ],
-  "author": "Derock <derock@derock.dev>",
-  "license": "GNU GPLv3",
-  "files": [
-    "dist/**/*.js",
-    "dist/**/*.d.ts",
-    "dist/**/*.js.map"
-  ],
   "devDependencies": {
-    "@types/node": "^18.11.18",
     "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
-    "@typescript-eslint/eslint-plugin": "^5.49.0",
-    "@typescript-eslint/parser": "^5.49.0",
-    "discord.js": "^14.12.0",
-    "dotenv": "^16.0.3",
-    "eslint": "^8.32.0",
-    "husky": "^8.0.3",
-    "prettier": "^2.8.3",
-    "pretty-quick": "^3.1.3",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.1.6"
+    "eslint": "^8.47.0",
+    "vitest": "^0.34.1"
   },
-  "dependencies": {
-    "@derockdev/discord-components-core": "^3.5.3",
-    "@derockdev/discord-components-react": "^3.5.3",
-    "discord-markdown-parser": "~1.1.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "simple-markdown": "^0.7.3",
-    "twemoji": "^14.0.2",
-    "undici": "^5.21.0"
-  },
-  "peerDependencies": {
-    "discord.js": "^14.0.0 || ^15.0.0"
+  "packageManager": "pnpm@8.6.0",
+  "engines": {
+    "node": "18.16.0"
   }
 }

@@ -4,5 +4,18 @@
     "noEmit": true,
     "skipLibCheck": true
   },
-  "include": ["src", "tests", "tsup.config.ts"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.mjs",
+    "**/*.jsx",
+    "**/*.test.ts",
+    "**/*.test.js",
+    "**/*.test.mjs",
+    "**/*.spec.ts",
+    "**/*.spec.js",
+    "**/*.spec.mjs"
+  ],
+  "exclude": []
 }

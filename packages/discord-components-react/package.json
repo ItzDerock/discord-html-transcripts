@@ -1,0 +1,67 @@
+{
+	"name": "@derockdev/discord-components-react",
+	"version": "3.5.2",
+	"description": "React bindings for @derockdev/discord-components-core",
+	"author": "@derockdev",
+	"license": "MIT",
+	"main": "dist/index.js",
+	"module": "dist/index.mjs",
+	"typings": "dist/index.d.ts",
+	"exports": {
+		"import": "./dist/index.mjs",
+		"require": "./dist/index.js"
+	},
+	"sideEffects": [
+		"./dist/index.mjs",
+		"./dist/index.js"
+	],
+	"homepage": "https://github.com/itzderock/discord-components/tree/main/packages/react#readme",
+	"scripts": {
+		"clean": "node scripts/clean.mjs",
+		"build": "pnpm clean && tsc && gen-esm-wrapper dist/index.js dist/index.mjs && replace-in-file --configFile=scripts/replaceDefaultMod.cjs"
+	},
+	"dependencies": {
+		"@derockdev/discord-components-core": "^3.5.1",
+		"tslib": "^2.4.0"
+	},
+	"peerDependencies": {
+		"react": "16.8.x || 17.x || 18.x",
+		"react-dom": "16.8.x || 17.x || 18.x"
+	},
+	"directories": {
+		"lib": "src"
+	},
+	"files": [
+		"dist",
+		"!dist/*.tsbuildinfo"
+	],
+	"engines": {
+		"node": ">=v14.0.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/skyra-project/discord-components.git"
+	},
+	"bugs": {
+		"url": "https://github.com/skyra-project/discord-components/issues"
+	},
+	"keywords": [
+		"skyra",
+		"typescript",
+		"ts",
+		"yarn",
+		"discord",
+		"bot",
+		"components",
+		"webcomponents",
+		"stencil",
+		"react"
+	],
+	"devDependencies": {
+		"gen-esm-wrapper": "^1.1.3",
+		"replace-in-file": "^6.3.5"
+	}
+}
