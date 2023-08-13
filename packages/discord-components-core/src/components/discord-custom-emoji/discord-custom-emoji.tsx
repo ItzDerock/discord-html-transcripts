@@ -1,4 +1,5 @@
-import { Component, ComponentInterface, Element, h, Prop } from '@stencil/core';
+import type { ComponentInterface} from '@stencil/core';
+import { Component, Element, h, Prop } from '@stencil/core';
 import { getGlobalEmojiUrl } from '../../util';
 
 @Component({

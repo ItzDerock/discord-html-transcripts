@@ -1,4 +1,5 @@
-import { Component, ComponentInterface, h, Host } from '@stencil/core';
+import type { ComponentInterface} from '@stencil/core';
+import { Component, h, Host } from '@stencil/core';
 
 @Component({
 	tag: 'discord-reactions',

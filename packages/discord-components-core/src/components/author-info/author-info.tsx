@@ -1,4 +1,5 @@
-import { FunctionalComponent, h } from '@stencil/core';
+import type { FunctionalComponent} from '@stencil/core';
+import { h } from '@stencil/core';
 import Fragment from '../../Fragment';
 import VerifiedTick from '../svgs/verified-tick';
 

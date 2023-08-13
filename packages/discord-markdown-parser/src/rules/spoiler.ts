@@ -1,4 +1,4 @@
-import SimpleMarkdown from 'simple-markdown';
+import type SimpleMarkdown from 'simple-markdown';
 import { SpoilerRegex } from '../utils/regex';
 
 export const spoiler: SimpleMarkdown.ParserRule = {

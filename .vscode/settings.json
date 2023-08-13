@@ -3,5 +3,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
     "source.organizeImports": false
-  }
+  },
+
+  "eslint.workingDirectories": ["./packages/*", "./apps/*"]
 }

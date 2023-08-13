@@ -1,10 +1,10 @@
 {
-	"extends": "../../tsconfig.base.json",
-	"compilerOptions": {
-		"rootDir": "src",
-		"outDir": "dist",
-		"jsxFactory": "h",
-		"experimentalDecorators": true
-	},
-	"include": ["src"]
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "jsxFactory": "h",
+    "experimentalDecorators": true
+  },
+  "include": ["src"]
 }

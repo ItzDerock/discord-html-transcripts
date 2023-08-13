@@ -1,4 +1,5 @@
-import { Component, ComponentInterface, Element, h, Prop, State } from '@stencil/core';
+import type { ComponentInterface} from '@stencil/core';
+import { Component, Element, h, Prop, State } from '@stencil/core';
 import clsx from 'clsx';
 import Fragment from '../../Fragment';
 import type { Emoji } from '../../options';

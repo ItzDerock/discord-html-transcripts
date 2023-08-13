@@ -1,4 +1,5 @@
-import { Component, ComponentInterface, Element, h, Host, Prop, Watch } from '@stencil/core';
+import type { ComponentInterface} from '@stencil/core';
+import { Component, Element, h, Host, Prop, Watch } from '@stencil/core';
 import hexToRgba from 'hex-to-rgba';
 import ChannelForum from '../svgs/channel-forum';
 import ChannelIcon from '../svgs/channel-icon';

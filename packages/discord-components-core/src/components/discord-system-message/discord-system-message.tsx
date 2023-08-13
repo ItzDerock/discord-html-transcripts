@@ -1,6 +1,8 @@
-import { Component, ComponentInterface, Element, h, Host, Prop, Watch } from '@stencil/core';
+import type { ComponentInterface} from '@stencil/core';
+import { Component, Element, h, Host, Prop, Watch } from '@stencil/core';
 import clsx from 'clsx';
-import { DiscordTimestamp, handleTimestamp } from '../../util';
+import type { DiscordTimestamp} from '../../util';
+import { handleTimestamp } from '../../util';
 import Boost from '../svgs/boost';
 import DMCall from '../svgs/dm-call';
 import DMEdit from '../svgs/dm-edit';

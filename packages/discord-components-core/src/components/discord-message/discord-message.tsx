@@ -1,8 +1,11 @@
-import { Component, ComponentInterface, Element, h, Host, Prop, Watch } from '@stencil/core';
+import type { ComponentInterface} from '@stencil/core';
+import { Component, Element, h, Host, Prop, Watch } from '@stencil/core';
 import clsx from 'clsx';
 import Fragment from '../../Fragment';
-import { avatars, Profile, profiles } from '../../options';
-import { DiscordTimestamp, handleTimestamp } from '../../util';
+import type { Profile} from '../../options';
+import { avatars, profiles } from '../../options';
+import type { DiscordTimestamp} from '../../util';
+import { handleTimestamp } from '../../util';
 import { AuthorInfo } from '../author-info/author-info';
 import Ephemeral from '../svgs/ephemeral';
 

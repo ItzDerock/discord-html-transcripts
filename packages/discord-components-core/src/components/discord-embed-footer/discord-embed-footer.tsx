@@ -1,6 +1,8 @@
-import { Component, ComponentInterface, Element, h, Host, Prop, Watch } from '@stencil/core';
+import type { ComponentInterface} from '@stencil/core';
+import { Component, Element, h, Host, Prop, Watch } from '@stencil/core';
 import Fragment from '../../Fragment';
-import { DiscordTimestamp, handleTimestamp } from '../../util';
+import type { DiscordTimestamp} from '../../util';
+import { handleTimestamp } from '../../util';
 
 @Component({
 	tag: 'discord-embed-footer',

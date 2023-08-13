@@ -2,15 +2,23 @@
   "name": "discord-html-transcripts",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Derock <derock@derock.dev>",
   "license": "Apache-2.0",
-  "workspaces": [
-    "./packages/**",
-    "./apps/**"
-  ]
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ItzDerock/discord-html-transcripts"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.27",
+    "eslint": "^8.47.0",
+    "vitest": "^0.34.1"
+  },
+  "packageManager": "pnpm@8.6.0",
+  "engines": {
+    "node": "18.16.0"
+  }
 }

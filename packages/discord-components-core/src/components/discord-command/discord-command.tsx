@@ -1,5 +1,7 @@
-import { Component, ComponentInterface, Element, h, Host, Prop } from '@stencil/core';
-import { avatars, Profile, profiles } from '../../options';
+import type { ComponentInterface} from '@stencil/core';
+import { Component, Element, h, Host, Prop } from '@stencil/core';
+import type { Profile} from '../../options';
+import { avatars, profiles } from '../../options';
 import CommandIcon from '../svgs/command-icon';
 
 @Component({

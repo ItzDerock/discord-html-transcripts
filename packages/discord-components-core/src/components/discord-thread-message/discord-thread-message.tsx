@@ -1,6 +1,8 @@
-import { Component, ComponentInterface, Element, h, Host, Prop } from '@stencil/core';
+import type { ComponentInterface} from '@stencil/core';
+import { Component, Element, h, Host, Prop } from '@stencil/core';
 import Fragment from '../../Fragment';
-import { avatars, Profile, profiles } from '../../options';
+import type { Profile} from '../../options';
+import { avatars, profiles } from '../../options';
 import VerifiedTick from '../svgs/verified-tick';
 
 @Component({

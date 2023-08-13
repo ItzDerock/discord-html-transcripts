@@ -1,4 +1,5 @@
-import { Component, ComponentInterface, Element, h, Prop } from '@stencil/core';
+import type { ComponentInterface} from '@stencil/core';
+import { Component, Element, h, Prop } from '@stencil/core';
 import { defaultDiscordAvatars } from '../../options';
 import GuildBadge from '../svgs/guild-badge';
 import PartnerBadgeOverlay from '../svgs/partner-badge-overlay';

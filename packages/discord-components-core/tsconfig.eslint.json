@@ -1,0 +1,7 @@
+{
+  "extends": "../../tsconfig.eslint.json",
+  "compilerOptions": {
+    "jsxFactory": "h"
+  },
+  "include": ["src"]
+}

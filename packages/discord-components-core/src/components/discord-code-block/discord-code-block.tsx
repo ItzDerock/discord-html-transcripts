@@ -1,4 +1,5 @@
-import { Component, Host, h, Prop, ComponentInterface } from '@stencil/core';
+import type { ComponentInterface } from '@stencil/core';
+import { Component, Host, h, Prop } from '@stencil/core';
 import hljs from 'highlight.js';
 
 @Component({

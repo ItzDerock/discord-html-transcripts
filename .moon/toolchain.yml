@@ -10,14 +10,15 @@ $schema: 'https://moonrepo.dev/schemas/toolchain.json'
 node:
   # The version to use. Must be a semantic version that includes major, minor, and patch.
   # We suggest using the latest active LTS version: https://nodejs.org/en/about/releases
-  version: '20.0.0'
+  version: '18.16.0'
 
   # The package manager to use when managing dependencies.
   # Accepts "npm" (default), "pnpm", or "yarn".
   packageManager: 'pnpm'
 
   # The version of the package manager (above) to use.
-  pnpm: {}
+  pnpm:
+    version: '8.6.0'
 
   # Add `node.version` as a constraint in the root `package.json` `engines`.
   addEnginesConstraint: true
@@ -46,10 +47,10 @@ typescript:
   createMissingConfig: false
 
   # Name of `tsconfig.json` file in each project root.
-  # projectConfigFileName: 'tsconfig.json'
+  projectConfigFileName: 'tsconfig.json'
 
   # Name of `tsconfig.json` file in the workspace root.
-  # rootConfigFileName: 'tsconfig.json'
+  rootConfigFileName: 'tsconfig.json'
 
   # Name of the config file in the workspace root that defines shared compiler
   # options for all project reference based config files.

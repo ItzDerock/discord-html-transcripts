@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "es2021",
+    "lib": ["esnext"],
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
@@ -25,7 +25,5 @@
     "incremental": true,
     "declaration": true,
     "skipLibCheck": true
-  },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  }
 }

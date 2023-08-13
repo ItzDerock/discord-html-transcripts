@@ -1,4 +1,5 @@
-import { Component, ComponentInterface, Element, h, Host } from '@stencil/core';
+import type { ComponentInterface} from '@stencil/core';
+import { Component, Element, h, Host } from '@stencil/core';
 
 @Component({
 	tag: 'discord-embed-description',

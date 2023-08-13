@@ -1,4 +1,5 @@
-import { Component, ComponentInterface, h, Host, Prop } from '@stencil/core';
+import type { ComponentInterface} from '@stencil/core';
+import { Component, h, Host, Prop } from '@stencil/core';
 import clsx from 'clsx';
 import { defaultBackground, defaultMode, defaultTheme } from '../../options';
 
