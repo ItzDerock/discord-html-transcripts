@@ -8,6 +8,7 @@ import { buildProfiles } from '../utils/buildProfiles';
 import { scrollToMessage } from '../static/client';
 import { readFileSync } from 'fs';
 import path from 'path';
+import {renderToString} from "@derockdev/discord-components-core/hydrate";
 
 // read the package.json file and get the @derockdev/discord-components-core version
 let discordComponentsVersion = '^3.5.0';
@@ -33,6 +34,7 @@ export type RenderMessageContext = {
   footerText?: string;
   saveImages: boolean;
   favicon: 'guild' | string;
+  ssr: boolean;
 };
 
 export default async function renderMessages({ messages, channel, callbacks, ...options }: RenderMessageContext) {
@@ -100,7 +102,7 @@ export default async function renderMessages({ messages, channel, callbacks, ...
     </DiscordMessages>
   );
 
-  return ReactDOMServer.renderToStaticMarkup(
+  const markup = ReactDOMServer.renderToStaticMarkup(
     <html>
       <head>
         <meta charSet="utf-8" />
@@ -137,10 +139,12 @@ export default async function renderMessages({ messages, channel, callbacks, ...
         />
 
         {/* component library */}
-        <script
-          type="module"
-          src={`https://cdn.jsdelivr.net/npm/@derockdev/discord-components-core@${discordComponentsVersion}/dist/derockdev-discord-components-core/derockdev-discord-components-core.esm.js`}
-        ></script>
+        {!options.ssr &&
+          <script
+            type="module"
+            src={`https://cdn.jsdelivr.net/npm/@derockdev/discord-components-core@${discordComponentsVersion}/dist/derockdev-discord-components-core/derockdev-discord-components-core.esm.js`}
+          ></script>
+        }
       </head>
 
       <body
@@ -153,4 +157,10 @@ export default async function renderMessages({ messages, channel, callbacks, ...
       </body>
     </html>
   );
+
+  if (options.ssr) {
+    const result = await renderToString(markup);
+    return result.html;
+  }
+  return markup;
 }
