@@ -8,7 +8,7 @@ import { buildProfiles } from '../utils/buildProfiles';
 import { scrollToMessage } from '../static/client';
 import { readFileSync } from 'fs';
 import path from 'path';
-import {renderToString} from "@derockdev/discord-components-core/hydrate";
+import { renderToString } from '@derockdev/discord-components-core/hydrate';
 
 // read the package.json file and get the @derockdev/discord-components-core version
 let discordComponentsVersion = '^3.5.0';
@@ -139,12 +139,12 @@ export default async function renderMessages({ messages, channel, callbacks, ...
         />
 
         {/* component library */}
-        {!options.ssr &&
+        {!options.ssr && (
           <script
             type="module"
             src={`https://cdn.jsdelivr.net/npm/@derockdev/discord-components-core@${discordComponentsVersion}/dist/derockdev-discord-components-core/derockdev-discord-components-core.esm.js`}
           ></script>
-        }
+        )}
       </head>
 
       <body
