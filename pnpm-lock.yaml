@@ -1,16 +1,12 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 dependencies:
   '@derockdev/discord-components-core':
-    specifier: ^3.5.3
-    version: 3.5.3
+    specifier: ^3.6.0
+    version: 3.6.0
   '@derockdev/discord-components-react':
-    specifier: ^3.5.3
-    version: 3.5.3(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^3.6.0
+    version: 3.6.0(react-dom@18.2.0)(react@18.2.0)
   discord-markdown-parser:
     specifier: ~1.1.0
     version: 1.1.0
@@ -80,27 +76,27 @@ packages:
       '@jridgewell/trace-mapping': 0.3.9
     dev: true
 
-  /@derockdev/discord-components-core@3.5.3:
-    resolution: {integrity: sha512-zTe/01obW1DcxiQkFsYj9Ub5O0XHpJg8ceIfWLj9jvAICQqu3HNmDsta6OiVLOxXNankAgaO4Wh8OBXlEFsG8g==}
+  /@derockdev/discord-components-core@3.6.0:
+    resolution: {integrity: sha512-wxjJs0ous1mKasLF0f6xUHTuZQWdRvob55SyrlNqJTeZVBMSwtiIU8qH/e2ssBJu6KOl67z0+YqwaGyyjEs0rg==}
     engines: {node: '>=v14.0.0'}
     dependencies:
-      '@stencil/core': 2.22.2
+      '@stencil/core': 3.4.2
       clsx: 1.2.1
       hex-to-rgba: 2.0.1
       highlight.js: 11.7.0
     dev: false
 
-  /@derockdev/discord-components-react@3.5.3(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-9MSczJdnwqgPyEU39UfEBfHpfQ6jG5IUytz3D+zwvp5RVPYAUCD2Ko30TPkMoJhQdP0QoEsx09ravfxNINH/lw==}
+  /@derockdev/discord-components-react@3.6.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-GjXMyH+rte84eAAQuSSmdPFxdLHnnxe4a0G0yY949DBB5az2jEtPveK299sfQ4ANZJJgEr8eUfoKOL4gwd30Tw==}
     engines: {node: '>=v14.0.0'}
     peerDependencies:
       react: 16.8.x || 17.x || 18.x
       react-dom: 16.8.x || 17.x || 18.x
     dependencies:
-      '@derockdev/discord-components-core': 3.5.3
+      '@derockdev/discord-components-core': 3.6.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      tslib: 2.4.1
+      tslib: 2.6.1
     dev: false
 
   /@discordjs/builders@1.6.4:
@@ -258,9 +254,9 @@ packages:
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
     dev: true
 
-  /@stencil/core@2.22.2:
-    resolution: {integrity: sha512-r+vbxsGNcBaV1VDOYW25lv4QfXTlNoIb5GpUX7rZ+cr59yqYCZC5tlV+IzX6YgHKW62ulCc9M3RYtTfHtNbNNw==}
-    engines: {node: '>=12.10.0', npm: '>=6.0.0'}
+  /@stencil/core@3.4.2:
+    resolution: {integrity: sha512-FAUhUVaakCy29nU2GwO/HQBRV1ihPRvncz3PUc8oR+UJLAxGabTmP8PLY7wvHfbw+Cvi4VXfJFTBvdfDu6iKPQ==}
+    engines: {node: '>=14.10.0', npm: '>=6.0.0'}
     hasBin: true
     dev: false
 
@@ -1502,13 +1498,8 @@ packages:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: true
 
-  /tslib@2.4.1:
-    resolution: {integrity: sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==}
-    dev: false
-
   /tslib@2.6.1:
     resolution: {integrity: sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==}
-    dev: true
 
   /tsutils@3.21.0(typescript@5.1.6):
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}
@@ -1623,3 +1614,7 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
