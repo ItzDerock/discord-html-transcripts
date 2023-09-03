@@ -2,11 +2,11 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@derockdev/discord-components-core':
-    specifier: ^3.6.0
-    version: 3.6.0
+    specifier: ^3.6.1
+    version: 3.6.1
   '@derockdev/discord-components-react':
-    specifier: ^3.6.0
-    version: 3.6.0(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^3.6.1
+    version: 3.6.1(react-dom@18.2.0)(react@18.2.0)
   discord-markdown-parser:
     specifier: ~1.1.0
     version: 1.1.0
@@ -76,8 +76,8 @@ packages:
       '@jridgewell/trace-mapping': 0.3.9
     dev: true
 
-  /@derockdev/discord-components-core@3.6.0:
-    resolution: {integrity: sha512-wxjJs0ous1mKasLF0f6xUHTuZQWdRvob55SyrlNqJTeZVBMSwtiIU8qH/e2ssBJu6KOl67z0+YqwaGyyjEs0rg==}
+  /@derockdev/discord-components-core@3.6.1:
+    resolution: {integrity: sha512-qLcoab2Olui1IzJavnPzMgZzopWU21D3VDthkFgzZyiID4C5+OiSWx6ZNxz6wnMKfv/253AsXg8opdCwoRJKgg==}
     engines: {node: '>=v14.0.0'}
     dependencies:
       '@stencil/core': 3.4.2
@@ -86,14 +86,14 @@ packages:
       highlight.js: 11.7.0
     dev: false
 
-  /@derockdev/discord-components-react@3.6.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-GjXMyH+rte84eAAQuSSmdPFxdLHnnxe4a0G0yY949DBB5az2jEtPveK299sfQ4ANZJJgEr8eUfoKOL4gwd30Tw==}
+  /@derockdev/discord-components-react@3.6.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-+EIHAo5wgXbVwJVgsRohi5/ZcWwrzzCPlV45c1lDL5iOvuuHDZKuPXJdUCdxUJBUpd2zxhcvjBXEZIlJqTe+sA==}
     engines: {node: '>=v14.0.0'}
     peerDependencies:
       react: 16.8.x || 17.x || 18.x
       react-dom: 16.8.x || 17.x || 18.x
     dependencies:
-      '@derockdev/discord-components-core': 3.6.0
+      '@derockdev/discord-components-core': 3.6.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       tslib: 2.6.1

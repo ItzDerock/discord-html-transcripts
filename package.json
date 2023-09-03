@@ -48,8 +48,8 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@derockdev/discord-components-core": "^3.6.0",
-    "@derockdev/discord-components-react": "^3.6.0",
+    "@derockdev/discord-components-core": "^3.6.1",
+    "@derockdev/discord-components-react": "^3.6.1",
     "discord-markdown-parser": "~1.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

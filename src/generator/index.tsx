@@ -11,7 +11,7 @@ import path from 'path';
 import { renderToString } from '@derockdev/discord-components-core/hydrate';
 
 // read the package.json file and get the @derockdev/discord-components-core version
-let discordComponentsVersion = '^3.5.0';
+let discordComponentsVersion = '^3.6.1';
 
 try {
   const packagePath = path.join(__dirname, '..', '..', 'package.json');
