@@ -41,7 +41,7 @@ export async function buildProfiles(messages: Message[]) {
   }
 
   // return as a JSON
-  return JSON.stringify(profiles);
+  return profiles;
 }
 
 function buildProfile(member: GuildMember | null, author: User) {

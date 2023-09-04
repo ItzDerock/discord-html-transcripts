@@ -127,7 +127,7 @@ export default async function renderMessages({ messages, channel, callbacks, ...
         {/* profiles */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.$discordMessage={profiles:${await profiles}}`,
+            __html: `window.$discordMessage={profiles:${JSON.stringify(await profiles)}}`,
           }}
         ></script>
 
@@ -143,6 +143,8 @@ export default async function renderMessages({ messages, channel, callbacks, ...
           <script
             type="module"
             src={`https://cdn.jsdelivr.net/npm/@derockdev/discord-components-core@${discordComponentsVersion}/dist/derockdev-discord-components-core/derockdev-discord-components-core.esm.js`}
+            // low priority if ssr is enabled
+            defer={options.ssr}
           ></script>
         )}
       </head>
@@ -159,8 +161,16 @@ export default async function renderMessages({ messages, channel, callbacks, ...
   );
 
   if (options.ssr) {
-    const result = await renderToString(markup);
+    const result = await renderToString(markup, {
+      beforeHydrate: async (document) => {
+        document.defaultView.$discordMessage = {
+          profiles: await profiles,
+        };
+      },
+    });
+
     return result.html;
   }
+
   return markup;
 }
