@@ -5,7 +5,7 @@ import { DiscordHeader, DiscordMessages } from '@derockdev/discord-components-re
 import renderMessage from './renderers/message';
 import renderContent, { RenderType } from './renderers/content';
 import { buildProfiles } from '../utils/buildProfiles';
-import { scrollToMessage } from '../static/client';
+import { revealSpoiler, scrollToMessage } from '../static/client';
 import { readFileSync } from 'fs';
 import path from 'path';
 import { renderToString } from '@derockdev/discord-components-core/hydrate';
@@ -155,6 +155,8 @@ export default async function renderMessages({ messages, channel, callbacks, ...
       >
         {elements}
       </body>
+      {/* Make sure the script runs after the DOM has loaded */}
+      {options.ssr && <script dangerouslySetInnerHTML={{__html: revealSpoiler}}></script>}
     </html>
   );
 
