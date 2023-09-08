@@ -124,12 +124,6 @@ export default async function renderMessages({ messages, channel, callbacks, ...
         {/* title */}
         <title>{channel.isDMBased() ? 'Direct Messages' : channel.name}</title>
 
-        {/* profiles */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.$discordMessage={profiles:${JSON.stringify(await profiles)}}`,
-          }}
-        ></script>
 
         {/* message reference handler */}
         <script
@@ -138,13 +132,19 @@ export default async function renderMessages({ messages, channel, callbacks, ...
           }}
         />
 
-        {/* component library */}
-        {!options.ssr && (
+        {!options.ssr && <>
+          {/* profiles */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.$discordMessage={profiles:${JSON.stringify(await profiles)}}`,
+            }}
+          ></script>
+          {/* component library */}
           <script
             type="module"
             src={`https://cdn.jsdelivr.net/npm/@derockdev/discord-components-core@${discordComponentsVersion}/dist/derockdev-discord-components-core/derockdev-discord-components-core.esm.js`}
           ></script>
-        )}
+        </>}
       </head>
 
       <body
