@@ -48,7 +48,10 @@ export async function generateFromMessages<T extends ExportReturnType = ExportRe
       ...(options.callbacks ?? {}),
     },
     poweredBy: options.poweredBy ?? true,
+    useNewCSS: options.useNewCSS ?? true,
     footerText: options.footerText ?? 'Exported {number} message{s}.',
+    headerText: options.headerText ?? '',
+    headerColor: options.headerColor ?? 'green',
     favicon: options.favicon ?? 'guild',
   });
 
