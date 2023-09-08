@@ -41,16 +41,35 @@ export type GenerateFromMessagesOptions<T extends ExportReturnType> = Partial<{
 
   /**
    * Whether to include the "Powered by discord-html-transcripts" footer
+   * Default = true
    * @default true
    */
   poweredBy: boolean;
-
+  /**
+   * Whether to use the New CSS or old, although if you are going for a realistic look to discord, use old.
+   * Default = true
+   * @default true
+   */
+  useNewCSS: boolean;
   /**
    * The message right before "Powered by" text. Remember to put the {s}
+   * Default = "Exported {number} message{s}"
    * @default 'Exported {number} message{s}.'
    */
   footerText: string;
-
+  /**
+   * Show a string on top of the transcript. Optional
+   * To change color, use headerColor
+   * @default ""
+   */
+  headerText: string;
+  /**
+   * Your choice of color for that specific string. Remember this color is for CSS. Which means whatever color system compatible with CSS can be used.
+   * Optional | Default is green
+   * Your choice!
+   * @default "green"
+   */
+  headerColor: string;
   /**
    * Whether to show the guild icon or a custom icon as the favicon
    * 'guild' - use the guild icon
