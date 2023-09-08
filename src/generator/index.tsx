@@ -143,8 +143,6 @@ export default async function renderMessages({ messages, channel, callbacks, ...
           <script
             type="module"
             src={`https://cdn.jsdelivr.net/npm/@derockdev/discord-components-core@${discordComponentsVersion}/dist/derockdev-discord-components-core/derockdev-discord-components-core.esm.js`}
-            // low priority if ssr is enabled
-            defer={options.ssr}
           ></script>
         )}
       </head>
