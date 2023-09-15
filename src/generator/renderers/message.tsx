@@ -18,10 +18,27 @@ import { renderEmbed } from './embed';
 import renderReply from './reply';
 import renderSystemMessage from './systemMessage';
 
+
+const AvailableLanguages = [
+  "ENGLISH", "BRAZILIAN"
+]
 export default async function renderMessage(message: Message, context: RenderMessageContext) {
-  if (message.system) return renderSystemMessage(message);
+  if (message.system) return renderSystemMessage(message, context);
 
   const isCrosspost = message.reference && message.reference.guildId !== message.guild?.id;
+  let dscmsg1 = ""
+  let dscmsg2 = ""
+  let dscmsg3 = ""
+
+  if(AvailableLanguages.includes(context.Language?.toUpperCase() || "ENGLISH") && context.Language?.toUpperCase() == "ENGLISH"){
+    dscmsg1 = "Message"
+    dscmsg2 = "View Thread"
+    dscmsg3 = "Thread messages not saved."
+  } else if(AvailableLanguages.includes(context.Language?.toUpperCase() || "ENGLISH") && context.Language?.toUpperCase() == "BRAZILIAN") {
+    dscmsg1 = "Mensage"
+    dscmsg2 = "Ver Thread"
+    dscmsg3 = " do Thread não foram salvas."
+  }
 
   return (
     <DiscordMessage
@@ -89,8 +106,8 @@ export default async function renderMessage(message: Message, context: RenderMes
           name={message.thread.name}
           cta={
             message.thread.messageCount
-              ? `${message.thread.messageCount} Message${message.thread.messageCount > 1 ? 's' : ''}`
-              : 'View Thread'
+              ? `${message.thread.messageCount} ${dscmsg1}${message.thread.messageCount > 1 ? 's' : ''}`
+              : dscmsg2
           }
         >
           {message.thread.lastMessage ? (
@@ -103,7 +120,7 @@ export default async function renderMessage(message: Message, context: RenderMes
               )}
             </DiscordThreadMessage>
           ) : (
-            `Thread messages not saved.`
+            `${dscmsg3}`
           )}
         </DiscordThread>
       )}
