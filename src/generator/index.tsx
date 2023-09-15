@@ -9,6 +9,26 @@ import { scrollToMessage } from '../static/client';
 import { readFileSync } from 'fs';
 import path from 'path';
 
+const AvailableLanguages = [
+"ENGLISH", "BRAZILIAN"
+] 
+// Check if the language is correct
+ // Define the variables and then add content
+ let TSCREATEDATE = "" 
+ let TitleThread = ""
+ let TitleDM = ""
+ let TitleDM1 = ""
+ let TitleVC = ""
+ let TitleCT = ""
+ let TitleCT1 = ""
+ let TitleCH = ""
+ let TitleCH1 = ""
+ let Footer0 = ""
+ let Footer1 = ""
+ let Footer2 = ""
+
+ 
+
 // read the package.json file and get the @derockdev/discord-components-core version
 let discordComponentsVersion = '^3.5.0';
 
@@ -22,25 +42,67 @@ try {
 export type RenderMessageContext = {
   messages: Message[];
   channel: Channel;
-
   callbacks: {
     resolveChannel: (channelId: string) => Awaitable<Channel | null>;
     resolveUser: (userId: string) => Awaitable<User | null>;
     resolveRole: (roleId: string) => Awaitable<Role | null>;
   };
-
+  customCSS: {
+    Primary?:  any;
+    TextTheme?: | any;
+  }; // I work on custom css later for now, ill add 2 simple little settings.
   poweredBy?: boolean;
   useNewCSS?: boolean;
   footerText?: string;
   headerText?: string;
   headerColor?: string;
+  Language?: string;
   saveImages: boolean;
   favicon: 'guild' | string;
 };
 
 export default async function renderMessages({ messages, channel, callbacks, ...options }: RenderMessageContext) {
+  
+  // Languages - Ill move this to a different file soon
+  if(AvailableLanguages.includes(options.Language?.toUpperCase() || "ENGLISH") && options.Language?.toUpperCase() == "ENGLISH"){
+    TSCREATEDATE = "Transcript created on " 
+    TitleThread = "Thread channel in "
+    TitleDM = "Direct Messages"
+    TitleDM1 = "Unknown Recipient"
+    TitleVC = "Voice Text Channel for "
+    TitleCT = "Category Channel"
+    TitleCT1 = "Topic"
+    TitleCH = "The start of #"
+    TitleCH1 = "Unknown Channel"
+    Footer0 = "Exported"
+    Footer1 = "message"
+    Footer2 = "Powered by"
+
+  } else if(AvailableLanguages.includes(options.Language?.toUpperCase() || "ENGLISH") && options.Language?.toUpperCase() == "BRAZILIAN"){
+    TSCREATEDATE = "Transcrição criada em " 
+    TitleThread = "Canal de rosca em "
+    TitleDM = "Mensagens diretas"
+    TitleDM1 = "Destinatário desconhecido"
+    TitleVC = "Canal de texto de voz para "
+    TitleCT = "Canal da categoria"
+    TitleCT1 = "Tópico"
+    TitleCH = "Isso é o começo do canal #"
+    TitleCH1 = "Canal desconhecido"
+    Footer0 = "Exportado"
+    Footer1 = "mensagem"
+    Footer2 = "Desenvolvido por"
+  }
+
   const profiles = buildProfiles(messages);
   const chatBody: React.ReactElement[] = [];
+
+  if(!AvailableLanguages.includes(options.Language?.toUpperCase() || "English")){
+    console.error(`[Discord-Html-Transcripts | Language Error] Seems like your following language you typed (${options.Language}) in is invalid or not found. \n This are the following languages available (${AvailableLanguages}). \n I will now quit as a proper language is required!`);
+    process.exit(0);
+  }
+  if(options.customCSS && !options.useNewCSS){
+    console.warn(`[Discord-Html-Transcripts | Configuration Warning] Seems like you want to add some custom css but that isn't possible if the new css is enabled.`)
+  }
 
   for (const message of messages) {
     const rendered = await renderMessage(message, {
@@ -52,6 +114,10 @@ export default async function renderMessages({ messages, channel, callbacks, ...
 
     if (rendered) chatBody.push(rendered);
   }
+
+ 
+
+
 
   const elements = (
     <DiscordMessages style={{ minHeight: '100vh' }}>
@@ -83,12 +149,12 @@ export default async function renderMessages({ messages, channel, callbacks, ...
   font-display:swap
 }
 .discord-messages {
-  color:#afafaf;
-  background-color:#1a1818;
+  color: ${options.customCSS.TextTheme || "#afafaf"};
+  background-color: ${options.customCSS.Primary || "#1a1818"};
   display:block;
   font-size:16px;
   font-family:Whitney, 'Source Sans Pro', ui-sans-serif, system-ui, -apple-system, 'system-ui', 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-		sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   line-height:170%;
   border:5px solid rgba(0, 0, 0, 0.05);
 }
@@ -136,12 +202,12 @@ export default async function renderMessages({ messages, channel, callbacks, ...
   font-weight:bold;
   font-style: italic;
 }.discord-message {
-  color:#dcddde;
+  color: ${options.customCSS.TextTheme || "#dcddde"};
   display:flex;
   flex-direction:column;
   font-size:0.9em;
   font-family:Whitney, 'Source Sans Pro', ui-sans-serif, system-ui, -apple-system, 'system-ui', 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-		sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   padding:0px 1em;
   position:relative;
   word-wrap:break-word;
@@ -283,7 +349,7 @@ export default async function renderMessages({ messages, channel, callbacks, ...
   background:#2f3136;
   white-space:break-spaces;
   font-family:Consolas, Andale Mono WT, Andale Mono, Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono,
-		Liberation Mono, Nimbus Mono L, Monaco, Courier New, Courier, monospace
+    Liberation Mono, Nimbus Mono L, Monaco, Courier New, Courier, monospace
 }
 .discord-light-theme .discord-message .discord-message-timestamp,
 .discord-compact-mode .discord-message:hover .discord-message-timestamp,
@@ -519,7 +585,7 @@ export default async function renderMessages({ messages, channel, callbacks, ...
 .discord-embed .discord-embed-author {
   -webkit-box-align:center;
   align-items:center;
-  color:#fff;
+  color: ${options.customCSS.TextTheme || "#fff"};
   font-size:14px;
   display:flex;
   font-weight:600;
@@ -661,7 +727,7 @@ export default async function renderMessages({ messages, channel, callbacks, ...
   display:flex;
   font-size:0.875rem;
   font-family:Whitney, 'Source Sans Pro', ui-sans-serif, system-ui, -apple-system, 'system-ui', 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-		sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   padding-top:2px;
   margin-left:56px;
   margin-bottom:4px;
@@ -800,7 +866,7 @@ export default async function renderMessages({ messages, channel, callbacks, ...
 }
 .discord-message .discord-author-info .discord-application-tag {
   background-color:#5865f2;
-  color:#fff;
+  color: ${options.customCSS.TextTheme || "#fff"};
   font-size:0.625em;
   margin-left:4px;
   border-radius:3px;
@@ -1284,32 +1350,32 @@ discord-underlined {
       {/* header */}
       <div style={{ textAlign: 'center', width: '100%', textDecoration: 'underline', color: options.headerColor }}>
         {options.headerText
-          ? options.headerText.replaceAll(`{date}`, `Transcript created on ${new Date().toLocaleString()}`)
+          ? options.headerText.replaceAll(`{date}`, `${TSCREATEDATE}${new Date().toLocaleString()}`)
           : ``}
         {''}
       </div>
       <DiscordHeader
-        guild={channel.isDMBased() ? 'Direct Messages' : channel.guild.name}
+        guild={channel.isDMBased() ? TitleDM : channel.guild.name}
         channel={
           channel.isDMBased()
             ? channel.type === ChannelType.DM
-              ? channel.recipient?.tag ?? 'Unknown Recipient'
-              : 'Unknown Recipient'
+              ? channel.recipient?.tag ?? TitleDM1
+              : TitleDM1
             : channel.name
         }
         icon={channel.isDMBased() ? undefined : channel.guild.iconURL({ size: 128 }) ?? undefined}
       >
         {channel.isThread()
-          ? `Thread channel in ${channel.parent?.name ?? 'Unknown Channel'}`
+          ? `${TitleThread}${channel.parent?.name ?? TitleCH1}`
           : channel.isDMBased()
-          ? `Direct Messages`
+          ? TitleDM
           : channel.isVoiceBased()
-          ? `Voice Text Channel for ${channel.name}`
+          ? `${TitleVC}${channel.name}`
           : channel.type === ChannelType.GuildCategory
-          ? `Category Channel`
-          : 'topic' in channel && channel.topic
+          ? TitleCT
+          : TitleCT1 in channel && channel.topic
           ? await renderContent(channel.topic, { messages, channel, callbacks, type: RenderType.REPLY, ...options })
-          : `The start of #${channel.name}!`}
+          : `${TitleCH}${channel.name}!`}
       </DiscordHeader>
 
       {/* body */}
@@ -1321,10 +1387,10 @@ discord-underlined {
           ? options.footerText
               .replaceAll('{number}', messages.length.toString())
               .replace('{s}', messages.length > 1 ? 's' : '')
-          : `Exported ${messages.length} message${messages.length > 1 ? 's' : ''}.`}{' '}
+          : `${Footer0} ${messages.length} ${Footer1}${messages.length > 1 ? 's' : ''}.`}{' '}
         {options.poweredBy ? (
           <span style={{ textAlign: 'center' }}>
-            Powered by{' '}
+            {Footer2}{' '}
             <a href="https://github.com/ItzDerock/discord-html-transcripts" style={{ color: 'lightblue' }}>
               discord-html-transcripts
             </a>
@@ -1355,7 +1421,7 @@ discord-underlined {
         />
 
         {/* title */}
-        <title>{channel.isDMBased() ? 'Direct Messages' : channel.name}</title>
+        <title>{channel.isDMBased() ? TitleDM : channel.name}</title>
 
         {/* profiles */}
         <script
@@ -1388,4 +1454,5 @@ discord-underlined {
       </body>
     </html>
   );
+
 }
