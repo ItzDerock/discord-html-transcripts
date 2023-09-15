@@ -32,7 +32,11 @@ export type GenerateFromMessagesOptions<T extends ExportReturnType> = Partial<{
    * Callbacks for resolving channels, users, and roles
    */
   callbacks: RenderMessageContext['callbacks'];
-
+  /**
+   * Add custom CSS to create a unique and fresh look into your transcript
+   * You will need to enablle useNewCSS in able for this to work!
+   */
+  customCSS: RenderMessageContext['customCSS'];
   /**
    * The name of the file to return if returnType is ExportReturnType.ATTACHMENT
    * @default 'transcript-{channel-id}.html'
@@ -48,6 +52,7 @@ export type GenerateFromMessagesOptions<T extends ExportReturnType> = Partial<{
   /**
    * Whether to use the New CSS or old, although if you are going for a realistic look to discord, use old.
    * Default = true
+   * Note: In order to use the custom css, you will need to enable this.
    * @default true
    */
   useNewCSS: boolean;
@@ -63,6 +68,15 @@ export type GenerateFromMessagesOptions<T extends ExportReturnType> = Partial<{
    * @default ""
    */
   headerText: string;
+  /**
+   * Choose a language available. Optional
+   * To change color, use headerColor
+   * Languages -
+   * English - Provided by derock
+   * Brazilian - Provided by oreczx 
+   * @default "English"
+   */
+  Language: string;
   /**
    * Your choice of color for that specific string. Remember this color is for CSS. Which means whatever color system compatible with CSS can be used.
    * Optional | Default is green
