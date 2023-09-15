@@ -8,7 +8,7 @@
 Discord HTML Transcripts is a node.js module to generate nice looking HTML transcripts. Processes discord markdown like **bold**, _italics_, ~~strikethroughs~~, and more. Nicely formats attachments and embeds. Built in XSS protection, preventing users from inserting arbitrary html tags.
 
 This module can format the following:
-
+- Languages (English & Brazilian [Languange information is below])
 - Discord flavored markdown
   - Uses [discord-markdown-parser](https://github.com/ItzDerock/discord-markdown-parser)
   - Allows for complex markdown syntax to be parsed properly
@@ -111,6 +111,11 @@ const attachment = await discordTranscripts.createTranscript(channel, {
       resolveUser: (userId: string) => Awaitable<User | null>,
       resolveRole: (roleId: string) => Awaitable<Role | null>
     },
+    customCSS: { // Custom CSS is optional and i recommand you use this feature in a future update where theres way more options to use.
+      Primary: "black" // Any color for the background theme, this has to be compatiable with the CSS Language.
+      TextTheme: "white" // Same as primary
+    }, // More customaizable options are coming soon, this is just a minor feature for now...
+    Language: "English" // Any compatiable languages. You can check below for compatiable or upcoming translations
     poweredBy: true, // Whether to include the "Powered by discord-html-transcripts" footer
     useNewCSS: true, // Whether to use the New CSS or old, although if you are going for a realistic look to discord, use old.
     headerText: "Yay! I love my messages! | {date}", // Show a string on top of the transcript. Optional
@@ -125,6 +130,14 @@ const attachment = await discordTranscripts.generateFromMessages(messages, chann
   // Same as createTranscript, except no limit
 });
 ```
+
+### Compatiable Languages
+| Language    | Information |   Translator   |
+| -------- | ------- | --------   |
+| English  | There by default. Developers speak and write english    |                       |
+| Brazilian | Available and optional for the brazilians     | Oreczx [Github](https://github.com/OreczXOfficial)  [Website](https://oreczxdev.xyz/)      |
+| French    | Coming soon eventually    |      Looking...                |
+| Spanish    | Coming soon eventually    |      Looking...                |
 
 ## 🤝 Enjoy the package?
 
