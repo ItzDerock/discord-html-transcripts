@@ -15,6 +15,22 @@ export default async function renderReply(message: Message, context: RenderMessa
   const isCrosspost = referencedMessage.reference && referencedMessage.reference.guildId !== message.guild?.id;
   const isCommand = referencedMessage.interaction !== null;
 
+
+const AvailableLanguages = [
+  "ENGLISH", "BRAZILIAN"
+]
+
+  let dscmsg1 = ""
+  let dscmsg2 = ""
+
+  if(AvailableLanguages.includes(context.Language?.toUpperCase() || "ENGLISH") && context.Language?.toUpperCase() == "ENGLISH"){
+    dscmsg1 = "Click to see command."
+    dscmsg2 = "Click to see attachment."
+  } else if(AvailableLanguages.includes(context.Language?.toUpperCase() || "ENGLISH") && context.Language?.toUpperCase() == "BRAZILIAN") {
+    dscmsg1 = "Clique para ver o comando."
+    dscmsg2 = "Clique para ver o anexo.."
+  }
+
   return (
     <DiscordReply
       slot="reply"
@@ -34,9 +50,9 @@ export default async function renderReply(message: Message, context: RenderMessa
           {await renderContent(referencedMessage.content, { ...context, type: RenderType.REPLY })}
         </span>
       ) : isCommand ? (
-        <em data-goto={referencedMessage.id}>Click to see command.</em>
+        <em data-goto={referencedMessage.id}>{dscmsg1}</em>
       ) : (
-        <em data-goto={referencedMessage.id}>Click to see attachment.</em>
+        <em data-goto={referencedMessage.id}>{dscmsg2}</em>
       )}
     </DiscordReply>
   );
