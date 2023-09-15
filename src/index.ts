@@ -47,10 +47,16 @@ export async function generateFromMessages<T extends ExportReturnType = ExportRe
 
       ...(options.callbacks ?? {}),
     },
+    customCSS: {
+      Primary: options.customCSS?.Primary ?? "1a1818", 
+      TextTheme: options.customCSS?.TextTheme ?? "afafaf",
+      ...(options.customCSS ?? { }),
+    },
     poweredBy: options.poweredBy ?? true,
     useNewCSS: options.useNewCSS ?? true,
     footerText: options.footerText ?? 'Exported {number} message{s}.',
     headerText: options.headerText ?? '',
+    Language: options.Language ?? 'English',
     headerColor: options.headerColor ?? 'green',
     favicon: options.favicon ?? 'guild',
   });
