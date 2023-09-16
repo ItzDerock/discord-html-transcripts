@@ -33,10 +33,10 @@ export default async function renderReply(message: Message, context: RenderMessa
         <span data-goto={referencedMessage.id}>
           {await renderContent(referencedMessage.content, { ...context, type: RenderType.REPLY })}
         </span>
-      ) : isCommand ? (
-        <em data-goto={referencedMessage.id}>Click to see command.</em>
       ) : (
-        <em data-goto={referencedMessage.id}>Click to see attachment.</em>
+        <em data-goto={referencedMessage.id}>
+          {context.language.format(isCommand ? 'reply.command' : 'reply.attachment')}
+        </em>
       )}
     </DiscordReply>
   );

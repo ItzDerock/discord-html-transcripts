@@ -1,5 +1,6 @@
 import type { AttachmentBuilder } from 'discord.js';
 import type { RenderMessageContext } from './generator';
+import type { Languages } from './languages';
 
 export type AttachmentTypes = 'audio' | 'video' | 'image' | 'file';
 
@@ -64,6 +65,12 @@ export type GenerateFromMessagesOptions<T extends ExportReturnType> = Partial<{
    * @default false - the returned html will be hydrated client-side
    */
   hydrate: boolean;
+
+  /**
+   * The language to use, e.g. 'en-US'. See documentation for list of supported languages.
+   * @default 'en-US'
+   */
+  language: Languages;
 }>;
 
 export type CreateTranscriptOptions<T extends ExportReturnType> = Partial<
