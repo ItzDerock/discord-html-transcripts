@@ -5,12 +5,13 @@ import { DiscordHeader, DiscordMessages } from '@derockdev/discord-components-re
 import renderMessage from './renderers/message';
 import renderContent, { RenderType } from './renderers/content';
 import { buildProfiles } from '../utils/buildProfiles';
-import { scrollToMessage } from '../static/client';
+import { revealSpoiler, scrollToMessage } from '../static/client';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { renderToString } from '@derockdev/discord-components-core/hydrate';
 
 // read the package.json file and get the @derockdev/discord-components-core version
-let discordComponentsVersion = '^3.5.0';
+let discordComponentsVersion = '^3.6.1';
 
 try {
   const packagePath = path.join(__dirname, '..', '..', 'package.json');
@@ -33,6 +34,7 @@ export type RenderMessageContext = {
   footerText?: string;
   saveImages: boolean;
   favicon: 'guild' | string;
+  hydrate: boolean;
 };
 
 export default async function renderMessages({ messages, channel, callbacks, ...options }: RenderMessageContext) {
@@ -100,7 +102,7 @@ export default async function renderMessages({ messages, channel, callbacks, ...
     </DiscordMessages>
   );
 
-  return ReactDOMServer.renderToStaticMarkup(
+  const markup = ReactDOMServer.renderToStaticMarkup(
     <html>
       <head>
         <meta charSet="utf-8" />
@@ -122,13 +124,6 @@ export default async function renderMessages({ messages, channel, callbacks, ...
         {/* title */}
         <title>{channel.isDMBased() ? 'Direct Messages' : channel.name}</title>
 
-        {/* profiles */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.$discordMessage={profiles:${await profiles}}`,
-          }}
-        ></script>
-
         {/* message reference handler */}
         <script
           dangerouslySetInnerHTML={{
@@ -136,11 +131,21 @@ export default async function renderMessages({ messages, channel, callbacks, ...
           }}
         />
 
-        {/* component library */}
-        <script
-          type="module"
-          src={`https://cdn.jsdelivr.net/npm/@derockdev/discord-components-core@${discordComponentsVersion}/dist/derockdev-discord-components-core/derockdev-discord-components-core.esm.js`}
-        ></script>
+        {!options.hydrate && (
+          <>
+            {/* profiles */}
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `window.$discordMessage={profiles:${JSON.stringify(await profiles)}}`,
+              }}
+            ></script>
+            {/* component library */}
+            <script
+              type="module"
+              src={`https://cdn.jsdelivr.net/npm/@derockdev/discord-components-core@${discordComponentsVersion}/dist/derockdev-discord-components-core/derockdev-discord-components-core.esm.js`}
+            ></script>
+          </>
+        )}
       </head>
 
       <body
@@ -151,6 +156,22 @@ export default async function renderMessages({ messages, channel, callbacks, ...
       >
         {elements}
       </body>
+      {/* Make sure the script runs after the DOM has loaded */}
+      {options.hydrate && <script dangerouslySetInnerHTML={{ __html: revealSpoiler }}></script>}
     </html>
   );
+
+  if (options.hydrate) {
+    const result = await renderToString(markup, {
+      beforeHydrate: async (document) => {
+        document.defaultView.$discordMessage = {
+          profiles: await profiles,
+        };
+      },
+    });
+
+    return result.html;
+  }
+
+  return markup;
 }
