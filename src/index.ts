@@ -6,6 +6,7 @@ import {
   type GenerateFromMessagesOptions,
   type ObjectType,
 } from './types';
+import { Language } from './languages';
 
 // version check
 const versionPrefix = version.split('.')[0];
@@ -51,6 +52,7 @@ export async function generateFromMessages<T extends ExportReturnType = ExportRe
     footerText: options.footerText ?? 'Exported {number} message{s}.',
     favicon: options.favicon ?? 'guild',
     hydrate: options.hydrate ?? false,
+    language: new Language(options.language ?? 'en-US'),
   });
 
   // get the time it took to render the messages
