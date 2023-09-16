@@ -97,7 +97,7 @@ const attachment = await discordTranscripts.createTranscript(channel, {
       resolveRole: (roleId: string) => Awaitable<Role | null>
     },
     poweredBy: true, // Whether to include the "Powered by discord-html-transcripts" footer
-    ssr: true // Whether to hydrate the html server-side
+    hydrate: true // Whether to hydrate the html server-side
 });
 ```
 
