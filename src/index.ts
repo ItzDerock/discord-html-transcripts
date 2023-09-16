@@ -50,7 +50,7 @@ export async function generateFromMessages<T extends ExportReturnType = ExportRe
     poweredBy: options.poweredBy ?? true,
     footerText: options.footerText ?? 'Exported {number} message{s}.',
     favicon: options.favicon ?? 'guild',
-    ssr: options.ssr ?? false,
+    hydrate: options.hydrate ?? false,
   });
 
   // get the time it took to render the messages

@@ -63,7 +63,7 @@ export type GenerateFromMessagesOptions<T extends ExportReturnType> = Partial<{
    * Whether to hydrate the html server-side
    * @default false - the returned html will be hydrated client-side
    */
-  ssr: boolean;
+  hydrate: boolean;
 }>;
 
 export type CreateTranscriptOptions<T extends ExportReturnType> = Partial<

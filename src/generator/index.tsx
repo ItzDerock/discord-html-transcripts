@@ -34,7 +34,7 @@ export type RenderMessageContext = {
   footerText?: string;
   saveImages: boolean;
   favicon: 'guild' | string;
-  ssr: boolean;
+  hydrate: boolean;
 };
 
 export default async function renderMessages({ messages, channel, callbacks, ...options }: RenderMessageContext) {
@@ -124,7 +124,6 @@ export default async function renderMessages({ messages, channel, callbacks, ...
         {/* title */}
         <title>{channel.isDMBased() ? 'Direct Messages' : channel.name}</title>
 
-
         {/* message reference handler */}
         <script
           dangerouslySetInnerHTML={{
@@ -132,19 +131,21 @@ export default async function renderMessages({ messages, channel, callbacks, ...
           }}
         />
 
-        {!options.ssr && <>
-          {/* profiles */}
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `window.$discordMessage={profiles:${JSON.stringify(await profiles)}}`,
-            }}
-          ></script>
-          {/* component library */}
-          <script
-            type="module"
-            src={`https://cdn.jsdelivr.net/npm/@derockdev/discord-components-core@${discordComponentsVersion}/dist/derockdev-discord-components-core/derockdev-discord-components-core.esm.js`}
-          ></script>
-        </>}
+        {!options.hydrate && (
+          <>
+            {/* profiles */}
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `window.$discordMessage={profiles:${JSON.stringify(await profiles)}}`,
+              }}
+            ></script>
+            {/* component library */}
+            <script
+              type="module"
+              src={`https://cdn.jsdelivr.net/npm/@derockdev/discord-components-core@${discordComponentsVersion}/dist/derockdev-discord-components-core/derockdev-discord-components-core.esm.js`}
+            ></script>
+          </>
+        )}
       </head>
 
       <body
@@ -156,11 +157,11 @@ export default async function renderMessages({ messages, channel, callbacks, ...
         {elements}
       </body>
       {/* Make sure the script runs after the DOM has loaded */}
-      {options.ssr && <script dangerouslySetInnerHTML={{__html: revealSpoiler}}></script>}
+      {options.hydrate && <script dangerouslySetInnerHTML={{ __html: revealSpoiler }}></script>}
     </html>
   );
 
-  if (options.ssr) {
+  if (options.hydrate) {
     const result = await renderToString(markup, {
       beforeHydrate: async (document) => {
         document.defaultView.$discordMessage = {
