@@ -16,8 +16,10 @@ export default async function renderSystemMessage(message: Message) {
     case MessageType.ChannelPinnedMessage:
       return (
         <DiscordSystemMessage id={`m-${message.id}`} key={message.id} type="pin">
-          <Highlight color={message.member?.roles.color?.hexColor}>{message.author.displayName}</Highlight> pinned{' '}
-          <i data-goto={message.reference?.messageId}>a message</i> to this channel.
+          <Highlight color={message.member?.roles.color?.hexColor}>
+            {message.author.displayName ?? message.author.username}
+          </Highlight>{' '}
+          pinned <i data-goto={message.reference?.messageId}>a message</i> to this channel.
           {/* reactions */}
           {message.reactions.cache.size > 0 && (
             <DiscordReactions slot="reactions">
@@ -40,16 +42,20 @@ export default async function renderSystemMessage(message: Message) {
     case MessageType.GuildBoostTier3:
       return (
         <DiscordSystemMessage id={`m-${message.id}`} key={message.id} type="boost">
-          <Highlight color={message.member?.roles.color?.hexColor}>{message.author.displayName}</Highlight> boosted the
-          server!
+          <Highlight color={message.member?.roles.color?.hexColor}>
+            {message.author.displayName ?? message.author.username}
+          </Highlight>{' '}
+          boosted the server!
         </DiscordSystemMessage>
       );
 
     case MessageType.ThreadStarterMessage:
       return (
         <DiscordSystemMessage id={`ms-${message.id}`} key={message.id} type="thread">
-          <Highlight color={message.member?.roles.color?.hexColor}>{message.author.displayName}</Highlight> started a
-          thread: <i data-goto={message.reference?.messageId}>{message.content}</i>
+          <Highlight color={message.member?.roles.color?.hexColor}>
+            {message.author.displayName ?? message.author.username}
+          </Highlight>{' '}
+          started a thread: <i data-goto={message.reference?.messageId}>{message.content}</i>
         </DiscordSystemMessage>
       );
 
@@ -110,7 +116,7 @@ export function JoinMessage(member: GuildMember | null, fallbackUser: User) {
     .flatMap((item, i) => [
       item,
       <Highlight color={member?.roles.color?.hexColor} key={i}>
-        {member?.nickname ?? fallbackUser.displayName}
+        {member?.nickname ?? fallbackUser.displayName ?? fallbackUser.username}
       </Highlight>,
     ])
     .slice(0, -1);

@@ -20,7 +20,9 @@ export default async function renderReply(message: Message, context: RenderMessa
       slot="reply"
       edited={!isCommand && referencedMessage.editedAt !== null}
       attachment={referencedMessage.attachments.size > 0}
-      author={referencedMessage.member?.nickname ?? referencedMessage.author.displayName}
+      author={
+        referencedMessage.member?.nickname ?? referencedMessage.author.displayName ?? referencedMessage.author.username
+      }
       avatar={referencedMessage.author.avatarURL({ size: 32 }) ?? undefined}
       roleColor={referencedMessage.member?.displayHexColor ?? undefined}
       bot={!isCrosspost && referencedMessage.author.bot}

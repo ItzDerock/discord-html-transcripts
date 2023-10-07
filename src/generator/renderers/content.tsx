@@ -123,7 +123,7 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
       const id = node.id as string;
       const user = await context.callbacks.resolveUser(id);
 
-      return <DiscordMention type="user">{user ? user.displayName : `<@${id}>`}</DiscordMention>;
+      return <DiscordMention type="user">{user ? user.displayName ?? user.username : `<@${id}>`}</DiscordMention>;
     }
 
     case 'here':
