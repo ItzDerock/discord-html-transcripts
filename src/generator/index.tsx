@@ -9,6 +9,7 @@ import { revealSpoiler, scrollToMessage } from '../static/client';
 import { readFileSync } from 'fs';
 import path from 'path';
 import { renderToString } from '@derockdev/discord-components-core/hydrate';
+import { isDefined } from '../utils/utils';
 
 // read the package.json file and get the @derockdev/discord-components-core version
 let discordComponentsVersion = '^3.6.1';
@@ -39,18 +40,19 @@ export type RenderMessageContext = {
 
 export default async function renderMessages({ messages, channel, callbacks, ...options }: RenderMessageContext) {
   const profiles = buildProfiles(messages);
-  const chatBody: React.ReactElement[] = [];
 
-  for (const message of messages) {
-    const rendered = await renderMessage(message, {
-      messages,
-      channel,
-      callbacks,
-      ...options,
-    });
-
-    if (rendered) chatBody.push(rendered);
-  }
+  const chatBody = (
+    await Promise.all(
+      messages.map((message) =>
+        renderMessage(message, {
+          messages,
+          channel,
+          callbacks,
+          ...options,
+        })
+      )
+    )
+  ).filter(isDefined);
 
   const elements = (
     <DiscordMessages style={{ minHeight: '100vh' }}>

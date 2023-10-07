@@ -55,7 +55,11 @@ export async function generateFromMessages<T extends ExportReturnType = ExportRe
 
   // get the time it took to render the messages
   // const renderTime = process.hrtime(startTime);
-  // console.log(`[discord-html-transcripts] Rendered ${transformedMessages.length} messages in ${renderTime[0]}s ${renderTime[1] / 1000000}ms`);
+  // console.log(
+  //   `[discord-html-transcripts] Rendered ${transformedMessages.length} messages in ${renderTime[0]}s ${
+  //     renderTime[1] / 1000000
+  //   }ms`
+  // );
 
   // return the html in the specified format
   if (options.returnType === ExportReturnType.Buffer) {

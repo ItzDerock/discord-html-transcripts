@@ -2,6 +2,10 @@ import type { APIMessageComponentEmoji, Emoji } from 'discord.js';
 import { request } from 'undici';
 import twemoji from 'twemoji';
 
+export function isDefined<T>(value: T | undefined | null): value is T {
+  return value !== undefined && value !== null;
+}
+
 export function formatBytes(bytes: number, decimals = 2) {
   if (bytes === 0) return '0 Bytes';
 
