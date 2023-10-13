@@ -81,10 +81,11 @@ export async function generateFromMessages<T extends ExportReturnType = ExportRe
  * @param options The options to use when creating the transcript
  * @returns       The generated transcript
  */
+
 export async function createTranscript<T extends ExportReturnType = ExportReturnType.Attachment>(
   channel: TextBasedChannel,
   options: CreateTranscriptOptions<T> = {}
-): Promise<ObjectType<T>> {
+): Promise<ObjectType<T> | ObjectType<T>[]> {
   // validate type
   if (!channel.isTextBased()) {
     // @ts-expect-error(2339): run-time check
@@ -121,7 +122,22 @@ export async function createTranscript<T extends ExportReturnType = ExportReturn
   if (resolvedLimit < allMessages.length) allMessages = allMessages.slice(0, limit);
 
   // generate the transcript
-  return generateFromMessages<T>(allMessages.reverse(), channel, options);
+  if (!options.limitPerFile) {
+    return generateFromMessages<T>(allMessages.reverse(), channel, options);
+  } else {
+    // split the messages into groups
+    const transcripts = [];
+    for (let i = 0; i < allMessages.length; i += options.limitPerFile) {
+      options.filename = `${options.filename ?? `transcript-${channel.id}`}_part.${i + 1}`;
+
+      const allMessageGroups = allMessages.slice(i, i + options.limitPerFile);
+      const transcript = await generateFromMessages<T>(allMessageGroups, channel, options);
+
+      transcripts.push(transcript as ObjectType<T>);
+    }
+
+    return transcripts;
+  }
 }
 
 export default {

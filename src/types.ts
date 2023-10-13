@@ -72,5 +72,11 @@ export type CreateTranscriptOptions<T extends ExportReturnType> = Partial<
      * The max amount of messages to fetch. Use `-1` to recursively fetch.
      */
     limit: number;
+
+    /**
+     * The max number of messages per file. If not defined or null, all messages will be in one file.
+     * @default null
+     */
+    limitPerFile?: number | null;
   }
 >;
