@@ -55,7 +55,7 @@
     "react-dom": "^18.2.0",
     "simple-markdown": "^0.7.3",
     "twemoji": "^14.0.2",
-    "undici": "^5.24.0"
+    "undici": "^5.26.2"
   },
   "peerDependencies": {
     "discord.js": "^14.0.0 || ^15.0.0"
