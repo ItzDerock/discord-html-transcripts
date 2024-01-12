@@ -7,18 +7,18 @@ import {
   DiscordThread,
   DiscordThreadMessage,
 } from '@derockdev/discord-components-react';
-import type { Message } from 'discord.js';
+import type { Message as MessageType } from 'discord.js';
 import React from 'react';
 import type { RenderMessageContext } from '..';
 import { parseDiscordEmoji } from '../../utils/utils';
-import renderAttachments from './attachment';
+import { Attachments } from './attachment';
 import renderComponentRow from './components';
 import renderContent, { RenderType } from './content';
 import { renderEmbed } from './embed';
 import renderReply from './reply';
 import renderSystemMessage from './systemMessage';
 
-export default async function renderMessage(message: Message, context: RenderMessageContext) {
+export default async function Message(message: MessageType, context: RenderMessageContext) {
   if (message.system) return renderSystemMessage(message);
 
   const isCrosspost = message.reference && message.reference.guildId !== message.guild?.id;
@@ -53,7 +53,8 @@ export default async function renderMessage(message: Message, context: RenderMes
         }))}
 
       {/* attachments */}
-      {await renderAttachments(message, context)}
+      {/* {await renderAttachments(message, context)} */}
+      <Attachments message={message} context={context} />
 
       {/* message embeds */}
       {message.embeds.length > 0 &&
