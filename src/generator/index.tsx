@@ -38,7 +38,7 @@ export type RenderMessageContext = {
   hydrate: boolean;
 };
 
-export default async function Messages({ messages, channel, callbacks, ...options }: RenderMessageContext) {
+export default async function render({ messages, channel, callbacks, ...options }: RenderMessageContext) {
   const profiles = buildProfiles(messages);
 
   const elements = (
