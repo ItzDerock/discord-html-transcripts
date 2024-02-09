@@ -1,5 +1,5 @@
 import { DiscordAttachment, DiscordAttachments } from '@derockdev/discord-components-react';
-import React, { ReactNode } from 'react';
+import React from 'react';
 import type { Attachment as AttachmentType, Message } from 'discord.js';
 import type { RenderMessageContext } from '..';
 import type { AttachmentTypes } from '../../types';
@@ -11,12 +11,11 @@ import { downloadImageToDataURL, formatBytes } from '../../utils/utils';
  * @param context
  * @returns
  */
-export async function Attachments(props: { message: Message; context: RenderMessageContext }): Promise<ReactNode> {
-  if (props.message.attachments.size === 0) return null;
+export async function Attachments(props: { message: Message; context: RenderMessageContext }) {
+  if (props.message.attachments.size === 0) return <></>;
 
   return (
     <DiscordAttachments slot="attachments">
-      {/* {await Promise.all(message.attachments.map((attachment) => renderAttachment(attachment, context)))} */}
       {props.message.attachments.map((attachment) => (
         <Attachment attachment={attachment} context={props.context} />
       ))}

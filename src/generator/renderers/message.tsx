@@ -12,7 +12,7 @@ import React from 'react';
 import type { RenderMessageContext } from '..';
 import { parseDiscordEmoji } from '../../utils/utils';
 import { Attachments } from './attachment';
-import renderComponentRow from './components';
+import ComponentRow from './components';
 import renderContent, { RenderType } from './content';
 import { renderEmbed } from './embed';
 import renderReply from './reply';
@@ -65,7 +65,7 @@ export default async function Message(message: MessageType, context: RenderMessa
       {/* components */}
       {message.components.length > 0 && (
         <DiscordAttachments slot="components">
-          {message.components.map((component, id) => renderComponentRow(component, id))}
+          {message.components.map((component, id) => ComponentRow(component, id))}
         </DiscordAttachments>
       )}
 

@@ -13,7 +13,8 @@ import {
 import parse, { type RuleTypesExtended } from 'discord-markdown-parser';
 import { ChannelType, type APIMessageComponentEmoji } from 'discord.js';
 import React, { Fragment, type ReactNode } from 'react';
-import type { ASTNode, SingleASTNode } from 'simple-markdown';
+import { ASTNode } from 'simple-markdown';
+import { SingleASTNode } from 'simple-markdown';
 import type { RenderMessageContext } from '../';
 import { parseDiscordEmoji } from '../../utils/utils';
 
@@ -55,17 +56,15 @@ export default async function renderContent(content: string, context: RenderCont
     }
   }
 
-  return <>{await renderNodes(parsed, context)}</>;
+  return <>{await ASTNode(parsed, context)}</>;
 }
 
-const renderNodes = async (nodes: ASTNode, context: RenderContentContext): Promise<React.ReactNode[]> =>
+const ASTNode = async (nodes: ASTNode, context: RenderContentContext): Promise<React.ReactNode[]> =>
   Array.isArray(nodes)
-    ? (await Promise.all(nodes.map((node) => renderASTNode(node, context)))).map((each, i) => (
-        <Fragment key={i}>{each}</Fragment>
-      ))
-    : [await renderASTNode(nodes, context)];
+    ? await Promise.all(nodes.map((node) => <SingleASTNode node={node} context={context} />))
+    : [<SingleASTNode node={nodes} context={context} />];
 
-export async function renderASTNode(node: SingleASTNode, context: RenderContentContext): Promise<ReactNode> {
+export async function SingleASTNode({ node, context }: { node: SingleASTNode; context: RenderContentContext }) {
   if (!node) return null;
 
   const type = node.type as RuleTypesExtended;
@@ -75,22 +74,22 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
       return node.content;
 
     case 'link':
-      return <a href={node.target}>{await renderNodes(node.content, context)}</a>;
+      return <a href={node.target}>{await ASTNode(node.content, context)}</a>;
 
     case 'url':
     case 'autolink':
       return (
         <a href={node.target} target="_blank" rel="noreferrer">
-          {...await renderNodes(node.content, context)}
+          {...await ASTNode(node.content, context)}
         </a>
       );
 
     case 'blockQuote':
       if (context.type === RenderType.REPLY) {
-        return await renderNodes(node.content, context);
+        return await ASTNode(node.content, context);
       }
 
-      return <DiscordQuote>{...await renderNodes(node.content, context)}</DiscordQuote>;
+      return <DiscordQuote>{...await ASTNode(node.content, context)}</DiscordQuote>;
 
     case 'br':
     case 'newline':
@@ -144,22 +143,22 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
       return <DiscordInlineCode>{node.content}</DiscordInlineCode>;
 
     case 'em':
-      return <DiscordItalic>{await renderNodes(node.content, context)}</DiscordItalic>;
+      return <DiscordItalic>{await ASTNode(node.content, context)}</DiscordItalic>;
 
     case 'strong':
-      return <DiscordBold>{await renderNodes(node.content, context)}</DiscordBold>;
+      return <DiscordBold>{await ASTNode(node.content, context)}</DiscordBold>;
 
     case 'underline':
-      return <DiscordUnderlined>{await renderNodes(node.content, context)}</DiscordUnderlined>;
+      return <DiscordUnderlined>{await ASTNode(node.content, context)}</DiscordUnderlined>;
 
     case 'strikethrough':
-      return <s>{await renderNodes(node.content, context)}</s>;
+      return <s>{await ASTNode(node.content, context)}</s>;
 
     case 'emoticon':
-      return typeof node.content === 'string' ? node.content : await renderNodes(node.content, context);
+      return typeof node.content === 'string' ? node.content : await ASTNode(node.content, context);
 
     case 'spoiler':
-      return <DiscordSpoiler>{await renderNodes(node.content, context)}</DiscordSpoiler>;
+      return <DiscordSpoiler>{await ASTNode(node.content, context)}</DiscordSpoiler>;
 
     case 'emoji':
     case 'twemoji':
@@ -177,7 +176,7 @@ export async function renderASTNode(node: SingleASTNode, context: RenderContentC
 
     default: {
       console.log(`Unknown node type: ${type}`, node);
-      return typeof node.content === 'string' ? node.content : await renderNodes(node.content, context);
+      return typeof node.content === 'string' ? node.content : await ASTNode(node.content, context);
     }
   }
 }

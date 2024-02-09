@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es2017",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["@types/node", "react/experimental", "@types/react-dom"],
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
