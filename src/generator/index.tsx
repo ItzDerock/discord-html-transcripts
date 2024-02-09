@@ -76,7 +76,7 @@ export default async function Messages({ messages, channel, callbacks, ...option
       {/* body */}
       <Suspense>
         {messages.map((message) => (
-          <DiscordMessage message={message} context={{ messages, channel, callbacks, ...options }} />
+          <DiscordMessage message={message} context={{ messages, channel, callbacks, ...options }} key={message.id} />
         ))}
       </Suspense>
 
