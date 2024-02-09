@@ -13,13 +13,13 @@ import type { RenderMessageContext } from '..';
 import { parseDiscordEmoji } from '../../utils/utils';
 import { Attachments } from './attachment';
 import ComponentRow from './components';
-import renderContent, { RenderType } from './content';
-import { renderEmbed } from './embed';
-import renderReply from './reply';
-import renderSystemMessage from './systemMessage';
+import MessageContent, { RenderType } from './content';
+import { DiscordEmbed } from './embed';
+import MessageReply from './reply';
+import DiscordSystemMessage from './systemMessage';
 
-export default async function Message(message: MessageType, context: RenderMessageContext) {
-  if (message.system) return renderSystemMessage(message);
+export default async function Message({ message, context }: { message: MessageType; context: RenderMessageContext }) {
+  if (message.system) return <DiscordSystemMessage message={message} />;
 
   const isCrosspost = message.reference && message.reference.guildId !== message.guild?.id;
 
@@ -34,7 +34,7 @@ export default async function Message(message: MessageType, context: RenderMessa
       profile={message.author.id}
     >
       {/* reply */}
-      {await renderReply(message, context)}
+      <MessageReply message={message} context={context} />
 
       {/* slash command */}
       {message.interaction && (
@@ -46,26 +46,27 @@ export default async function Message(message: MessageType, context: RenderMessa
       )}
 
       {/* message content */}
-      {message.content &&
-        (await renderContent(message.content, {
-          ...context,
-          type: message.webhookId ? RenderType.WEBHOOK : RenderType.NORMAL,
-        }))}
+      {message.content && (
+        <MessageContent
+          content={message.content}
+          context={{ ...context, type: message.webhookId ? RenderType.WEBHOOK : RenderType.NORMAL }}
+        />
+      )}
 
       {/* attachments */}
-      {/* {await renderAttachments(message, context)} */}
       <Attachments message={message} context={context} />
 
       {/* message embeds */}
-      {message.embeds.length > 0 &&
-        (await Promise.all(
-          message.embeds.map(async (embed, id) => await renderEmbed(embed, { ...context, index: id, message }))
-        ))}
+      {message.embeds.map((embed, id) => (
+        <DiscordEmbed embed={embed} context={{ ...context, index: id, message }} key={id} />
+      ))}
 
       {/* components */}
       {message.components.length > 0 && (
         <DiscordAttachments slot="components">
-          {message.components.map((component, id) => ComponentRow(component, id))}
+          {message.components.map((component, id) => (
+            <ComponentRow key={id} id={id} row={component} />
+          ))}
         </DiscordAttachments>
       )}
 
@@ -96,12 +97,14 @@ export default async function Message(message: MessageType, context: RenderMessa
         >
           {message.thread.lastMessage ? (
             <DiscordThreadMessage profile={message.thread.lastMessage.author.id}>
-              {await renderContent(
-                message.thread.lastMessage.content.length > 128
-                  ? message.thread.lastMessage.content.substring(0, 125) + '...'
-                  : message.thread.lastMessage.content,
-                { ...context, type: RenderType.REPLY }
-              )}
+              <MessageContent
+                content={
+                  message.thread.lastMessage.content.length > 128
+                    ? message.thread.lastMessage.content.substring(0, 125) + '...'
+                    : message.thread.lastMessage.content
+                }
+                context={{ ...context, type: RenderType.REPLY }}
+              />
             </DiscordThreadMessage>
           ) : (
             `Thread messages not saved.`

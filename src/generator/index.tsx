@@ -1,15 +1,15 @@
 import { ChannelType, type Awaitable, type Channel, type Message, type Role, type User } from 'discord.js';
 import ReactDOMServer from 'react-dom/server';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { DiscordHeader, DiscordMessages } from '@derockdev/discord-components-react';
-import renderMessage from './renderers/message';
-import renderContent, { RenderType } from './renderers/content';
+import DiscordMessage from './renderers/message';
+import MessageContent, { RenderType } from './renderers/content';
 import { buildProfiles } from '../utils/buildProfiles';
 import { revealSpoiler, scrollToMessage } from '../static/client';
 import { readFileSync } from 'fs';
 import path from 'path';
 import { renderToString } from '@derockdev/discord-components-core/hydrate';
-import { isDefined } from '../utils/utils';
+import { streamToString } from '../utils/utils';
 
 // read the package.json file and get the @derockdev/discord-components-core version
 let discordComponentsVersion = '^3.6.1';
@@ -38,21 +38,8 @@ export type RenderMessageContext = {
   hydrate: boolean;
 };
 
-export default async function renderMessages({ messages, channel, callbacks, ...options }: RenderMessageContext) {
+export default async function Messages({ messages, channel, callbacks, ...options }: RenderMessageContext) {
   const profiles = buildProfiles(messages);
-
-  const chatBody = (
-    await Promise.all(
-      messages.map((message) =>
-        renderMessage(message, {
-          messages,
-          channel,
-          callbacks,
-          ...options,
-        })
-      )
-    )
-  ).filter(isDefined);
 
   const elements = (
     <DiscordMessages style={{ minHeight: '100vh' }}>
@@ -68,21 +55,30 @@ export default async function renderMessages({ messages, channel, callbacks, ...
         }
         icon={channel.isDMBased() ? undefined : channel.guild.iconURL({ size: 128 }) ?? undefined}
       >
-        {channel.isThread()
-          ? `Thread channel in ${channel.parent?.name ?? 'Unknown Channel'}`
-          : channel.isDMBased()
-          ? `Direct Messages`
-          : channel.isVoiceBased()
-          ? `Voice Text Channel for ${channel.name}`
-          : channel.type === ChannelType.GuildCategory
-          ? `Category Channel`
-          : 'topic' in channel && channel.topic
-          ? await renderContent(channel.topic, { messages, channel, callbacks, type: RenderType.REPLY, ...options })
-          : `This is the start of #${channel.name} channel.`}
+        {channel.isThread() ? (
+          `Thread channel in ${channel.parent?.name ?? 'Unknown Channel'}`
+        ) : channel.isDMBased() ? (
+          `Direct Messages`
+        ) : channel.isVoiceBased() ? (
+          `Voice Text Channel for ${channel.name}`
+        ) : channel.type === ChannelType.GuildCategory ? (
+          `Category Channel`
+        ) : 'topic' in channel && channel.topic ? (
+          <MessageContent
+            content={channel.topic}
+            context={{ messages, channel, callbacks, type: RenderType.REPLY, ...options }}
+          />
+        ) : (
+          `This is the start of #${channel.name} channel.`
+        )}
       </DiscordHeader>
 
       {/* body */}
-      {chatBody}
+      <Suspense>
+        {messages.map((message) => (
+          <DiscordMessage message={message} context={{ messages, channel, callbacks, ...options }} />
+        ))}
+      </Suspense>
 
       {/* footer */}
       <div style={{ textAlign: 'center', width: '100%' }}>
@@ -104,7 +100,9 @@ export default async function renderMessages({ messages, channel, callbacks, ...
     </DiscordMessages>
   );
 
-  const markup = ReactDOMServer.renderToStaticMarkup(
+  // NOTE: this renders a STATIC site with no interactivity
+  // if interactivity is needed, switch to renderToPipeableStream and use hydrateRoot on client.
+  const stream = ReactDOMServer.renderToStaticNodeStream(
     <html>
       <head>
         <meta charSet="utf-8" />
@@ -158,10 +156,13 @@ export default async function renderMessages({ messages, channel, callbacks, ...
       >
         {elements}
       </body>
+
       {/* Make sure the script runs after the DOM has loaded */}
       {options.hydrate && <script dangerouslySetInnerHTML={{ __html: revealSpoiler }}></script>}
     </html>
   );
+
+  const markup = await streamToString(stream);
 
   if (options.hydrate) {
     const result = await renderToString(markup, {

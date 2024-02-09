@@ -3,7 +3,7 @@ import { ButtonStyle, ComponentType, type MessageActionRowComponent, type Action
 import React from 'react';
 import { parseDiscordEmoji } from '../../utils/utils';
 
-export default function ComponentRow(row: ActionRow<MessageActionRowComponent>, id: number) {
+export default function ComponentRow({ row, id }: { row: ActionRow<MessageActionRowComponent>; id: number }) {
   return (
     <DiscordActionRow key={id}>
       {row.components.map((component, id) => (

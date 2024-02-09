@@ -12,9 +12,10 @@ import {
 } from '@derockdev/discord-components-react';
 import parse, { type RuleTypesExtended } from 'discord-markdown-parser';
 import { ChannelType, type APIMessageComponentEmoji } from 'discord.js';
-import React, { Fragment, type ReactNode } from 'react';
-import { ASTNode } from 'simple-markdown';
-import { SingleASTNode } from 'simple-markdown';
+import React from 'react';
+import type { ASTNode } from 'simple-markdown';
+import { ASTNode as MessageASTNodes } from 'simple-markdown';
+import type { SingleASTNode } from 'simple-markdown';
 import type { RenderMessageContext } from '../';
 import { parseDiscordEmoji } from '../../utils/utils';
 
@@ -33,7 +34,13 @@ type RenderContentContext = RenderMessageContext & {
   };
 };
 
-export default async function renderContent(content: string, context: RenderContentContext) {
+/**
+ * Renders discord markdown content
+ * @param content - The content to render
+ * @param context - The context to render the content in
+ * @returns
+ */
+export default async function MessageContent({ content, context }: { content: string; context: RenderContentContext }) {
   if (context.type === RenderType.REPLY && content.length > 180) content = content.slice(0, 180) + '...';
 
   // parse the markdown
@@ -56,15 +63,31 @@ export default async function renderContent(content: string, context: RenderCont
     }
   }
 
-  return <>{await ASTNode(parsed, context)}</>;
+  return <MessageASTNodes nodes={parsed} context={context} />;
 }
 
-const ASTNode = async (nodes: ASTNode, context: RenderContentContext): Promise<React.ReactNode[]> =>
-  Array.isArray(nodes)
-    ? await Promise.all(nodes.map((node) => <SingleASTNode node={node} context={context} />))
-    : [<SingleASTNode node={nodes} context={context} />];
+// This function can probably be combined into the MessageSingleASTNode function
+async function MessageASTNodes({
+  nodes,
+  context,
+}: {
+  nodes: ASTNode;
+  context: RenderContentContext;
+}): Promise<React.JSX.Element> {
+  if (Array.isArray(nodes)) {
+    return (
+      <>
+        {nodes.map((node) => (
+          <MessageSingleASTNode node={node} context={context} />
+        ))}
+      </>
+    );
+  } else {
+    return <MessageSingleASTNode node={nodes} context={context} />;
+  }
+}
 
-export async function SingleASTNode({ node, context }: { node: SingleASTNode; context: RenderContentContext }) {
+export async function MessageSingleASTNode({ node, context }: { node: SingleASTNode; context: RenderContentContext }) {
   if (!node) return null;
 
   const type = node.type as RuleTypesExtended;
@@ -74,22 +97,30 @@ export async function SingleASTNode({ node, context }: { node: SingleASTNode; co
       return node.content;
 
     case 'link':
-      return <a href={node.target}>{await ASTNode(node.content, context)}</a>;
+      return (
+        <a href={node.target}>
+          <MessageASTNodes nodes={node.content} context={context} />
+        </a>
+      );
 
     case 'url':
     case 'autolink':
       return (
         <a href={node.target} target="_blank" rel="noreferrer">
-          {...await ASTNode(node.content, context)}
+          <MessageASTNodes nodes={node.content} context={context} />
         </a>
       );
 
     case 'blockQuote':
       if (context.type === RenderType.REPLY) {
-        return await ASTNode(node.content, context);
+        return <MessageASTNodes nodes={node.content} context={context} />;
       }
 
-      return <DiscordQuote>{...await ASTNode(node.content, context)}</DiscordQuote>;
+      return (
+        <DiscordQuote>
+          <MessageASTNodes nodes={node.content} context={context} />
+        </DiscordQuote>
+      );
 
     case 'br':
     case 'newline':
@@ -143,22 +174,46 @@ export async function SingleASTNode({ node, context }: { node: SingleASTNode; co
       return <DiscordInlineCode>{node.content}</DiscordInlineCode>;
 
     case 'em':
-      return <DiscordItalic>{await ASTNode(node.content, context)}</DiscordItalic>;
+      return (
+        <DiscordItalic>
+          <MessageASTNodes nodes={node.content} context={context} />
+        </DiscordItalic>
+      );
 
     case 'strong':
-      return <DiscordBold>{await ASTNode(node.content, context)}</DiscordBold>;
+      return (
+        <DiscordBold>
+          <MessageASTNodes nodes={node.content} context={context} />
+        </DiscordBold>
+      );
 
     case 'underline':
-      return <DiscordUnderlined>{await ASTNode(node.content, context)}</DiscordUnderlined>;
+      return (
+        <DiscordUnderlined>
+          <MessageASTNodes nodes={node.content} context={context} />
+        </DiscordUnderlined>
+      );
 
     case 'strikethrough':
-      return <s>{await ASTNode(node.content, context)}</s>;
+      return (
+        <s>
+          <MessageASTNodes nodes={node.content} context={context} />
+        </s>
+      );
 
     case 'emoticon':
-      return typeof node.content === 'string' ? node.content : await ASTNode(node.content, context);
+      return typeof node.content === 'string' ? (
+        node.content
+      ) : (
+        <MessageASTNodes nodes={node.content} context={context} />
+      );
 
     case 'spoiler':
-      return <DiscordSpoiler>{await ASTNode(node.content, context)}</DiscordSpoiler>;
+      return (
+        <DiscordSpoiler>
+          <MessageASTNodes nodes={node.content} context={context} />
+        </DiscordSpoiler>
+      );
 
     case 'emoji':
     case 'twemoji':
@@ -176,7 +231,11 @@ export async function SingleASTNode({ node, context }: { node: SingleASTNode; co
 
     default: {
       console.log(`Unknown node type: ${type}`, node);
-      return typeof node.content === 'string' ? node.content : await ASTNode(node.content, context);
+      return typeof node.content === 'string' ? (
+        node.content
+      ) : (
+        <MessageASTNodes nodes={node.content} context={context} />
+      );
     }
   }
 }

@@ -9,6 +9,7 @@ const client = new discord.Client({
 });
 
 client.on('ready', async () => {
+  console.log('Fetching channel: ', process.env.CHANNEL!);
   const channel = await client.channels.fetch(process.env.CHANNEL!);
 
   if (!channel || !channel.isTextBased()) {
@@ -16,7 +17,10 @@ client.on('ready', async () => {
     process.exit(1);
   }
 
+  console.log('Generating transcript for', channel);
+  console.time('transcript');
   const attachment = await createTranscript(channel);
+  console.timeEnd('transcript');
 
   await channel.send({
     files: [attachment],
