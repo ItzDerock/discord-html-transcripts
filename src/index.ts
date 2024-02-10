@@ -1,11 +1,14 @@
 import { AttachmentBuilder, version, Collection, type Channel, type Message, type TextBasedChannel } from 'discord.js';
-import renderMessages from './generator';
+import DiscordMessages from './generator';
 import {
   ExportReturnType,
   type CreateTranscriptOptions,
   type GenerateFromMessagesOptions,
   type ObjectType,
 } from './types';
+
+// re-export component for custom rendering
+export { default as DiscordMessages } from './generator/transcript';
 
 // version check
 const versionPrefix = version.split('.')[0];
@@ -36,7 +39,7 @@ export async function generateFromMessages<T extends ExportReturnType = ExportRe
   // const startTime = process.hrtime();
 
   // render the messages
-  const html = await renderMessages({
+  const html = await DiscordMessages({
     messages: transformedMessages,
     channel,
     saveImages: options.saveImages ?? false,

@@ -2,9 +2,9 @@ import { DiscordReply } from '@derockdev/discord-components-react';
 import { type Message, UserFlags } from 'discord.js';
 import type { RenderMessageContext } from '..';
 import React from 'react';
-import renderContent, { RenderType } from './content';
+import MessageContent, { RenderType } from './content';
 
-export default async function renderReply(message: Message, context: RenderMessageContext) {
+export default async function MessageReply({ message, context }: { message: Message; context: RenderMessageContext }) {
   if (!message.reference) return null;
   if (message.reference.guildId !== message.guild?.id) return null;
 
@@ -33,7 +33,7 @@ export default async function renderReply(message: Message, context: RenderMessa
     >
       {referencedMessage.content ? (
         <span data-goto={referencedMessage.id}>
-          {await renderContent(referencedMessage.content, { ...context, type: RenderType.REPLY })}
+          <MessageContent content={referencedMessage.content} context={{ ...context, type: RenderType.REPLY }} />
         </span>
       ) : isCommand ? (
         <em data-goto={referencedMessage.id}>Click to see command.</em>

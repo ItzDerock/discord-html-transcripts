@@ -3,13 +3,13 @@ import { MessageType, type GuildMember, type Message, type User } from 'discord.
 import React from 'react';
 import { parseDiscordEmoji } from '../../utils/utils';
 
-export default async function renderSystemMessage(message: Message) {
+export default async function SystemMessage({ message }: { message: Message }) {
   switch (message.type) {
     case MessageType.RecipientAdd:
     case MessageType.UserJoin:
       return (
         <DiscordSystemMessage id={`m-${message.id}`} key={message.id} type="join">
-          {JoinMessage(message.member, message.author)}
+          <JoinMessage member={message.member} fallbackUser={message.author} />
         </DiscordSystemMessage>
       );
 
@@ -108,7 +108,7 @@ const allJoinMessages = [
   "Hello. Is it {user} you're looking for?",
 ];
 
-export function JoinMessage(member: GuildMember | null, fallbackUser: User) {
+export function JoinMessage({ member, fallbackUser }: { member: GuildMember | null; fallbackUser: User }) {
   const randomMessage = allJoinMessages[Math.floor(Math.random() * allJoinMessages.length)];
 
   return randomMessage

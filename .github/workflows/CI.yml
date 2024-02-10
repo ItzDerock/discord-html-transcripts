@@ -15,16 +15,20 @@ jobs:
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
       - name: Add problem matcher
         run: echo "::add-matcher::.github/problemMatchers/eslint.json"
-      - name: Use Node.js v16
-        uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93 # tag=v3
+      - name: Use Node.js v20
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
 
       - name: Install Dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       - name: Run ESLint
-        run: npm run lint --fix=false
+        run: pnpm run lint --fix=false
 
   TypeCheck:
     name: TypeCheck
@@ -34,15 +38,16 @@ jobs:
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
       - name: Add problem matcher
         run: echo "::add-matcher::.github/problemMatchers/tsc.json"
-      - name: Use Node.js v16
-        uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93 # tag=v3
+      - name: Use Node.js v20
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
 
       - name: Install Dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       - name: Validate Types
-        run: npm run typecheck
-#      - name: Run Tests
-#        run: npm run test
+        run: pnpm run typecheck

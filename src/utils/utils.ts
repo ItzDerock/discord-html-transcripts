@@ -53,3 +53,17 @@ export async function downloadImageToDataURL(url: string): Promise<string | null
 
   return dataURL;
 }
+
+/**
+ * Converts a stream to a string
+ * @param stream - The stream to convert
+ */
+export function streamToString(stream: NodeJS.ReadableStream) {
+  const chunks: Buffer[] = [];
+
+  return new Promise<string>((resolve, reject) => {
+    stream.on('data', (chunk) => chunks.push(chunk));
+    stream.on('error', reject);
+    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+  });
+}
