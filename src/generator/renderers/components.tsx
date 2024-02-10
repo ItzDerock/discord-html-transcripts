@@ -7,7 +7,7 @@ export default function ComponentRow({ row, id }: { row: ActionRow<MessageAction
   return (
     <DiscordActionRow key={id}>
       {row.components.map((component, id) => (
-        <Component component={component} id={id} />
+        <Component component={component} id={id} key={id} />
       ))}
     </DiscordActionRow>
   );

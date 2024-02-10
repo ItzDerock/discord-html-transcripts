@@ -16,8 +16,8 @@ export async function Attachments(props: { message: Message; context: RenderMess
 
   return (
     <DiscordAttachments slot="attachments">
-      {props.message.attachments.map((attachment) => (
-        <Attachment attachment={attachment} context={props.context} />
+      {props.message.attachments.map((attachment, id) => (
+        <Attachment attachment={attachment} context={props.context} key={id} />
       ))}
     </DiscordAttachments>
   );

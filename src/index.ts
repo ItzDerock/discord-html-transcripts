@@ -7,6 +7,9 @@ import {
   type ObjectType,
 } from './types';
 
+// re-export component for custom rendering
+export { default as DiscordMessages } from './generator/transcript';
+
 // version check
 const versionPrefix = version.split('.')[0];
 

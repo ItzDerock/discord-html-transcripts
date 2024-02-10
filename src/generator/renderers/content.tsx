@@ -77,8 +77,8 @@ async function MessageASTNodes({
   if (Array.isArray(nodes)) {
     return (
       <>
-        {nodes.map((node) => (
-          <MessageSingleASTNode node={node} context={context} />
+        {nodes.map((node, i) => (
+          <MessageSingleASTNode node={node} context={context} key={i} />
         ))}
       </>
     );

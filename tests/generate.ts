@@ -17,7 +17,6 @@ client.on('ready', async () => {
     process.exit(1);
   }
 
-  console.log('Generating transcript for', channel);
   console.time('transcript');
   const attachment = await createTranscript(channel);
   console.timeEnd('transcript');

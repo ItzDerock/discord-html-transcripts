@@ -1,7 +1,7 @@
 import {
   DiscordAttachments,
   DiscordCommand,
-  DiscordMessage,
+  DiscordMessage as DiscordMessageComponent,
   DiscordReaction,
   DiscordReactions,
   DiscordThread,
@@ -18,13 +18,19 @@ import { DiscordEmbed } from './embed';
 import MessageReply from './reply';
 import DiscordSystemMessage from './systemMessage';
 
-export default async function Message({ message, context }: { message: MessageType; context: RenderMessageContext }) {
+export default async function DiscordMessage({
+  message,
+  context,
+}: {
+  message: MessageType;
+  context: RenderMessageContext;
+}) {
   if (message.system) return <DiscordSystemMessage message={message} />;
 
   const isCrosspost = message.reference && message.reference.guildId !== message.guild?.id;
 
   return (
-    <DiscordMessage
+    <DiscordMessageComponent
       id={`m-${message.id}`}
       timestamp={message.createdAt.toISOString()}
       key={message.id}
@@ -111,6 +117,6 @@ export default async function Message({ message, context }: { message: MessageTy
           )}
         </DiscordThread>
       )}
-    </DiscordMessage>
+    </DiscordMessageComponent>
   );
 }
