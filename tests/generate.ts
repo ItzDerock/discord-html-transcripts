@@ -1,5 +1,5 @@
 import * as discord from 'discord.js';
-import { createTranscript } from '../src';
+import { TranscriptImageDownloader, createTranscript } from '../src';
 
 import { config } from 'dotenv';
 config();
@@ -18,7 +18,15 @@ client.on('ready', async () => {
   }
 
   console.time('transcript');
-  const attachment = await createTranscript(channel);
+  const attachment = await createTranscript(channel, {
+    // saveImages: true,
+    callbacks: {
+      resolveImageSrc: new TranscriptImageDownloader()
+        .withMaxSize(5120) // 5MB in KB
+        .withCompression(40, true) // 40% quality, convert to webp
+        .build(),
+    },
+  });
   console.timeEnd('transcript');
 
   await channel.send({

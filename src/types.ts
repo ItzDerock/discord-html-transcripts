@@ -31,7 +31,7 @@ export type GenerateFromMessagesOptions<T extends ExportReturnType> = Partial<{
   /**
    * Callbacks for resolving channels, users, and roles
    */
-  callbacks: RenderMessageContext['callbacks'];
+  callbacks: Partial<RenderMessageContext['callbacks']>;
 
   /**
    * The name of the file to return if returnType is ExportReturnType.ATTACHMENT
