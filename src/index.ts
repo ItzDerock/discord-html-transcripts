@@ -114,7 +114,8 @@ export async function createTranscript<T extends ExportReturnType = ExportReturn
 
     // add the messages to the array
     allMessages.push(...filteredMessages.values());
-    lastMessageId = filteredMessages.lastKey();
+    // Get the last key of 'messages', not 'filteredMessages' because you will be refetching the same messages
+    lastMessageId = messages.lastKey();
 
     // if there are no more messages, break
     if (filteredMessages.size < 100) break;
