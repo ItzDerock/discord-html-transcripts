@@ -4,8 +4,10 @@ import { createTranscript } from '../src';
 import { config } from 'dotenv';
 config();
 
+const { GuildMessages, Guilds, MessageContent } = discord.GatewayIntentBits;
+
 const client = new discord.Client({
-  intents: [discord.IntentsBitField.Flags.GuildMessages, discord.IntentsBitField.Flags.Guilds],
+  intents: [GuildMessages, Guilds, MessageContent],
 });
 
 client.on('ready', async () => {
@@ -18,7 +20,12 @@ client.on('ready', async () => {
   }
 
   console.time('transcript');
-  const attachment = await createTranscript(channel);
+
+  const attachment = await createTranscript(channel, {
+    // Filter bot messages
+    filter: (message) => !message.author.bot
+  });
+
   console.timeEnd('transcript');
 
   await channel.send({
