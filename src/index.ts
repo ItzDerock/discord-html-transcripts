@@ -118,7 +118,7 @@ export async function createTranscript<T extends ExportReturnType = ExportReturn
     lastMessageId = messages.lastKey();
 
     // if there are no more messages, break
-    if (filteredMessages.size < 100) break;
+    if (messages.size < 100) break;
 
     // if the limit has been reached, break
     if (allMessages.length >= resolvedLimit) break;
