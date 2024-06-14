@@ -23,7 +23,7 @@ client.on('ready', async () => {
 
   const attachment = await createTranscript(channel, {
     // Filter bot messages
-    filter: (message) => !message.author.bot
+    filter: (message) => !message.author.bot,
   });
 
   console.timeEnd('transcript');

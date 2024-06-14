@@ -99,7 +99,6 @@ export async function createTranscript<T extends ExportReturnType = ExportReturn
   let lastMessageId: string | undefined;
   const { limit, filter } = options;
   const resolvedLimit = typeof limit === 'undefined' || limit === -1 ? Infinity : limit;
-  const resolvedFilter = typeof filter === 'function' ? filter : (() => true);
 
   // until there are no more messages, keep fetching
   // eslint-disable-next-line no-constant-condition
@@ -110,7 +109,7 @@ export async function createTranscript<T extends ExportReturnType = ExportReturn
 
     // fetch messages
     const messages = await channel.messages.fetch(fetchLimitOptions);
-    const filteredMessages = messages.filter(resolvedFilter);
+    const filteredMessages = typeof filter === 'function' ? messages.filter(filter) : messages;
 
     // add the messages to the array
     allMessages.push(...filteredMessages.values());
