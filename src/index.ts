@@ -6,9 +6,11 @@ import {
   type GenerateFromMessagesOptions,
   type ObjectType,
 } from './types';
+import { TranscriptImageDownloader, type ResolveImageCallback } from './downloader/images';
 
-// re-export component for custom rendering
+// re-exports
 export { default as DiscordMessages } from './generator/transcript';
+export { TranscriptImageDownloader } from './downloader/images';
 
 // version check
 const versionPrefix = version.split('.')[0];
@@ -36,7 +38,18 @@ export async function generateFromMessages<T extends ExportReturnType = ExportRe
   // turn messages into an array
   const transformedMessages = messages instanceof Collection ? Array.from(messages.values()) : messages;
 
-  // const startTime = process.hrtime();
+  // figure out how the user wants images saved
+  let resolveImageSrc: ResolveImageCallback = options.callbacks?.resolveImageSrc ?? ((attachment) => attachment.url);
+  if (options.saveImages) {
+    if (options.callbacks?.resolveImageSrc) {
+      console.warn(
+        `[discord-html-transcripts] You have specified both saveImages and resolveImageSrc, please only specify one. resolveImageSrc will be used.`
+      );
+    } else {
+      resolveImageSrc = new TranscriptImageDownloader().build();
+      console.log('Using default downloader');
+    }
+  }
 
   // render the messages
   const html = await DiscordMessages({
@@ -44,6 +57,7 @@ export async function generateFromMessages<T extends ExportReturnType = ExportRe
     channel,
     saveImages: options.saveImages ?? false,
     callbacks: {
+      resolveImageSrc,
       resolveChannel: async (id) => channel.client.channels.fetch(id).catch(() => null),
       resolveUser: async (id) => channel.client.users.fetch(id).catch(() => null),
       resolveRole: channel.isDMBased() ? () => null : async (id) => channel.guild?.roles.fetch(id).catch(() => null),
