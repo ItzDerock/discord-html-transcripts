@@ -90,3 +90,11 @@ Defined in [discord.js](https://discord.js.org/#/docs/discord.js/main/typedef/Gu
 ### `options: CreateTranscriptOptions`
 
 The same options as [generatefrommessages.md](generatefrommessages.md 'mention') but adds the `limit` option which lets you limit set the number of messages to fetch.
+
+### `options.limit: number`
+
+The number of messages to fetch.
+
+### `options.filter: (message: Message<boolean>) => boolean`
+
+A function that will be called for each message to determine if it should be included in the transcript. If false, the message will not be included.
