@@ -111,7 +111,7 @@ export async function createTranscript<T extends ExportReturnType = ExportReturn
   // fetch messages
   let allMessages: Message[] = [];
   let lastMessageId: string | undefined;
-  const { limit } = options;
+  const { limit, filter } = options;
   const resolvedLimit = typeof limit === 'undefined' || limit === -1 ? Infinity : limit;
 
   // until there are no more messages, keep fetching
@@ -123,9 +123,11 @@ export async function createTranscript<T extends ExportReturnType = ExportReturn
 
     // fetch messages
     const messages = await channel.messages.fetch(fetchLimitOptions);
+    const filteredMessages = typeof filter === 'function' ? messages.filter(filter) : messages;
 
     // add the messages to the array
-    allMessages.push(...messages.values());
+    allMessages.push(...filteredMessages.values());
+    // Get the last key of 'messages', not 'filteredMessages' because you will be refetching the same messages
     lastMessageId = messages.lastKey();
 
     // if there are no more messages, break
