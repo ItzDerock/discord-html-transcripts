@@ -1,5 +1,5 @@
 import * as discord from 'discord.js';
-import { TranscriptImageDownloader, createTranscript } from '../src';
+import { createTranscript } from '../src';
 
 import { config } from 'dotenv';
 config();
