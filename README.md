@@ -106,7 +106,7 @@ const attachment = await discordTranscripts.createTranscript(channel, {
 
 ```js
 const attachment = await discordTranscripts.generateFromMessages(messages, channel, {
-  // Same as createTranscript, except no limit
+  // Same as createTranscript, except no limit or filter
 });
 ```
 
