@@ -1,9 +1,9 @@
 import { DiscordAttachment, DiscordAttachments } from '@derockdev/discord-components-react';
 import React from 'react';
-import type { Attachment as AttachmentType, Message } from 'discord.js';
+import type { APIAttachment, APIMessage, Attachment as AttachmentType, Message } from 'discord.js';
 import type { RenderMessageContext } from '..';
 import type { AttachmentTypes } from '../../types';
-import { downloadImageToDataURL, formatBytes } from '../../utils/utils';
+import { formatBytes } from '../../utils/utils';
 
 /**
  * Renders all attachments for a message
@@ -17,7 +17,7 @@ export async function Attachments(props: { message: Message; context: RenderMess
   return (
     <DiscordAttachments slot="attachments">
       {props.message.attachments.map((attachment, id) => (
-        <Attachment attachment={attachment} context={props.context} key={id} />
+        <Attachment attachment={attachment} message={props.message} context={props.context} key={id} />
       ))}
     </DiscordAttachments>
   );
@@ -37,9 +37,11 @@ function getAttachmentType(attachment: AttachmentType): AttachmentTypes {
 export async function Attachment({
   attachment,
   context,
+  message,
 }: {
   attachment: AttachmentType;
   context: RenderMessageContext;
+  message: Message;
 }) {
   let url = attachment.url;
   const name = attachment.name;
@@ -49,10 +51,14 @@ export async function Attachment({
   const type = getAttachmentType(attachment);
 
   // if the attachment is an image, download it to a data url
-  if (context.saveImages && type === 'image') {
-    const downloaded = await downloadImageToDataURL(url);
-    if (downloaded) {
-      url = downloaded;
+  if (type === 'image') {
+    const downloaded = await context.callbacks.resolveImageSrc(
+      attachment.toJSON() as APIAttachment,
+      message.toJSON() as APIMessage
+    );
+
+    if (downloaded !== null) {
+      url = downloaded ?? url;
     }
   }
 
