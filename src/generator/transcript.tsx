@@ -55,7 +55,7 @@ export default async function DiscordMessages({ messages, channel, callbacks, ..
         {options.footerText
           ? options.footerText
               .replaceAll('{number}', messages.length.toString())
-              .replace('{s}', messages.length > 1 ? 's' : '')
+              .replaceAll('{s}', messages.length > 1 ? 's' : '')
           : `Exported ${messages.length} message${messages.length > 1 ? 's' : ''}.`}{' '}
         {options.poweredBy ? (
           <span style={{ textAlign: 'center' }}>
