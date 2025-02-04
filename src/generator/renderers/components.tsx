@@ -19,6 +19,7 @@ const ButtonStyleMapping = {
   [ButtonStyle.Success]: 'success',
   [ButtonStyle.Danger]: 'destructive',
   [ButtonStyle.Link]: 'secondary',
+  [ButtonStyle.Premium]: 'premium',
 } as const;
 
 export function Component({ component, id }: { component: MessageActionRowComponent; id: number }) {
