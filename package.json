@@ -58,12 +58,13 @@
     "react-dom": "0.0.0-experimental-6639ed3b3-20240111",
     "simple-markdown": "^0.7.3",
     "twemoji": "^14.0.2",
-    "undici": "^5.28.2"
+    "undici": "^7.9.0"
   },
   "peerDependencies": {
     "discord.js": "^14.0.0 || ^15.0.0"
   },
   "overrides": {
     "react": "$react"
-  }
+  },
+  "packageManager": "pnpm@10.11.0+sha512.6540583f41cc5f628eb3d9773ecee802f4f9ef9923cc45b69890fb47991d4b092964694ec3a4f738a420c918a333062c8b925d312f42e4f0c263eb603551f977"
 }

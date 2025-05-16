@@ -27,7 +27,8 @@ client.on('ready', async () => {
 
   console.timeEnd('transcript');
 
-  await channel.send({
+  await (channel as discord.TextChannel).send({
+    content: 'Here is the transcript',
     files: [attachment],
   });
 
