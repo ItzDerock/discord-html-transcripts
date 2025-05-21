@@ -55,7 +55,7 @@
     "@derockdev/discord-components-react": "^3.6.1",
     "discord-markdown-parser": "~1.1.0",
     "react": "0.0.0-experimental-6639ed3b3-20240111",
-    "react-dom": "0.0.0-experimental-6639ed3b3-20240111",
+    "react-dom": "0.14.10",
     "simple-markdown": "^0.7.3",
     "twemoji": "^14.0.2",
     "undici": "^7.9.0"
