@@ -67,12 +67,18 @@ export default async function render({ messages, channel, callbacks, ...options 
         <title>{channel.isDMBased() ? 'Direct Messages' : channel.name}</title>
 
         {/* message reference handler */}
-        <script>{scrollToMessage}</script>
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: */}
+        <script dangerouslySetInnerHTML={{ __html: scrollToMessage }} />
 
         {!options.hydrate && (
           <>
             {/* profiles */}
-            <script>{`window.$discordMessage={profiles:${JSON.stringify(await profiles)}}`}</script>
+            <script
+              // biome-ignore lint/security/noDangerouslySetInnerHtml:
+              dangerouslySetInnerHTML={{
+                __html: `window.$discordMessage={profiles:${JSON.stringify(await profiles)}}`,
+              }}
+            />
             {/* component library */}
             <script
               type="module"
@@ -92,7 +98,8 @@ export default async function render({ messages, channel, callbacks, ...options 
       </body>
 
       {/* Make sure the script runs after the DOM has loaded */}
-      {options.hydrate && <script>{revealSpoiler}</script>}
+      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: */}
+      {options.hydrate && <script dangerouslySetInnerHTML={{ __html: revealSpoiler }} />}
     </html>
   );
 
