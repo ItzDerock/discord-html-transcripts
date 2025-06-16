@@ -132,40 +132,39 @@ export function MessageSingleASTNode({ node, context }: { node: SingleASTNode; c
 
     case 'channel': {
       const id = node.id as string;
-      // NOTE: resolveChannel is now assumed to be sync or returns null
-      const channel = (
-        context.callbacks.resolveChannel as (
-          id: string
-        ) => { isDMBased?: () => boolean; name: string; type: ChannelType } | null
-      )?.(id);
-
-      return (
-        <DiscordMention type={channel ? (channel.isDMBased?.() ? 'channel' : getChannelType(channel.type)) : 'channel'}>
-          {channel ? (channel.isDMBased?.() ? 'DM Channel' : channel.name) : `<#${id}>`}
-        </DiscordMention>
-      );
+      // for now, we'll show the fallback since resolveChannel is async
+      // in the future, this could be pre-resolved or handled differently
+      return <DiscordMention type="channel">{`<#${id}>`}</DiscordMention>;
     }
 
     case 'role': {
       const id = node.id as string;
-      const role = (context.callbacks.resolveRole as (id: string) => { name: string; hexColor: string } | undefined)?.(
-        id
-      );
+      const role = context.callbacks.resolveRole(id);
 
       return (
-        <DiscordMention type="role" color={context.type === RenderType.REPLY ? undefined : role?.hexColor}>
-          {role ? role.name : `<@&${id}>`}
+        <DiscordMention
+          type="role"
+          color={
+            context.type === RenderType.REPLY
+              ? undefined
+              : role && typeof role === 'object' && 'hexColor' in role
+                ? role.hexColor
+                : undefined
+          }
+        >
+          {role && typeof role === 'object' && 'name' in role ? role.name : `<@&${id}>`}
         </DiscordMention>
       );
     }
 
     case 'user': {
       const id = node.id as string;
-      const user = (
-        context.callbacks.resolveUser as (id: string) => { displayName?: string; username: string } | undefined
-      )?.(id);
+      const user = context.callbacks.resolveUser(id);
 
-      return <DiscordMention type="user">{user ? (user.displayName ?? user.username) : `<@${id}>`}</DiscordMention>;
+      if (user && typeof user === 'object' && 'username' in user) {
+        return <DiscordMention type="user">{user.displayName ?? user.username}</DiscordMention>;
+      }
+      return <DiscordMention type="user">{`<@${id}>`}</DiscordMention>;
     }
 
     case 'here':

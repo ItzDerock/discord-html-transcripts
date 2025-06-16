@@ -39,9 +39,6 @@ export type RenderMessageContext = {
 export default async function render({ messages, channel, callbacks, ...options }: RenderMessageContext) {
   const profiles = await buildProfiles(messages);
 
-  // Render the transcript content to a string (await the async component)
-  const transcriptContent = await DiscordMessages({ messages, channel, callbacks, ...options });
-
   // NOTE: this renders a STATIC site with no interactivity
   // if interactivity is needed, switch to renderToPipeableStream and use hydrateRoot on client.
   const markup = ReactDOMServer.renderToStaticMarkup(
@@ -76,7 +73,7 @@ export default async function render({ messages, channel, callbacks, ...options 
             <script
               // biome-ignore lint/security/noDangerouslySetInnerHtml:
               dangerouslySetInnerHTML={{
-                __html: `window.$discordMessage={profiles:${JSON.stringify(await profiles)}}`,
+                __html: `window.$discordMessage={profiles:${JSON.stringify(profiles)}}`,
               }}
             />
             {/* component library */}
@@ -94,7 +91,7 @@ export default async function render({ messages, channel, callbacks, ...options 
           minHeight: '100vh',
         }}
       >
-        {transcriptContent}
+        <DiscordMessages messages={messages} channel={channel} callbacks={callbacks} {...options} />
       </body>
 
       {/* Make sure the script runs after the DOM has loaded */}

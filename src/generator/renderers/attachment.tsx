@@ -43,24 +43,26 @@ export function Attachment({
   context: RenderMessageContext;
   message: Message;
 }) {
-  let url = attachment.url;
+  const [src, setSrc] = React.useState<string>(attachment.url);
   const name = attachment.name;
   const width = attachment.width;
   const height = attachment.height;
 
   const type = getAttachmentType(attachment);
 
-  // if the attachment is an image, download it to a data url
-  if (type === 'image') {
-    const resolveImageSrc = context.callbacks.resolveImageSrc as
-      | ((attachment: APIAttachment, message: APIMessage) => string | undefined | null)
-      | undefined;
-    const downloaded = resolveImageSrc?.(attachment.toJSON() as APIAttachment, message.toJSON() as APIMessage);
-
-    if (downloaded !== null && downloaded !== undefined) {
-      url = downloaded;
+  React.useEffect(() => {
+    if (type === 'image') {
+      const result = context.callbacks.resolveImageSrc(
+        attachment.toJSON() as APIAttachment,
+        message.toJSON() as APIMessage
+      );
+      Promise.resolve(result).then((resolved) => {
+        if (resolved) {
+          setSrc(resolved);
+        }
+      });
     }
-  }
+  }, [attachment, context, message, type]);
 
   return (
     <DiscordAttachment
@@ -68,7 +70,7 @@ export function Attachment({
       size={formatBytes(attachment.size)}
       key={attachment.id}
       slot="attachment"
-      url={url}
+      url={src}
       alt={name ?? undefined}
       width={width ?? undefined}
       height={height ?? undefined}
