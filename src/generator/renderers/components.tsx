@@ -1,16 +1,16 @@
-import { DiscordActionRow, DiscordButton } from '@derockdev/discord-components-react';
-import { ButtonStyle, ComponentType, type MessageActionRowComponent, type ActionRow } from 'discord.js';
-import React from 'react';
-import { parseDiscordEmoji } from '../../utils/utils';
+import { DiscordActionRow, DiscordButton } from '@derockdev/discord-components-react'
+import { ButtonStyle, ComponentType, type MessageActionRowComponent, type ActionRow } from 'discord.js'
+import React from 'react'
+import { parseDiscordEmoji } from '../../utils/utils'
 
 export default function ComponentRow({ row, id }: { row: ActionRow<MessageActionRowComponent>; id: number }) {
   return (
     <DiscordActionRow key={id}>
-      {row.components.map((component, id) => (
-        <Component component={component} id={id} key={id} />
+      {row.components.map((component, index) => (
+        <Component component={component} id={index} key={`${component.type}-${index}`} />
       ))}
     </DiscordActionRow>
-  );
+  )
 }
 
 const ButtonStyleMapping = {
@@ -19,7 +19,8 @@ const ButtonStyleMapping = {
   [ButtonStyle.Success]: 'success',
   [ButtonStyle.Danger]: 'destructive',
   [ButtonStyle.Link]: 'secondary',
-} as const;
+  [ButtonStyle.Premium]: 'primary',
+} as const
 
 export function Component({ component, id }: { component: MessageActionRowComponent; id: number }) {
   if (component.type === ComponentType.Button) {
@@ -32,8 +33,8 @@ export function Component({ component, id }: { component: MessageActionRowCompon
       >
         {component.label}
       </DiscordButton>
-    );
+    )
   }
 
-  return undefined;
+  return undefined
 }

@@ -6,28 +6,28 @@ import {
   DiscordReactions,
   DiscordThread,
   DiscordThreadMessage,
-} from '@derockdev/discord-components-react';
-import type { Message as MessageType } from 'discord.js';
-import React from 'react';
-import type { RenderMessageContext } from '..';
-import { parseDiscordEmoji } from '../../utils/utils';
-import { Attachments } from './attachment';
-import ComponentRow from './components';
-import MessageContent, { RenderType } from './content';
-import { DiscordEmbed } from './embed';
-import MessageReply from './reply';
-import DiscordSystemMessage from './systemMessage';
+} from '@derockdev/discord-components-react'
+import type { Message as MessageType } from 'discord.js'
+import React from 'react'
+import type { RenderMessageContext } from '..'
+import { parseDiscordEmoji } from '../../utils/utils'
+import { Attachments } from './attachment'
+import ComponentRow from './components'
+import MessageContent, { RenderType } from './content'
+import { DiscordEmbed } from './embed'
+import MessageReply from './reply'
+import DiscordSystemMessage from './systemMessage'
 
 export default async function DiscordMessage({
   message,
   context,
 }: {
-  message: MessageType;
-  context: RenderMessageContext;
+  message: MessageType
+  context: RenderMessageContext
 }) {
-  if (message.system) return <DiscordSystemMessage message={message} />;
+  if (message.system) return <DiscordSystemMessage message={message} />
 
-  const isCrosspost = message.reference && message.reference.guildId !== message.guild?.id;
+  const isCrosspost = message.reference && message.reference.guildId !== message.guild?.id
 
   return (
     <DiscordMessageComponent
@@ -47,7 +47,7 @@ export default async function DiscordMessage({
         <DiscordCommand
           slot="reply"
           profile={message.interaction.user.id}
-          command={'/' + message.interaction.commandName}
+          command={`/${message.interaction.commandName}`}
         />
       )}
 
@@ -64,15 +64,22 @@ export default async function DiscordMessage({
 
       {/* message embeds */}
       {message.embeds.map((embed, id) => (
-        <DiscordEmbed embed={embed} context={{ ...context, index: id, message }} key={id} />
+        <DiscordEmbed embed={embed} context={{ ...context, index: id, message }} key={`${message.id}-embed-${id}`} />
       ))}
 
       {/* components */}
       {message.components.length > 0 && (
         <DiscordAttachments slot="components">
-          {message.components.map((component, id) => (
-            <ComponentRow key={id} id={id} row={component} />
-          ))}
+          {message.components
+            .filter(
+              (
+                component
+              ): component is import('discord.js').ActionRow<import('discord.js').MessageActionRowComponent> =>
+                component.type === 1
+            )
+            .map((component, id) => (
+              <ComponentRow key={`${message.id}-component-${id}`} id={id} row={component} />
+            ))}
         </DiscordAttachments>
       )}
 
@@ -82,7 +89,7 @@ export default async function DiscordMessage({
           {message.reactions.cache.map((reaction, id) => (
             <DiscordReaction
               key={`${message.id}r${id}`}
-              name={reaction.emoji.name!}
+              name={reaction.emoji.name || 'unknown'}
               emoji={parseDiscordEmoji(reaction.emoji)}
               count={reaction.count}
             />
@@ -106,17 +113,17 @@ export default async function DiscordMessage({
               <MessageContent
                 content={
                   message.thread.lastMessage.content.length > 128
-                    ? message.thread.lastMessage.content.substring(0, 125) + '...'
+                    ? `${message.thread.lastMessage.content.substring(0, 125)}...`
                     : message.thread.lastMessage.content
                 }
                 context={{ ...context, type: RenderType.REPLY }}
               />
             </DiscordThreadMessage>
           ) : (
-            `Thread messages not saved.`
+            'Thread messages not saved.'
           )}
         </DiscordThread>
       )}
     </DiscordMessageComponent>
-  );
+  )
 }

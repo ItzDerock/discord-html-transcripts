@@ -1,39 +1,51 @@
-import * as discord from 'discord.js';
-import { createTranscript } from '../src';
+import * as discord from 'discord.js'
+import { createTranscript } from '../src'
 
-import { config } from 'dotenv';
-config();
+import { config } from 'dotenv'
+config()
 
-const { GuildMessages, Guilds, MessageContent } = discord.GatewayIntentBits;
+const { GuildMessages, Guilds, MessageContent } = discord.GatewayIntentBits
 
 const client = new discord.Client({
   intents: [GuildMessages, Guilds, MessageContent],
-});
+})
 
 client.on('ready', async () => {
-  console.log('Fetching channel: ', process.env.CHANNEL!);
-  const channel = await client.channels.fetch(process.env.CHANNEL!);
-
-  if (!channel || !channel.isTextBased()) {
-    console.error('Invalid channel provided.');
-    process.exit(1);
+  const channelId = process.env.CHANNEL
+  if (!channelId) {
+    console.error('CHANNEL environment variable is not set')
+    process.exit(1)
   }
 
-  console.time('transcript');
+  console.log('Fetching channel: ', channelId)
+  const channel = await client.channels.fetch(channelId)
+
+  if (!channel || !channel.isTextBased()) {
+    console.error('Invalid channel provided.')
+    process.exit(1)
+  }
+
+  console.time('transcript')
 
   const attachment = await createTranscript(channel, {
     // options go here
-  });
+  })
 
-  console.timeEnd('transcript');
+  console.timeEnd('transcript')
 
   await (channel as discord.TextChannel).send({
     content: 'Here is the transcript',
     files: [attachment],
-  });
+  })
 
-  client.destroy();
-  process.exit(0);
-});
+  client.destroy()
+  process.exit(0)
+})
 
-client.login(process.env.TOKEN!);
+const token = process.env.TOKEN
+if (!token) {
+  console.error('TOKEN environment variable is not set')
+  process.exit(1)
+}
+
+client.login(token)

@@ -28,7 +28,7 @@ npm install --save discord-html-transcripts
 {% tab title="PNPM" %}
 
 ```shell
-pnpm i -S discord-html-transcripts`
+pnpm add discord-html-transcripts`
 ```
 
 {% endtab %}

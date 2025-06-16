@@ -1,19 +1,19 @@
-import { DiscordReply } from '@derockdev/discord-components-react';
-import { type Message, UserFlags } from 'discord.js';
-import type { RenderMessageContext } from '..';
-import React from 'react';
-import MessageContent, { RenderType } from './content';
+import { DiscordReply } from '@derockdev/discord-components-react'
+import { type Message, UserFlags } from 'discord.js'
+import type { RenderMessageContext } from '..'
+import React from 'react'
+import MessageContent, { RenderType } from './content'
 
 export default async function MessageReply({ message, context }: { message: Message; context: RenderMessageContext }) {
-  if (!message.reference) return null;
-  if (message.reference.guildId !== message.guild?.id) return null;
+  if (!message.reference) return null
+  if (message.reference.guildId !== message.guild?.id) return null
 
-  const referencedMessage = context.messages.find((m) => m.id === message.reference!.messageId);
+  const referencedMessage = context.messages.find((m) => m.id === message.reference?.messageId)
 
-  if (!referencedMessage) return <DiscordReply slot="reply">Message could not be loaded.</DiscordReply>;
+  if (!referencedMessage) return <DiscordReply slot="reply">Message could not be loaded.</DiscordReply>
 
-  const isCrosspost = referencedMessage.reference && referencedMessage.reference.guildId !== message.guild?.id;
-  const isCommand = referencedMessage.interaction !== null;
+  const isCrosspost = referencedMessage.reference && referencedMessage.reference.guildId !== message.guild?.id
+  const isCommand = referencedMessage.interaction !== null
 
   return (
     <DiscordReply
@@ -41,5 +41,5 @@ export default async function MessageReply({ message, context }: { message: Mess
         <em data-goto={referencedMessage.id}>Click to see attachment.</em>
       )}
     </DiscordReply>
-  );
+  )
 }
