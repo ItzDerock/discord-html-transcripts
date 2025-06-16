@@ -1,8 +1,8 @@
-import { DiscordReaction, DiscordReactions, DiscordSystemMessage } from '@derockdev/discord-components-react'
-import { MessageType, type GuildMember, type Message, type User } from 'discord.js'
+import { DiscordReaction, DiscordReactions, DiscordSystemMessage } from '@derockdev/discord-components-react';
+import { MessageType, type GuildMember, type Message, type User } from 'discord.js';
 // biome-ignore lint/style/useImportType:
-import React from 'react'
-import { parseDiscordEmoji } from '../../utils/utils'
+import React from 'react';
+import { parseDiscordEmoji } from '../../utils/utils';
 
 export default function SystemMessage({ message }: { message: Message }) {
   switch (message.type) {
@@ -12,7 +12,7 @@ export default function SystemMessage({ message }: { message: Message }) {
         <DiscordSystemMessage id={`m-${message.id}`} key={message.id} type="join">
           <JoinMessage member={message.member} fallbackUser={message.author} />
         </DiscordSystemMessage>
-      )
+      );
 
     case MessageType.ChannelPinnedMessage:
       return (
@@ -35,7 +35,7 @@ export default function SystemMessage({ message }: { message: Message }) {
             </DiscordReactions>
           )}
         </DiscordSystemMessage>
-      )
+      );
 
     case MessageType.GuildBoost:
     case MessageType.GuildBoostTier1:
@@ -48,7 +48,7 @@ export default function SystemMessage({ message }: { message: Message }) {
           </Highlight>{' '}
           boosted the server!
         </DiscordSystemMessage>
-      )
+      );
 
     case MessageType.ThreadStarterMessage:
       return (
@@ -58,15 +58,15 @@ export default function SystemMessage({ message }: { message: Message }) {
           </Highlight>{' '}
           started a thread: <i data-goto={message.reference?.messageId}>{message.content}</i>
         </DiscordSystemMessage>
-      )
+      );
 
     default:
-      return undefined
+      return undefined;
   }
 }
 
 export function Highlight({ children, color }: { children: React.ReactNode; color?: string }) {
-  return <i style={{ color: color ?? 'white' }}>{children}</i>
+  return <i style={{ color: color ?? 'white' }}>{children}</i>;
 }
 
 const allJoinMessages = [
@@ -107,10 +107,10 @@ const allJoinMessages = [
   'Ready player {user}',
   '{user} is here to kick butt and chew bubblegum. And {user} is all out of gum.',
   "Hello. Is it {user} you're looking for?",
-]
+];
 
 export function JoinMessage({ member, fallbackUser }: { member: GuildMember | null; fallbackUser: User }) {
-  const randomMessage = allJoinMessages[Math.floor(Math.random() * allJoinMessages.length)]
+  const randomMessage = allJoinMessages[Math.floor(Math.random() * allJoinMessages.length)];
 
   return randomMessage
     .split('{user}')
@@ -123,5 +123,5 @@ export function JoinMessage({ member, fallbackUser }: { member: GuildMember | nu
         {member?.nickname ?? fallbackUser.displayName ?? fallbackUser.username}
       </Highlight>,
     ])
-    .slice(0, -1)
+    .slice(0, -1);
 }

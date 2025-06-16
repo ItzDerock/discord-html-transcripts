@@ -6,28 +6,28 @@ import {
   DiscordReactions,
   DiscordThread,
   DiscordThreadMessage,
-} from '@derockdev/discord-components-react'
-import type { Message as MessageType } from 'discord.js'
-import React from 'react'
-import type { RenderMessageContext } from '..'
-import { parseDiscordEmoji } from '../../utils/utils'
-import { Attachments } from './attachment'
-import ComponentRow from './components'
-import MessageContent, { RenderType } from './content'
-import { DiscordEmbed } from './embed'
-import MessageReply from './reply'
-import DiscordSystemMessage from './systemMessage'
+} from '@derockdev/discord-components-react';
+import type { Message as MessageType } from 'discord.js';
+import React from 'react';
+import type { RenderMessageContext } from '..';
+import { parseDiscordEmoji } from '../../utils/utils';
+import { Attachments } from './attachment';
+import ComponentRow from './components';
+import MessageContent, { RenderType } from './content';
+import { DiscordEmbed } from './embed';
+import MessageReply from './reply';
+import DiscordSystemMessage from './systemMessage';
 
 export default function DiscordMessage({
   message,
   context,
 }: {
-  message: MessageType
-  context: RenderMessageContext
+  message: MessageType;
+  context: RenderMessageContext;
 }) {
-  if (message.system) return <DiscordSystemMessage message={message} />
+  if (message.system) return <DiscordSystemMessage message={message} />;
 
-  const isCrosspost = message.reference && message.reference.guildId !== message.guild?.id
+  const isCrosspost = message.reference && message.reference.guildId !== message.guild?.id;
 
   return (
     <DiscordMessageComponent
@@ -125,5 +125,5 @@ export default function DiscordMessage({
         </DiscordThread>
       )}
     </DiscordMessageComponent>
-  )
+  );
 }

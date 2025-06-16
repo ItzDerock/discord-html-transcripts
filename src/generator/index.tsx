@@ -1,46 +1,46 @@
-import type { Awaitable, Channel, Message, Role, User } from 'discord.js'
-import ReactDOMServer from 'react-dom/server'
-import React from 'react'
-import { buildProfiles } from '../utils/buildProfiles'
-import { revealSpoiler, scrollToMessage } from '../static/client'
-import { readFileSync } from 'node:fs'
-import path from 'node:path'
-import { renderToString } from '@derockdev/discord-components-core/hydrate'
-import DiscordMessages from './transcript'
-import type { ResolveImageCallback } from '../downloader/images'
+import type { Awaitable, Channel, Message, Role, User } from 'discord.js';
+import ReactDOMServer from 'react-dom/server';
+import React from 'react';
+import { buildProfiles } from '../utils/buildProfiles';
+import { revealSpoiler, scrollToMessage } from '../static/client';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { renderToString } from '@derockdev/discord-components-core/hydrate';
+import DiscordMessages from './transcript';
+import type { ResolveImageCallback } from '../downloader/images';
 
 // read the package.json file and get the @derockdev/discord-components-core version
-let discordComponentsVersion = '^3.6.1'
+let discordComponentsVersion = '^3.6.1';
 
 try {
-  const packagePath = path.join(__dirname, '..', '..', 'package.json')
-  const packageJSON = JSON.parse(readFileSync(packagePath, 'utf8'))
-  discordComponentsVersion = packageJSON.dependencies['@derockdev/discord-components-core'] ?? discordComponentsVersion
+  const packagePath = path.join(__dirname, '..', '..', 'package.json');
+  const packageJSON = JSON.parse(readFileSync(packagePath, 'utf8'));
+  discordComponentsVersion = packageJSON.dependencies['@derockdev/discord-components-core'] ?? discordComponentsVersion;
 } catch {} // ignore errors
 
 export type RenderMessageContext = {
-  messages: Message[]
-  channel: Channel
+  messages: Message[];
+  channel: Channel;
 
   callbacks: {
-    resolveImageSrc: ResolveImageCallback
-    resolveChannel: (channelId: string) => Awaitable<Channel | null>
-    resolveUser: (userId: string) => Awaitable<User | null>
-    resolveRole: (roleId: string) => Awaitable<Role | null>
-  }
+    resolveImageSrc: ResolveImageCallback;
+    resolveChannel: (channelId: string) => Awaitable<Channel | null>;
+    resolveUser: (userId: string) => Awaitable<User | null>;
+    resolveRole: (roleId: string) => Awaitable<Role | null>;
+  };
 
-  poweredBy?: boolean
-  footerText?: string
-  saveImages: boolean
-  favicon: 'guild' | string
-  hydrate: boolean
-}
+  poweredBy?: boolean;
+  footerText?: string;
+  saveImages: boolean;
+  favicon: 'guild' | string;
+  hydrate: boolean;
+};
 
 export default async function render({ messages, channel, callbacks, ...options }: RenderMessageContext) {
-  const profiles = await buildProfiles(messages)
+  const profiles = await buildProfiles(messages);
 
   // Render the transcript content to a string (await the async component)
-  const transcriptContent = await DiscordMessages({ messages, channel, callbacks, ...options })
+  const transcriptContent = await DiscordMessages({ messages, channel, callbacks, ...options });
 
   // NOTE: this renders a STATIC site with no interactivity
   // if interactivity is needed, switch to renderToPipeableStream and use hydrateRoot on client.
@@ -94,19 +94,19 @@ export default async function render({ messages, channel, callbacks, ...options 
       {/* Make sure the script runs after the DOM has loaded */}
       {options.hydrate && <script>{revealSpoiler}</script>}
     </html>
-  )
+  );
 
   if (options.hydrate) {
     const result = await renderToString(markup, {
       beforeHydrate: async (document) => {
         document.defaultView.$discordMessage = {
           profiles: profiles,
-        }
+        };
       },
-    })
+    });
 
-    return result.html
+    return result.html;
   }
 
-  return markup
+  return markup;
 }

@@ -1,9 +1,9 @@
-import { DiscordHeader, DiscordMessages as DiscordMessagesComponent } from '@derockdev/discord-components-react'
-import { ChannelType } from 'discord.js'
-import React from 'react'
-import type { RenderMessageContext } from '.'
-import MessageContent, { RenderType } from './renderers/content'
-import DiscordMessage from './renderers/message'
+import { DiscordHeader, DiscordMessages as DiscordMessagesComponent } from '@derockdev/discord-components-react';
+import { ChannelType } from 'discord.js';
+import React from 'react';
+import type { RenderMessageContext } from '.';
+import MessageContent, { RenderType } from './renderers/content';
+import DiscordMessage from './renderers/message';
 
 /**
  * The core transcript component.
@@ -68,5 +68,5 @@ export default function DiscordMessages({ messages, channel, callbacks, ...optio
         ) : null}
       </div>
     </DiscordMessagesComponent>
-  )
+  );
 }
