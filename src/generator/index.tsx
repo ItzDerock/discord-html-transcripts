@@ -16,7 +16,6 @@ try {
   const packagePath = path.join(__dirname, '..', '..', 'package.json')
   const packageJSON = JSON.parse(readFileSync(packagePath, 'utf8'))
   discordComponentsVersion = packageJSON.dependencies['@derockdev/discord-components-core'] ?? discordComponentsVersion
-  // eslint-disable-next-line no-empty
 } catch {} // ignore errors
 
 export type RenderMessageContext = {
