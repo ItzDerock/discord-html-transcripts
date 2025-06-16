@@ -37,8 +37,6 @@
     "debug": "^4.4.1",
     "discord.js": "^14.20.0",
     "dotenv": "^16.5.0",
-    "husky": "^9.1.7",
-    "pretty-quick": "^4.2.2",
     "sharp": "^0.34.2",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
@@ -50,8 +48,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "simple-markdown": "^0.7.3",
-    "twemoji": "^14.0.2",
-    "undici": "^7.10.0"
+    "twemoji": "^14.0.2"
   },
   "peerDependencies": {
     "discord.js": "^14.0.0 || ^15.0.0"

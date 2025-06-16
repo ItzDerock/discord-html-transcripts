@@ -1,6 +1,5 @@
 import type { APIAttachment, APIMessage, Awaitable } from 'discord.js';
 import type { WebpOptions } from 'sharp';
-import { request } from 'undici';
 import debug from 'debug';
 
 /**
@@ -73,15 +72,15 @@ export class TranscriptImageDownloader {
 
       // fetch the image
       this.log(`Fetching attachment ${attachment.id}: ${attachment.url}`);
-      const response = await request(attachment.url).catch((err) => {
+      const response = await fetch(attachment.url).catch((err) => {
         console.error('[discord-html-transcripts] Failed to download image for transcript: ', err);
         return null;
       });
 
       if (!response) return undefined;
 
-      const mimetype = response.headers['content-type'];
-      const buffer = await response.body.arrayBuffer().then((res) => Buffer.from(res));
+      const mimetype = response.headers.get('content-type') || '';
+      const buffer = Buffer.from(await response.arrayBuffer());
       this.log(`Finished fetching ${attachment.id} (${buffer.length} bytes)`);
 
       // if the compression options are set, compress the image
