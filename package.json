@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "prepack": "pnpm run build",
-    "test:typescript": "tsx ./tests/generate.ts",
+    "test": "tsx ./tests/generate.ts",
     "lint": "biome lint --write .",
     "format": "biome format --write .",
     "typecheck": "tsc --noEmit"

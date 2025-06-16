@@ -3,7 +3,7 @@ export type State = {
   inline?: boolean | undefined;
 
   callbacks: {
-    resolveChannel: (channelId: string) => Awaitable<Channel | null>;
+    resolveChannel: (channelId: string) => string;
     resolveUser: (userId: string) => string;
     resolveEmoji: (emojiId: string) => string;
     resolveRole: (roleId: string) => string;
