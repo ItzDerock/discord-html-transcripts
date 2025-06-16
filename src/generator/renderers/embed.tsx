@@ -16,7 +16,7 @@ type RenderEmbedContext = RenderMessageContext & {
   message: Message
 }
 
-export async function DiscordEmbed({ embed, context }: { embed: Embed; context: RenderEmbedContext }) {
+export function DiscordEmbed({ embed, context }: { embed: Embed; context: RenderEmbedContext }) {
   return (
     <DiscordEmbedComponent
       embedTitle={embed.title ?? undefined}
@@ -40,7 +40,7 @@ export async function DiscordEmbed({ embed, context }: { embed: Embed; context: 
       {/* Fields */}
       {embed.fields.length > 0 && (
         <DiscordEmbedFields slot="fields">
-          {embed.fields.map(async (field, id) => (
+          {embed.fields.map((field, id) => (
             <DiscordEmbedField
               key={`${context.message.id}-e-${context.index}-f-${id}`}
               fieldTitle={field.name}

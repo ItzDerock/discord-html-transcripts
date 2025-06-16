@@ -11,7 +11,7 @@ import { formatBytes } from '../../utils/utils'
  * @param context
  * @returns
  */
-export async function Attachments(props: { message: Message; context: RenderMessageContext }) {
+export function Attachments(props: { message: Message; context: RenderMessageContext }) {
   if (props.message.attachments.size === 0) return <></>
 
   return (
@@ -34,7 +34,7 @@ function getAttachmentType(attachment: AttachmentType): AttachmentTypes {
  * Renders one Discord Attachment
  * @param props - the attachment and rendering context
  */
-export async function Attachment({
+export function Attachment({
   attachment,
   context,
   message,
@@ -52,13 +52,13 @@ export async function Attachment({
 
   // if the attachment is an image, download it to a data url
   if (type === 'image') {
-    const downloaded = await context.callbacks.resolveImageSrc(
-      attachment.toJSON() as APIAttachment,
-      message.toJSON() as APIMessage
-    )
+    const resolveImageSrc = context.callbacks.resolveImageSrc as
+      | ((attachment: APIAttachment, message: APIMessage) => string | undefined | null)
+      | undefined
+    const downloaded = resolveImageSrc?.(attachment.toJSON() as APIAttachment, message.toJSON() as APIMessage)
 
-    if (downloaded !== null) {
-      url = downloaded ?? url
+    if (downloaded !== null && downloaded !== undefined) {
+      url = downloaded
     }
   }
 

@@ -38,7 +38,10 @@ export type RenderMessageContext = {
 }
 
 export default async function render({ messages, channel, callbacks, ...options }: RenderMessageContext) {
-  const profiles = buildProfiles(messages)
+  const profiles = await buildProfiles(messages)
+
+  // Render the transcript content to a string (await the async component)
+  const transcriptContent = await DiscordMessages({ messages, channel, callbacks, ...options })
 
   // NOTE: this renders a STATIC site with no interactivity
   // if interactivity is needed, switch to renderToPipeableStream and use hydrateRoot on client.
@@ -86,7 +89,7 @@ export default async function render({ messages, channel, callbacks, ...options 
           minHeight: '100vh',
         }}
       >
-        <DiscordMessages messages={messages} channel={channel} callbacks={callbacks} {...options} />
+        {transcriptContent}
       </body>
 
       {/* Make sure the script runs after the DOM has loaded */}
@@ -98,7 +101,7 @@ export default async function render({ messages, channel, callbacks, ...options 
     const result = await renderToString(markup, {
       beforeHydrate: async (document) => {
         document.defaultView.$discordMessage = {
-          profiles: await profiles,
+          profiles: profiles,
         }
       },
     })

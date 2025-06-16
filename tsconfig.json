@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "es2022",
     "lib": ["dom", "dom.iterable", "esnext"],
     "types": ["@types/node", "react/experimental", "@types/react-dom"],
     "strict": true,

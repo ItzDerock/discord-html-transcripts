@@ -4,7 +4,7 @@ import type { RenderMessageContext } from '..'
 import React from 'react'
 import MessageContent, { RenderType } from './content'
 
-export default async function MessageReply({ message, context }: { message: Message; context: RenderMessageContext }) {
+export default function MessageReply({ message, context }: { message: Message; context: RenderMessageContext }) {
   if (!message.reference) return null
   if (message.reference.guildId !== message.guild?.id) return null
 

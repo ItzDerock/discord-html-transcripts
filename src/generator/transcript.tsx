@@ -12,7 +12,7 @@ import DiscordMessage from './renderers/message'
  * @param props Messages, channel details, callbacks, etc.
  * @returns
  */
-export default async function DiscordMessages({ messages, channel, callbacks, ...options }: RenderMessageContext) {
+export default function DiscordMessages({ messages, channel, callbacks, ...options }: RenderMessageContext) {
   return (
     <DiscordMessagesComponent style={{ minHeight: '100vh' }}>
       {/* header */}

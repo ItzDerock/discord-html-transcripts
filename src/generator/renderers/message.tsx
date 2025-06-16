@@ -18,7 +18,7 @@ import { DiscordEmbed } from './embed'
 import MessageReply from './reply'
 import DiscordSystemMessage from './systemMessage'
 
-export default async function DiscordMessage({
+export default function DiscordMessage({
   message,
   context,
 }: {

@@ -4,7 +4,7 @@ import { MessageType, type GuildMember, type Message, type User } from 'discord.
 import React from 'react'
 import { parseDiscordEmoji } from '../../utils/utils'
 
-export default async function SystemMessage({ message }: { message: Message }) {
+export default function SystemMessage({ message }: { message: Message }) {
   switch (message.type) {
     case MessageType.RecipientAdd:
     case MessageType.UserJoin:
