@@ -4,6 +4,12 @@ import { createTranscript } from '../src';
 import { config } from 'dotenv';
 config();
 
+const { TOKEN, CHANNEL } = process.env;
+if (!TOKEN || !CHANNEL) {
+  console.error('TOKEN and CHANNEL environment variables must be set');
+  process.exit(1);
+}
+
 const { GuildMessages, Guilds, MessageContent } = discord.GatewayIntentBits;
 
 const client = new discord.Client({
@@ -11,14 +17,8 @@ const client = new discord.Client({
 });
 
 client.on('ready', async () => {
-  const channelId = process.env.CHANNEL;
-  if (!channelId) {
-    console.error('CHANNEL environment variable is not set');
-    process.exit(1);
-  }
-
-  console.log('Fetching channel: ', channelId);
-  const channel = await client.channels.fetch(channelId);
+  console.log('Fetching channel: ', CHANNEL);
+  const channel = await client.channels.fetch(CHANNEL);
 
   if (!channel || !channel.isTextBased()) {
     console.error('Invalid channel provided.');
@@ -42,10 +42,4 @@ client.on('ready', async () => {
   process.exit(0);
 });
 
-const token = process.env.TOKEN;
-if (!token) {
-  console.error('TOKEN environment variable is not set');
-  process.exit(1);
-}
-
-client.login(token);
+client.login(TOKEN);
