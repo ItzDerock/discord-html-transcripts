@@ -4,7 +4,7 @@ interface SectionContentProps {
   children: React.ReactNode;
 }
 
-const SectionContent: React.FC<SectionContentProps> = ({ children }) => {
+function SectionContent({ children }: SectionContentProps) {
   return (
     <div
       style={{
@@ -16,6 +16,6 @@ const SectionContent: React.FC<SectionContentProps> = ({ children }) => {
       {children}
     </div>
   );
-};
+}
 
 export default SectionContent;

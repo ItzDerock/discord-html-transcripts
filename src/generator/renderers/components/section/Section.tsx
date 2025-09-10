@@ -10,7 +10,7 @@ interface DiscordSectionProps {
   id: number;
 }
 
-const DiscordSection: React.FC<DiscordSectionProps> = ({ children, accessory, id }) => {
+function DiscordSection({ children, accessory, id }: DiscordSectionProps) {
   return (
     <div
       style={{
@@ -24,6 +24,6 @@ const DiscordSection: React.FC<DiscordSectionProps> = ({ children, accessory, id
       <SectionAccessory>{accessory && <Component component={accessory} id={id} />}</SectionAccessory>
     </div>
   );
-};
+}
 
 export default DiscordSection;

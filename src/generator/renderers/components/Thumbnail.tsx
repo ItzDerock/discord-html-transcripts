@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DiscordThumbnail: React.FC<{ url: string }> = ({ url }) => {
+function DiscordThumbnail({ url }: { url: string }) {
   return (
     <img
       src={url}
@@ -13,6 +13,6 @@ const DiscordThumbnail: React.FC<{ url: string }> = ({ url }) => {
       }}
     />
   );
-};
+}
 
 export default DiscordThumbnail;

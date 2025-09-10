@@ -4,7 +4,7 @@ interface SectionAccessoryProps {
   children?: React.ReactNode;
 }
 
-const SectionAccessory: React.FC<SectionAccessoryProps> = ({ children }) => {
+function SectionAccessory({ children }: SectionAccessoryProps) {
   if (!children) return null;
 
   return (
@@ -20,6 +20,6 @@ const SectionAccessory: React.FC<SectionAccessoryProps> = ({ children }) => {
       {children}
     </div>
   );
-};
+}
 
 export default SectionAccessory;

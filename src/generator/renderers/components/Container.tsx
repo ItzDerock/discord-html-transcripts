@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DiscordContainer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+function DiscordContainer({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
@@ -19,6 +19,6 @@ const DiscordContainer: React.FC<{ children: React.ReactNode }> = ({ children })
       {children}
     </div>
   );
-};
+}
 
 export default DiscordContainer;

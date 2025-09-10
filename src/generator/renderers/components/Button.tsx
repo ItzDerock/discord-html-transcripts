@@ -7,7 +7,7 @@ interface DiscordButtonProps {
   children: React.ReactNode;
 }
 
-export const DiscordButton: React.FC<DiscordButtonProps> = ({ type, url, emoji, children }) => {
+export function DiscordButton({ type, url, emoji, children }: DiscordButtonProps) {
   return (
     <a href={url} target="_blank" className={`discord-button discord-button-${type}`}>
       {emoji && (
@@ -32,6 +32,6 @@ export const DiscordButton: React.FC<DiscordButtonProps> = ({ type, url, emoji, 
       )}
     </a>
   );
-};
+}
 
 export default DiscordButton;

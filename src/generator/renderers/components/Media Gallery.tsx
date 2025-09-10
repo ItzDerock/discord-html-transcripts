@@ -2,7 +2,7 @@ import React from 'react';
 import type { MediaGalleryComponent } from 'discord.js';
 import { getGalleryLayout, getImageStyle } from './utils';
 
-const DiscordMediaGallery: React.FC<{ component: MediaGalleryComponent }> = ({ component }) => {
+function DiscordMediaGallery({ component }: { component: MediaGalleryComponent }) {
   if (!component.items || component.items.length === 0) {
     return null;
   }
@@ -48,6 +48,6 @@ const DiscordMediaGallery: React.FC<{ component: MediaGalleryComponent }> = ({ c
       ))}
     </div>
   );
-};
+}
 
 export default DiscordMediaGallery;

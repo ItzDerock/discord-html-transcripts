@@ -1,7 +1,7 @@
 import React from 'react';
 import { SeparatorSpacingSize } from 'discord.js';
 
-const DiscordSeperator: React.FC<{ divider: boolean; spacing: SeparatorSpacingSize }> = ({ divider, spacing }) => {
+function DiscordSeparator({ divider, spacing }: { divider: boolean; spacing: SeparatorSpacingSize }) {
   return (
     <div
       style={{
@@ -12,6 +12,6 @@ const DiscordSeperator: React.FC<{ divider: boolean; spacing: SeparatorSpacingSi
       }}
     />
   );
-};
+}
 
-export default DiscordSeperator;
+export default DiscordSeparator;

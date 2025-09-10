@@ -11,7 +11,7 @@ import DiscordSelectMenu from './components/Select Menu';
 import DiscordContainer from './components/Container';
 import DiscordSection from './components/section/Section';
 import DiscordMediaGallery from './components/Media Gallery';
-import DiscordSeperator from './components/Spacing';
+import DiscordSeparator from './components/Spacing';
 import DiscordButton from './components/Button';
 import DiscordThumbnail from './components/Thumbnail';
 import MessageContent from './content';
@@ -89,7 +89,7 @@ export default function ComponentRow({
       );
 
     case ComponentType.Separator:
-      return <DiscordSeperator key={id} spacing={component.spacing} divider={component.divider} />;
+      return <DiscordSeparator key={id} spacing={component.spacing} divider={component.divider} />;
 
     case ComponentType.TextDisplay:
       return <MessageContent key={id} content={component.content} context={{ ...context, type: RenderType.NORMAL }} />;

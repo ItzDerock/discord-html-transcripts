@@ -12,14 +12,14 @@ const SELECT_LABEL_MAP = {
   [ComponentType.StringSelect]: 'Make a Selection',
 } as const;
 
-export const getSelectTypeLabel = (type: ComponentType): string => {
+export function getSelectTypeLabel(type: ComponentType): string {
   return SELECT_LABEL_MAP[type as keyof typeof SELECT_LABEL_MAP] ?? 'Select Option';
-};
+}
 
 /**
  * Gets the grid layout for media galleries based on count
  */
-export const getGalleryLayout = (count: number) => {
+export function getGalleryLayout(count: number) {
   switch (count) {
     case 1:
       return {
@@ -61,12 +61,12 @@ export const getGalleryLayout = (count: number) => {
         };
       }
   }
-};
+}
 
 /**
  * Gets the style for an individual image based on its position and total count
  */
-export const getImageStyle = (idx: number, count: number) => {
+export function getImageStyle(idx: number, count: number) {
   switch (count) {
     case 3:
       if (idx === 0) {
@@ -165,4 +165,4 @@ export const getImageStyle = (idx: number, count: number) => {
   }
 
   return baseImageStyle;
-};
+}

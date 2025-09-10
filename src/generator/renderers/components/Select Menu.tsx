@@ -3,9 +3,11 @@ import { type MessageActionRowComponent, ComponentType } from 'discord.js';
 import { parseDiscordEmoji } from '../../../utils/utils';
 import { getSelectTypeLabel } from './utils';
 
-const DiscordSelectMenu: React.FC<{
+function DiscordSelectMenu({
+  component,
+}: {
   component: Exclude<MessageActionRowComponent, { type: ComponentType.Button }>;
-}> = ({ component }) => {
+}) {
   const isStringSelect = component.type === ComponentType.StringSelect;
   const placeholder = component.placeholder || getSelectTypeLabel(component.type);
 
@@ -52,6 +54,6 @@ const DiscordSelectMenu: React.FC<{
       )}
     </div>
   );
-};
+}
 
 export default DiscordSelectMenu;
