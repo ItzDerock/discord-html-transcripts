@@ -153,7 +153,7 @@ export async function MessageSingleASTNode({ node, context }: { node: SingleASTN
       const id = node.id as string;
       const user = await context.callbacks.resolveUser(id);
 
-      return <DiscordMention type="user">{user ? user.displayName ?? user.username : `<@${id}>`}</DiscordMention>;
+      return <DiscordMention type="user">{user ? (user.displayName ?? user.username) : `<@${id}>`}</DiscordMention>;
     }
 
     case 'here':
@@ -245,6 +245,10 @@ export function getChannelType(channelType: ChannelType): 'channel' | 'voice' | 
     case ChannelType.GuildCategory:
     case ChannelType.GuildAnnouncement:
     case ChannelType.GuildText:
+    case ChannelType.DM:
+    case ChannelType.GroupDM:
+    case ChannelType.GuildDirectory:
+    case ChannelType.GuildMedia:
       return 'channel';
     case ChannelType.GuildVoice:
     case ChannelType.GuildStageVoice:

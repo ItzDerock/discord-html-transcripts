@@ -12,8 +12,8 @@ export enum ExportReturnType {
 export type ObjectType<T extends ExportReturnType> = T extends ExportReturnType.Buffer
   ? Buffer
   : T extends ExportReturnType.String
-  ? string
-  : AttachmentBuilder;
+    ? string
+    : AttachmentBuilder;
 
 export type GenerateFromMessagesOptions<T extends ExportReturnType> = Partial<{
   /**

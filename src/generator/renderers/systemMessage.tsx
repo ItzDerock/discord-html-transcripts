@@ -59,6 +59,39 @@ export default async function SystemMessage({ message }: { message: Message }) {
         </DiscordSystemMessage>
       );
 
+    // TODO: implement support for these:
+    case MessageType.Default:
+    case MessageType.RecipientRemove:
+    case MessageType.Call:
+    case MessageType.ChannelNameChange:
+    case MessageType.ChannelIconChange:
+    case MessageType.ChannelFollowAdd:
+    case MessageType.GuildDiscoveryDisqualified:
+    case MessageType.GuildDiscoveryRequalified:
+    case MessageType.GuildDiscoveryGracePeriodInitialWarning:
+    case MessageType.GuildDiscoveryGracePeriodFinalWarning:
+    case MessageType.ThreadCreated:
+    case MessageType.Reply:
+    case MessageType.ChatInputCommand:
+    case MessageType.GuildInviteReminder:
+    case MessageType.ContextMenuCommand:
+    case MessageType.AutoModerationAction:
+    case MessageType.RoleSubscriptionPurchase:
+    case MessageType.InteractionPremiumUpsell:
+    case MessageType.StageStart:
+    case MessageType.StageEnd:
+    case MessageType.StageSpeaker:
+    case MessageType.StageRaiseHand:
+    case MessageType.StageTopic:
+    case MessageType.GuildApplicationPremiumSubscription:
+    case MessageType.GuildIncidentAlertModeEnabled:
+    case MessageType.GuildIncidentAlertModeDisabled:
+    case MessageType.GuildIncidentReportRaid:
+    case MessageType.GuildIncidentReportFalseAlarm:
+    case MessageType.PurchaseNotification:
+    case MessageType.PollResult:
+      return undefined;
+
     default:
       return undefined;
   }

@@ -115,7 +115,7 @@ export async function createTranscript<T extends ExportReturnType = ExportReturn
   const resolvedLimit = typeof limit === 'undefined' || limit === -1 ? Infinity : limit;
 
   // until there are no more messages, keep fetching
-  // eslint-disable-next-line no-constant-condition
+
   while (true) {
     // create fetch options
     const fetchLimitOptions = { limit: 100, before: lastMessageId };

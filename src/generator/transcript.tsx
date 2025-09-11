@@ -22,11 +22,11 @@ export default async function DiscordMessages({ messages, channel, callbacks, ..
         channel={
           channel.isDMBased()
             ? channel.type === ChannelType.DM
-              ? channel.recipient?.tag ?? 'Unknown Recipient'
+              ? (channel.recipient?.tag ?? 'Unknown Recipient')
               : 'Unknown Recipient'
             : channel.name
         }
-        icon={channel.isDMBased() ? undefined : channel.guild.iconURL({ size: 128 }) ?? undefined}
+        icon={channel.isDMBased() ? undefined : (channel.guild.iconURL({ size: 128 }) ?? undefined)}
       >
         {channel.isThread() ? (
           `Thread channel in ${channel.parent?.name ?? 'Unknown Channel'}`
