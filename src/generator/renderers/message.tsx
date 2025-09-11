@@ -7,7 +7,7 @@ import {
   DiscordThread,
   DiscordThreadMessage,
 } from '@derockdev/discord-components-react';
-import { ComponentType, type Message as MessageType } from 'discord.js';
+import { type Message as MessageType } from 'discord.js';
 import React from 'react';
 import type { RenderMessageContext } from '..';
 import { parseDiscordEmoji } from '../../utils/utils';
