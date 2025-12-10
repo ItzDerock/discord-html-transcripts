@@ -42,7 +42,6 @@
     "@types/react-dom": "^19.1.9",
     "@typescript-eslint/eslint-plugin": "^8.43.0",
     "@typescript-eslint/parser": "^8.43.0",
-    "debug": "^4.4.1",
     "discord.js": "^14.22.1",
     "dotenv": "^17.2.2",
     "eslint": "^9.35.0",
@@ -57,6 +56,7 @@
   "dependencies": {
     "@derockdev/discord-components-core": "^3.6.1",
     "@derockdev/discord-components-react": "^3.6.1",
+    "debug": "^4.4.1",
     "discord-markdown-parser": "~1.2.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",
