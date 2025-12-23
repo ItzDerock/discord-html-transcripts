@@ -1,4 +1,3 @@
-import { DiscordReaction, DiscordReactions, DiscordSystemMessage } from '@derockdev/discord-components-react';
 import { MessageType, type GuildMember, type Message, type User } from 'discord.js';
 import React from 'react';
 import { parseDiscordEmoji } from '../../utils/utils';
@@ -8,32 +7,32 @@ export default async function SystemMessage({ message }: { message: Message }) {
     case MessageType.RecipientAdd:
     case MessageType.UserJoin:
       return (
-        <DiscordSystemMessage id={`m-${message.id}`} key={message.id} type="join">
+        <discord-system-message id={`m-${message.id}`} key={message.id} type="join">
           <JoinMessage member={message.member} fallbackUser={message.author} />
-        </DiscordSystemMessage>
+        </discord-system-message>
       );
 
     case MessageType.ChannelPinnedMessage:
       return (
-        <DiscordSystemMessage id={`m-${message.id}`} key={message.id} type="pin">
+        <discord-system-message id={`m-${message.id}`} key={message.id} type="pin">
           <Highlight color={message.member?.roles.color?.hexColor}>
             {message.author.displayName ?? message.author.username}
           </Highlight>{' '}
           pinned <i data-goto={message.reference?.messageId}>a message</i> to this channel.
           {/* reactions */}
           {message.reactions.cache.size > 0 && (
-            <DiscordReactions slot="reactions">
+            <discord-reactions slot="reactions">
               {message.reactions.cache.map((reaction, id) => (
-                <DiscordReaction
+                <discord-reaction
                   key={`${message.id}r${id}`}
                   name={reaction.emoji.name!}
                   emoji={parseDiscordEmoji(reaction.emoji)}
                   count={reaction.count}
                 />
               ))}
-            </DiscordReactions>
+            </discord-reactions>
           )}
-        </DiscordSystemMessage>
+        </discord-system-message>
       );
 
     case MessageType.GuildBoost:
@@ -41,22 +40,22 @@ export default async function SystemMessage({ message }: { message: Message }) {
     case MessageType.GuildBoostTier2:
     case MessageType.GuildBoostTier3:
       return (
-        <DiscordSystemMessage id={`m-${message.id}`} key={message.id} type="boost">
+        <discord-system-message id={`m-${message.id}`} key={message.id} type="boost">
           <Highlight color={message.member?.roles.color?.hexColor}>
             {message.author.displayName ?? message.author.username}
           </Highlight>{' '}
           boosted the server!
-        </DiscordSystemMessage>
+        </discord-system-message>
       );
 
     case MessageType.ThreadStarterMessage:
       return (
-        <DiscordSystemMessage id={`ms-${message.id}`} key={message.id} type="thread">
+        <discord-system-message id={`ms-${message.id}`} key={message.id} type="thread">
           <Highlight color={message.member?.roles.color?.hexColor}>
             {message.author.displayName ?? message.author.username}
           </Highlight>{' '}
           started a thread: <i data-goto={message.reference?.messageId}>{message.content}</i>
-        </DiscordSystemMessage>
+        </discord-system-message>
       );
 
     // TODO: implement support for these:

@@ -42,6 +42,7 @@ export default defineConfig([
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/no-non-null-assertion': 'off',
+      '@typescript-eslint/triple-slash-reference': 'off',
     },
   },
 ]);

@@ -1,10 +1,8 @@
-import { DiscordHeader, DiscordMessages as DiscordMessagesComponent } from '@derockdev/discord-components-react';
 import { ChannelType } from 'discord.js';
-import React from 'react';
 import type { RenderMessageContext } from '.';
 import MessageContent, { RenderType } from './renderers/content';
 import DiscordMessage from './renderers/message';
-import { globalStyles } from './renderers/components/styles';
+import { TranscriptHeader } from './renderers/components/TranscriptHeader';
 
 /**
  * The core transcript component.
@@ -15,18 +13,17 @@ import { globalStyles } from './renderers/components/styles';
  */
 export default async function DiscordMessages({ messages, channel, callbacks, ...options }: RenderMessageContext) {
   return (
-    <DiscordMessagesComponent style={{ minHeight: '100vh' }}>
-      <style dangerouslySetInnerHTML={{ __html: globalStyles }} />
-      <DiscordHeader
-        guild={channel.isDMBased() ? 'Direct Messages' : channel.guild.name}
-        channel={
+    <discord-messages style={{ minHeight: '100vh' }}>
+      <TranscriptHeader
+        guildName={channel.isDMBased() ? 'Direct Messages' : channel.guild.name}
+        guildIcon={channel.isDMBased() ? undefined : (channel.guild.iconURL({ size: 128 }) ?? undefined)}
+        channelName={
           channel.isDMBased()
             ? channel.type === ChannelType.DM
               ? (channel.recipient?.tag ?? 'Unknown Recipient')
               : 'Unknown Recipient'
             : channel.name
         }
-        icon={channel.isDMBased() ? undefined : (channel.guild.iconURL({ size: 128 }) ?? undefined)}
       >
         {channel.isThread() ? (
           `Thread channel in ${channel.parent?.name ?? 'Unknown Channel'}`
@@ -44,7 +41,7 @@ export default async function DiscordMessages({ messages, channel, callbacks, ..
         ) : (
           `This is the start of #${channel.name} channel.`
         )}
-      </DiscordHeader>
+      </TranscriptHeader>
       {/* body */}
       {messages.map((message) => (
         <DiscordMessage message={message} context={{ messages, channel, callbacks, ...options }} key={message.id} />
@@ -66,6 +63,6 @@ export default async function DiscordMessages({ messages, channel, callbacks, ..
           </span>
         ) : null}
       </div>
-    </DiscordMessagesComponent>
+    </discord-messages>
   );
 }

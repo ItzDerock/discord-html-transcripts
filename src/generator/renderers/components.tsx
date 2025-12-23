@@ -1,11 +1,9 @@
-import { DiscordActionRow, DiscordAttachment, DiscordSpoiler } from '@derockdev/discord-components-react';
 import {
   ComponentType,
   type ThumbnailComponent,
   type MessageActionRowComponent,
   type TopLevelComponent,
 } from 'discord.js';
-import React from 'react';
 import { parseDiscordEmoji } from '../../utils/utils';
 import DiscordSelectMenu from './components/Select Menu';
 import DiscordContainer from './components/Container';
@@ -31,13 +29,13 @@ export default function ComponentRow({
   switch (component.type) {
     case ComponentType.ActionRow:
       return (
-        <DiscordActionRow key={id}>
+        <discord-action-row key={id}>
           <>
             {component.components.map((nestedComponent, id) => (
               <Component component={nestedComponent} id={id} key={id} />
             ))}
           </>
-        </DiscordActionRow>
+        </discord-action-row>
       );
 
     case ComponentType.Container:
@@ -51,30 +49,19 @@ export default function ComponentRow({
         </DiscordContainer>
       );
 
-    case ComponentType.File:
-      return (
-        <>
-          {component.spoiler ? (
-            <DiscordSpoiler key={component.id} slot="attachment">
-              <DiscordAttachment
-                type="file"
-                key={component.id}
-                slot="attachment"
-                url={component.file.url}
-                alt="Discord Attachment"
-              />
-            </DiscordSpoiler>
-          ) : (
-            <DiscordAttachment
-              type="file"
-              key={component.id}
-              slot="attachment"
-              url={component.file.url}
-              alt="Discord Attachment"
-            />
-          )}
-        </>
-      );
+    case ComponentType.File: {
+      const attachmentComponent = <discord-file-attachment href={component.file.url} />;
+
+      if (component.spoiler) {
+        return (
+          <discord-spoiler key={component.id} slot="attachment">
+            {attachmentComponent}
+          </discord-spoiler>
+        );
+      } else {
+        return attachmentComponent;
+      }
+    }
 
     case ComponentType.MediaGallery:
       return <DiscordMediaGallery component={component} key={id} />;

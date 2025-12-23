@@ -1,4 +1,3 @@
-import React from 'react';
 import { SeparatorSpacingSize } from 'discord.js';
 
 function DiscordSeparator({ divider, spacing }: { divider: boolean; spacing: SeparatorSpacingSize }) {

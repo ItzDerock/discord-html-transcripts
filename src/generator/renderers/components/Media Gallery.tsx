@@ -1,4 +1,3 @@
-import React from 'react';
 import type { MediaGalleryComponent } from 'discord.js';
 import { getGalleryLayout, getImageStyle } from './utils';
 

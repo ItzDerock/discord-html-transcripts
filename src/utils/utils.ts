@@ -5,8 +5,14 @@ export function isDefined<T>(value: T | undefined | null): value is T {
   return value !== undefined && value !== null;
 }
 
-export function formatBytes(bytes: number, decimals = 2) {
-  if (bytes === 0) return '0 Bytes';
+/**
+ * Returns a tuple of [bytes (i.e. 1024), bytesUnit (i.e. KB)]
+ * @param bytes
+ * @param decimals
+ * @returns
+ */
+export function formatBytes(bytes: number, decimals = 2): [number, string] {
+  if (bytes === 0) return [0, 'Bytes'];
 
   const k = 1024;
   const dm = decimals < 0 ? 0 : decimals;
@@ -14,7 +20,7 @@ export function formatBytes(bytes: number, decimals = 2) {
 
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  return [parseFloat((bytes / Math.pow(k, i)).toFixed(dm)), sizes[i]];
 }
 
 export function parseDiscordEmoji(emoji: Emoji | APIMessageComponentEmoji) {

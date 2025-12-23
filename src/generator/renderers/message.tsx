@@ -1,14 +1,4 @@
-import {
-  DiscordAttachments,
-  DiscordCommand,
-  DiscordMessage as DiscordMessageComponent,
-  DiscordReaction,
-  DiscordReactions,
-  DiscordThread,
-  DiscordThreadMessage,
-} from '@derockdev/discord-components-react';
 import { type Message as MessageType } from 'discord.js';
-import React from 'react';
 import type { RenderMessageContext } from '..';
 import { parseDiscordEmoji } from '../../utils/utils';
 import { Attachments } from './attachment';
@@ -30,9 +20,9 @@ export default async function DiscordMessage({
   const isCrosspost = message.reference && message.reference.guildId !== message.guild?.id;
 
   return (
-    <DiscordMessageComponent
+    <discord-message
       id={`m-${message.id}`}
-      timestamp={message.createdAt.toISOString()}
+      timestamp={message.createdAt}
       key={message.id}
       edited={message.editedAt !== null}
       server={isCrosspost ?? undefined}
@@ -44,7 +34,7 @@ export default async function DiscordMessage({
 
       {/* slash command */}
       {message.interaction && (
-        <DiscordCommand
+        <discord-command
           slot="reply"
           profile={message.interaction.user.id}
           command={'/' + message.interaction.commandName}
@@ -69,30 +59,30 @@ export default async function DiscordMessage({
 
       {/* components */}
       {message.components.length > 0 && (
-        <DiscordAttachments slot="components">
+        <discord-attachments slot="components">
           {message.components.map((component, id) => (
             <ComponentRow key={id} id={id} component={component} context={context} />
           ))}
-        </DiscordAttachments>
+        </discord-attachments>
       )}
 
       {/* reactions */}
       {message.reactions.cache.size > 0 && (
-        <DiscordReactions slot="reactions">
+        <discord-reactions slot="reactions">
           {message.reactions.cache.map((reaction, id) => (
-            <DiscordReaction
+            <discord-reaction
               key={`${message.id}r${id}`}
               name={reaction.emoji.name!}
               emoji={parseDiscordEmoji(reaction.emoji)}
               count={reaction.count}
             />
           ))}
-        </DiscordReactions>
+        </discord-reactions>
       )}
 
       {/* threads */}
       {message.hasThread && message.thread && (
-        <DiscordThread
+        <discord-thread
           slot="thread"
           name={message.thread.name}
           cta={
@@ -102,7 +92,7 @@ export default async function DiscordMessage({
           }
         >
           {message.thread.lastMessage ? (
-            <DiscordThreadMessage profile={message.thread.lastMessage.author.id}>
+            <discord-thread-message profile={message.thread.lastMessage.author.id}>
               <MessageContent
                 content={
                   message.thread.lastMessage.content.length > 128
@@ -111,12 +101,12 @@ export default async function DiscordMessage({
                 }
                 context={{ ...context, type: RenderType.REPLY }}
               />
-            </DiscordThreadMessage>
+            </discord-thread-message>
           ) : (
             `Thread messages not saved.`
           )}
-        </DiscordThread>
+        </discord-thread>
       )}
-    </DiscordMessageComponent>
+    </discord-message>
   );
 }

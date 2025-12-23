@@ -1,4 +1,3 @@
-import React from 'react';
 import { type MessageActionRowComponent, ComponentType } from 'discord.js';
 import { parseDiscordEmoji } from '../../../utils/utils';
 import { getSelectTypeLabel } from './utils';

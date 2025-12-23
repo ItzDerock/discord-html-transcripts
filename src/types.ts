@@ -1,7 +1,12 @@
 import type { AttachmentBuilder, Message } from 'discord.js';
 import type { RenderMessageContext } from './generator';
 
-export type AttachmentTypes = 'audio' | 'video' | 'image' | 'file';
+export enum AttachmentTypes {
+  Audio,
+  Video,
+  Image,
+  File,
+}
 
 export enum ExportReturnType {
   Buffer = 'buffer',

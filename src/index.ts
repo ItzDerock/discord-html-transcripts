@@ -1,3 +1,5 @@
+/// <reference path="./discord-components.d.ts" />
+
 import { AttachmentBuilder, version, Collection, type Channel, type Message, type TextBasedChannel } from 'discord.js';
 import DiscordMessages from './generator';
 import {

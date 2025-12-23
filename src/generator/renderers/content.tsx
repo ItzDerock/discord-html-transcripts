@@ -1,15 +1,3 @@
-import {
-  DiscordBold,
-  DiscordCodeBlock,
-  DiscordCustomEmoji,
-  DiscordInlineCode,
-  DiscordItalic,
-  DiscordMention,
-  DiscordQuote,
-  DiscordSpoiler,
-  DiscordTime,
-  DiscordUnderlined,
-} from '@derockdev/discord-components-react';
 import parse, { type RuleTypesExtended } from 'discord-markdown-parser';
 import { ChannelType, type APIMessageComponentEmoji } from 'discord.js';
 import React from 'react';
@@ -18,6 +6,7 @@ import { ASTNode as MessageASTNodes } from 'simple-markdown';
 import type { SingleASTNode } from 'simple-markdown';
 import type { RenderMessageContext } from '../';
 import { parseDiscordEmoji } from '../../utils/utils';
+import { DiscordHighlightedCode } from './components/DiscordHighlightedCode';
 
 export enum RenderType {
   EMBED,
@@ -98,17 +87,17 @@ export async function MessageSingleASTNode({ node, context }: { node: SingleASTN
 
     case 'link':
       return (
-        <a href={node.target}>
+        <discord-link href={node.target}>
           <MessageASTNodes nodes={node.content} context={context} />
-        </a>
+        </discord-link>
       );
 
     case 'url':
     case 'autolink':
       return (
-        <a href={node.target} target="_blank" rel="noreferrer">
+        <discord-link href={node.target} target="_blank" rel="noreferrer">
           <MessageASTNodes nodes={node.content} context={context} />
-        </a>
+        </discord-link>
       );
 
     case 'blockQuote':
@@ -117,9 +106,9 @@ export async function MessageSingleASTNode({ node, context }: { node: SingleASTN
       }
 
       return (
-        <DiscordQuote>
+        <discord-quote>
           <MessageASTNodes nodes={node.content} context={context} />
-        </DiscordQuote>
+        </discord-quote>
       );
 
     case 'br':
@@ -132,9 +121,9 @@ export async function MessageSingleASTNode({ node, context }: { node: SingleASTN
       const channel = await context.callbacks.resolveChannel(id);
 
       return (
-        <DiscordMention type={channel ? (channel.isDMBased() ? 'channel' : getChannelType(channel.type)) : 'channel'}>
+        <discord-mention type={channel ? (channel.isDMBased() ? 'channel' : getChannelType(channel.type)) : 'channel'}>
           {channel ? (channel.isDMBased() ? 'DM Channel' : channel.name) : `<#${id}>`}
-        </DiscordMention>
+        </discord-mention>
       );
     }
 
@@ -143,9 +132,9 @@ export async function MessageSingleASTNode({ node, context }: { node: SingleASTN
       const role = await context.callbacks.resolveRole(id);
 
       return (
-        <DiscordMention type="role" color={context.type === RenderType.REPLY ? undefined : role?.hexColor}>
+        <discord-mention type="role" color={context.type === RenderType.REPLY ? undefined : role?.hexColor}>
           {role ? role.name : `<@&${id}>`}
-        </DiscordMention>
+        </discord-mention>
       );
     }
 
@@ -153,45 +142,45 @@ export async function MessageSingleASTNode({ node, context }: { node: SingleASTN
       const id = node.id as string;
       const user = await context.callbacks.resolveUser(id);
 
-      return <DiscordMention type="user">{user ? (user.displayName ?? user.username) : `<@${id}>`}</DiscordMention>;
+      return <discord-mention type="user">{user ? (user.displayName ?? user.username) : `<@${id}>`}</discord-mention>;
     }
 
     case 'here':
     case 'everyone':
       return (
-        <DiscordMention type={'role'} highlight>
+        <discord-mention type={'role'} highlight>
           {`@${type}`}
-        </DiscordMention>
+        </discord-mention>
       );
 
     case 'codeBlock':
       if (context.type !== RenderType.REPLY) {
-        return <DiscordCodeBlock language={node.lang} code={node.content} />;
+        return <DiscordHighlightedCode language={node.lang} content={node.content} />;
       }
-      return <DiscordInlineCode>{node.content}</DiscordInlineCode>;
+      return <discord-code>{node.content}</discord-code>;
 
     case 'inlineCode':
-      return <DiscordInlineCode>{node.content}</DiscordInlineCode>;
+      return <discord-code>{node.content}</discord-code>;
 
     case 'em':
       return (
-        <DiscordItalic>
+        <discord-italic>
           <MessageASTNodes nodes={node.content} context={context} />
-        </DiscordItalic>
+        </discord-italic>
       );
 
     case 'strong':
       return (
-        <DiscordBold>
+        <discord-bold>
           <MessageASTNodes nodes={node.content} context={context} />
-        </DiscordBold>
+        </discord-bold>
       );
 
     case 'underline':
       return (
-        <DiscordUnderlined>
+        <discord-underlined>
           <MessageASTNodes nodes={node.content} context={context} />
-        </DiscordUnderlined>
+        </discord-underlined>
       );
 
     case 'strikethrough':
@@ -210,27 +199,30 @@ export async function MessageSingleASTNode({ node, context }: { node: SingleASTN
 
     case 'spoiler':
       return (
-        <DiscordSpoiler>
+        <discord-spoiler>
           <MessageASTNodes nodes={node.content} context={context} />
-        </DiscordSpoiler>
+        </discord-spoiler>
       );
 
     case 'emoji':
     case 'twemoji':
       return (
-        <DiscordCustomEmoji
+        <discord-custom-emoji
           name={node.name}
           url={parseDiscordEmoji(node as APIMessageComponentEmoji)}
           embedEmoji={context.type === RenderType.EMBED}
-          largeEmoji={context._internal?.largeEmojis}
+          jumbo={context._internal?.largeEmojis}
         />
       );
 
     case 'timestamp':
-      return <DiscordTime timestamp={parseInt(node.timestamp) * 1000} format={node.format} />;
+      // TODO: Make this reactive
+      // https://github.com/ItzDerock/discord-components/blob/main/packages/core/src/components/discord-time/discord-time.tsx
+      return <discord-time>{new Date(node.timestamp).toISOString()}</discord-time>;
+    // return <DiscordTime timestamp={parseInt(node.timestamp) * 1000} format={node.format} />;
 
     default: {
-      console.log(`Unknown node type: ${type}`, node);
+      console.log(`[discord-html-transcripts] Unknown node type: ${type}`, node);
       return typeof node.content === 'string' ? (
         node.content
       ) : (

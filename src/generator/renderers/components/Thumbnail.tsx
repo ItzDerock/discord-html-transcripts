@@ -1,5 +1,3 @@
-import React from 'react';
-
 function DiscordThumbnail({ url }: { url: string }) {
   return (
     <img

@@ -1,7 +1,5 @@
-import { DiscordReply } from '@derockdev/discord-components-react';
 import { type Message, UserFlags } from 'discord.js';
 import type { RenderMessageContext } from '..';
-import React from 'react';
 import MessageContent, { RenderType } from './content';
 
 export default async function MessageReply({ message, context }: { message: Message; context: RenderMessageContext }) {
@@ -9,14 +7,13 @@ export default async function MessageReply({ message, context }: { message: Mess
   if (message.reference.guildId !== message.guild?.id) return null;
 
   const referencedMessage = context.messages.find((m) => m.id === message.reference!.messageId);
-
-  if (!referencedMessage) return <DiscordReply slot="reply">Message could not be loaded.</DiscordReply>;
+  if (!referencedMessage) return <discord-reply slot="reply">Message could not be loaded.</discord-reply>;
 
   const isCrossPost = referencedMessage.reference && referencedMessage.reference.guildId !== message.guild?.id;
   const isCommand = referencedMessage.interaction !== null;
 
   return (
-    <DiscordReply
+    <discord-reply
       slot="reply"
       edited={!isCommand && referencedMessage.editedAt !== null}
       attachment={referencedMessage.attachments.size > 0}
@@ -32,7 +29,7 @@ export default async function MessageReply({ message, context }: { message: Mess
       command={isCommand}
     >
       {referencedMessage.content ? (
-        <span data-goto={referencedMessage.id}>
+        <span data-goto={referencedMessage.id} className="reply-inline">
           <MessageContent content={referencedMessage.content} context={{ ...context, type: RenderType.REPLY }} />
         </span>
       ) : isCommand ? (
@@ -40,6 +37,6 @@ export default async function MessageReply({ message, context }: { message: Mess
       ) : (
         <em data-goto={referencedMessage.id}>Click to see attachment.</em>
       )}
-    </DiscordReply>
+    </discord-reply>
   );
 }
