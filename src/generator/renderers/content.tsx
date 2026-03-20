@@ -96,20 +96,24 @@ export async function MessageSingleASTNode({ node, context }: { node: SingleASTN
     case 'text':
       return node.content;
 
-    case 'link':
+    case 'link': {
+      const safeHref = /^https?:\/\//i.test(node.target) ? node.target : '#';
       return (
-        <a href={node.target}>
+        <a href={safeHref}>
           <MessageASTNodes nodes={node.content} context={context} />
         </a>
       );
+    }
 
     case 'url':
-    case 'autolink':
+    case 'autolink': {
+      const safeHref = /^https?:\/\//i.test(node.target) ? node.target : '#';
       return (
-        <a href={node.target} target="_blank" rel="noreferrer">
+        <a href={safeHref} target="_blank" rel="noreferrer">
           <MessageASTNodes nodes={node.content} context={context} />
         </a>
       );
+    }
 
     case 'blockQuote':
       if (context.type === RenderType.REPLY) {
