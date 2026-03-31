@@ -1,11 +1,20 @@
 {
   "problemMatcher": [
     {
-      "owner": "eslint-stylish",
+      "owner": "eslint-stylish"* Para prosseguir com o recrutamento da Mecânica Valley Custom, é necessário que você leia as Regras Gerais e o Material de Estudo na aba de recrutamento. Após a leitura, dirija-se à call de espera, onde em breve um recrutador irá direcioná-lo para os próximos passos.  
+
+ Estamos empolgados em tê-los por aqui e ansiosos para conhecê-los melhor. 
+Aproveitem ao máximo essa experiência! 
+        Bem-vindos à Mecânica Street Garage!
+
+ Nossa equipe está sempre pronto e preparada para atender, tunar, atendelos com excelencia e paciência! 
+
+ Queremos garantir que sua passagem por aqui seja mais do que apenas um serviço mecânico – queremos que tenha uma experiência completa como cliente, convidado ou membro da nossa equipe. 
+
       "pattern": [
         {
           "regexp": "^([^\\s].*)$",
-          "file": 1
+          "file": 1Aqui, a paixão por veículos nos move!
         },
         {
           "regexp": "^\\s+(\\d+):(\\d+)\\s+(error|warning|info)\\s+(.*)\\s\\s+(.*)$",
